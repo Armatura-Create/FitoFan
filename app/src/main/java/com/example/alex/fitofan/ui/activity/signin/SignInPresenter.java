@@ -14,7 +14,6 @@ class SignInPresenter implements SignInContract.EventListener {
     private SignInContract.View view;
     private CallbackManager mCallbackManager;
     private ActivitySignInBinding binding;
-    private boolean isLoginWithEmail = false;
 
     SignInPresenter(SignInContract.View view, ActivitySignInBinding binding) {
         this.view = view;
@@ -28,7 +27,6 @@ class SignInPresenter implements SignInContract.EventListener {
     }
 
     public void loginWithFB() {
-        isLoginWithEmail = false;
         Log.e("Facebook", "It was started");
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -56,12 +54,20 @@ class SignInPresenter implements SignInContract.EventListener {
         });
     }
 
-    public void loginUserWithFB(String fbToken) {
+    private void loginUserWithFB(String fbToken) {
         Log.e("user_info", "Send FB token");
     }
 
-    public void goToMain() {
+    void goToMain() {
         view.goToMain();
+    }
+
+    void goToForgotPass() {
+        view.goToForgotPass();
+    }
+
+    void goToRegistration() {
+        view.goToSignUp();
     }
 
     public CallbackManager getCallbackManager() {

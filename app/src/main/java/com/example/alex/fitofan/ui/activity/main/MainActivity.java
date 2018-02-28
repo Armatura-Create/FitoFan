@@ -1,9 +1,15 @@
 package com.example.alex.fitofan.ui.activity.main;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTabHost;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,36 +21,48 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.databinding.ActivityMainBinding;
+import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
+import com.example.alex.fitofan.ui.fragments.participants.ParticiplantFragment;
+import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
+
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        setSupportActionBar(mBinding.appBarMain.toolbar);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mBinding.drawerLayout, mBinding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mBinding.navView.setNavigationItemSelectedListener(this);
+
+        initTabs();
+    }
+
+    private void initTabs(){
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new WallFragment(), "Wall");
+        adapter.addFragment(new ParticiplantFragment(), "Participlants");
+        adapter.addFragment(new MyPlansFragment(), "MyPlans");
+        mBinding.appBarMain.contentMain.viewpager.setAdapter(adapter);
+        mBinding.appBarMain.tablayout.setupWithViewPager(mBinding.appBarMain.contentMain.viewpager);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }

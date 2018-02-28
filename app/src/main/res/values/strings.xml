@@ -9,4 +9,13 @@
 
     <!--facebook-->
     <string name="facebook_app_id">00000</string>
+
+
+    <string name="forgot_pass">Forgot password?</string>
+    <string name="sing_in">Sing in</string>
+    <string name="year">2018</string>
+    <string name="inc_andrii">Andrii Luzin inc.</string>
+    <string name="registration">Registration</string>
+    <string name="Email">Email</string>
+    <string name="password">Password</string>
 </resources>

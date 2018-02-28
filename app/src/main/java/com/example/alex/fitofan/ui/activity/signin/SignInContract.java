@@ -11,9 +11,9 @@ interface SignInContract {
 
         void goToMain();
 
-        void forgotPassword();
-
         void goToLogin();
+
+        void goToForgotPass();
     }
 
     interface EventListener {

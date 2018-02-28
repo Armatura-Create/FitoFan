@@ -14,7 +14,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
 
     //TODO: It might be useful to use DataBinding
     //TODO: Будет хорошо, если вы будете использовать DataBinding
-    private ActivitySignUpBinding binding;
+    private ActivitySignUpBinding mBinding;
     private SignUpPresenter presenter;
 
     private static final String REGISTRATION_ERROR = "Registration error";
@@ -24,7 +24,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
         presenter = new SignUpPresenter(this);
     }
 

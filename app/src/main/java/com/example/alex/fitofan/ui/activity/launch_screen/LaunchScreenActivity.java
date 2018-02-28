@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.ui.activity.main.MainActivity;
+import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 
 public class LaunchScreenActivity extends AppCompatActivity {
 
@@ -19,7 +19,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler();
-        Intent intent = new Intent(LaunchScreenActivity.this, MainActivity.class);
+        Intent intent = new Intent(LaunchScreenActivity.this, SignInActivity.class);
 
         runnable = () -> {
             startActivity(intent);

@@ -22,7 +22,7 @@
         <activity
             android:name=".ui.activity.launch_screen.LaunchScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -39,25 +39,25 @@
         <activity
             android:name=".ui.activity.signin.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
 
         <activity
             android:name=".ui.activity.signup.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
 
         <activity
             android:name=".ui.activity.contact.ContactActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
 
         <activity
             android:name=".ui.activity.forgot_password.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar"/>
     </application>
 
 </manifest>

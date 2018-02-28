@@ -5,5 +5,10 @@
     <string name="navigation_drawer_close">Закрыть меню</string>
 
     <string name="action_settings">Настройки</string>
+    <string name="forgot_pass">Забыли пароль?</string>
+    <string name="sing_in">Вход</string>
+    <string name="registration">Регистрация</string>
+    <string name="Email">Эл.почта</string>
+    <string name="password">Пароль</string>
 
 </resources>
