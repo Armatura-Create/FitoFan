@@ -1,8 +1,8 @@
-package com.example.alex.fitofan.ui.activity.forgot_password;
+package com.example.alex.fitofan.ui.activity.MyProfile;
 
 import android.content.Context;
 
-public interface ForgotPasswordContact {
+public interface MyProfileContract {
 
     interface View {
         Context getContext();

@@ -10,12 +10,27 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/background"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.activity.signin.SignInActivity">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/logo"
+                app:layout_constraintBottom_toTopOf="@+id/login_data"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <LinearLayout
                 android:id="@+id/login_data"
@@ -31,14 +46,14 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.235">
+                app:layout_constraintVertical_bias="0.391">
 
                 <EditText
                     android:id="@+id/login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/Email"
                     android:background="#00000000"
+                    android:hint="@string/Email"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/transporent_text_wite"
                     android:textColorHint="@color/transporent_text_wite"/>
@@ -50,12 +65,12 @@
 
                 <EditText
                     android:id="@+id/password"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#00000000"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:background="#00000000"
                     android:textColor="@color/transporent_text_wite"
                     android:textColorHint="@color/transporent_text_wite"/>
 

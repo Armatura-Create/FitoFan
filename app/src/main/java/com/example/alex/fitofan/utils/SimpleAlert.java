@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
+
+import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 
 /**
  * Created by 0x008800 on 01.12.17.

@@ -17,15 +17,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     private ActivitySignUpBinding mBinding;
     private SignUpPresenter presenter;
 
-    private static final String REGISTRATION_ERROR = "Registration error";
-    public static final String TRY_AGAIN = "Try again";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
         presenter = new SignUpPresenter(this);
+        initLiteners();
+    }
+
+    private void initLiteners() {
+        mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     @Override

@@ -4,37 +4,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.alex.fitofan.ui.activity.main.MainActivity">
-
-        <android.support.design.widget.AppBarLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            >
+            android:layout_height="match_parent"
+            tools:context="com.example.alex.fitofan.ui.activity.main.MainActivity">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:title="@string/app_name"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tablayout"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabGravity="fill"
-                app:tabMode="fixed" />
+                android:background="@android:color/transparent"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                >
 
-        </android.support.design.widget.AppBarLayout>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:title="@string/app_name"/>
 
-        <include
-            android:id="@+id/content_main"
-            layout="@layout/content_main"/>
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tablayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabGravity="fill"
+                    app:tabMode="fixed"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+            </android.support.design.widget.AppBarLayout>
+
+            <include
+                android:id="@+id/content_main"
+                layout="@layout/content_main"/>
+
+        </android.support.design.widget.CoordinatorLayout>
+
 </layout>

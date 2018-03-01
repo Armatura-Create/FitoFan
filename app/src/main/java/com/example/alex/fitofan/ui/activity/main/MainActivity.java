@@ -1,27 +1,23 @@
 package com.example.alex.fitofan.ui.activity.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTabHost;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
+import com.example.alex.fitofan.ui.activity.MyProfile.MyProfileActivity;
+import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
+import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.participants.ParticiplantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
@@ -30,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding mBinding;
+    private MainPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +34,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mPresenter = new MainPresenter(this);
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
 
@@ -84,6 +82,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingActivity.class));
+            return true;
+        }
+        if (id == R.id.action_exit) {
+            mPresenter.alertExit();
             return true;
         }
 
@@ -96,23 +99,32 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_my_profile){
+            startActivity(new Intent(this, MyProfileActivity.class));
+        } else if (id == R.id.nav_wall) {
+            mBinding.appBarMain.contentMain.viewpager.setCurrentItem(0);
+        } else if (id == R.id.nav_participants) {
+            mBinding.appBarMain.contentMain.viewpager.setCurrentItem(1);
+        } else if (id == R.id.nav_my_plans) {
+            mBinding.appBarMain.contentMain.viewpager.setCurrentItem(2);
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, SettingActivity.class));
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            mPresenter.shareApp();
+        } else if (id == R.id.nav_exit) {
+            //sing out
+            mPresenter.alertExit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void goSingOut() {
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
     }
 
     @Override

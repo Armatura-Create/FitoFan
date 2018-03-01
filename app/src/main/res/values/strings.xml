@@ -18,4 +18,7 @@
     <string name="registration">Registration</string>
     <string name="Email">Email</string>
     <string name="password">Password</string>
+    <string name="exit">Sing Out</string>
+    <string name="forgot_password">Password recovery</string>
+    <string name="my_profile">My Profile</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.alex.fitofan.ui.activity.forgot_password;
+package com.example.alex.fitofan.ui.activity.MyProfile;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -8,22 +8,23 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityForgotPasswordBinding;
+import com.example.alex.fitofan.databinding.ActivityMyProfileBinding;
 
-public class ForgotPasswordActivity extends AppCompatActivity implements ForgotPasswordContact.View {
+public class MyProfileActivity extends AppCompatActivity implements MyProfileContract.View {
 
-    private ActivityForgotPasswordBinding mBinding;
+    private ActivityMyProfileBinding mBinding;
 
-    private ForgotPasswordPresenter presenter;
+    private MyProfilePresenter presenter;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password);
+        setContentView(R.layout.activity_my_profile);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_password);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_profile);
 
-        presenter = new ForgotPasswordPresenter(this);
+        presenter = new MyProfilePresenter(this);
 
         initListeners();
     }

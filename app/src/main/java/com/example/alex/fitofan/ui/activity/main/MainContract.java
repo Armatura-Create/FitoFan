@@ -12,9 +12,13 @@ interface MainContract {
     interface View {
         Context getContext();
 
+        void goSingOut();
+
     }
 
     interface EventListener {
+        void alertExit();
 
+        void shareApp();
     }
 }

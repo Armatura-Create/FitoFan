@@ -10,5 +10,7 @@
     <string name="registration">Регистрация</string>
     <string name="Email">Эл.почта</string>
     <string name="password">Пароль</string>
+    <string name="exit">Выход</string>
+    <string name="forgot_password">Восстановление пароля</string>
 
 </resources>

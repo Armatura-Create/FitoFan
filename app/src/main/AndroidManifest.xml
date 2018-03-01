@@ -58,6 +58,16 @@
             android:name=".ui.activity.forgot_password.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.settings.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.MyProfile.MyProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar"/>
     </application>
 
 </manifest>

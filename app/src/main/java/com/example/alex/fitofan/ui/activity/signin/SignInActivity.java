@@ -41,27 +41,27 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     private void initListeners() {
         mBinding.btLogin.setOnClickListener(v -> {
-            boolean isEmpty = false;
-            List<EditText> list = Arrays.asList(
-                    mBinding.login,
-                    mBinding.password
-            );
-            for (EditText edit : list) {
-                if (TextUtils.isEmpty(edit.getText().toString().trim())) {
-                    edit.setError("Обязательное поле");
-                    isEmpty = true;
-                }
-            }
-
-            if (isEmpty) return;
-            if (!CheckerInputData.isEmail(mBinding.login.getText().toString().trim())) {
-                Toast.makeText(this, "Логин не валидный.\nExample:example@gmail.com", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!CheckerInputData.isPassword(mBinding.password.getText().toString().trim())) {
-                Toast.makeText(this, "Пароль должен содержать не менее 8 символов, цифры, буквы верхнего и нижнего регистра", Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            boolean isEmpty = false;
+//            List<EditText> list = Arrays.asList(
+//                    mBinding.login,
+//                    mBinding.password
+//            );
+//            for (EditText edit : list) {
+//                if (TextUtils.isEmpty(edit.getText().toString().trim())) {
+//                    edit.setError("Обязательное поле");
+//                    isEmpty = true;
+//                }
+//            }
+//
+//            if (isEmpty) return;
+//            if (!CheckerInputData.isEmail(mBinding.login.getText().toString().trim())) {
+//                Toast.makeText(this, "Логин не валидный.\nExample:example@gmail.com", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            if (!CheckerInputData.isPassword(mBinding.password.getText().toString().trim())) {
+//                Toast.makeText(this, "Пароль должен содержать не менее 8 символов, цифры, буквы верхнего и нижнего регистра", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             presenter.goToMain();
         });
         mBinding.forgotPass.setOnClickListener(v -> presenter.goToForgotPass());
