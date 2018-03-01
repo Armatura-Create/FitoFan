@@ -33,7 +33,7 @@
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
         </activity>
 
         <activity
@@ -65,7 +65,12 @@
             android:theme="@style/Theme.Design.NoActionBar"/>
 
         <activity
-            android:name=".ui.activity.MyProfile.MyProfileActivity"
+            android:name=".ui.activity.my_profile.MyProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.training.TrainingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar"/>
     </application>

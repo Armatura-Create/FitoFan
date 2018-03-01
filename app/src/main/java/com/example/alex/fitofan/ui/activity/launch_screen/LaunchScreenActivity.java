@@ -29,7 +29,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_launch_screen);
 
-        // переход на другое активити спустя 5 сек
-        handler.postDelayed(runnable, 5000);
+        // переход на другое активити спустя 3 сек
+        handler.postDelayed(runnable, 3000);
     }
 }

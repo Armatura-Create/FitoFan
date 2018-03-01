@@ -1,4 +1,4 @@
-package com.example.alex.fitofan.ui.activity.MyProfile;
+package com.example.alex.fitofan.ui.activity.my_profile;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.databinding.ActivityForgotPasswordBinding;
 import com.example.alex.fitofan.databinding.ActivityMyProfileBinding;
 
 public class MyProfileActivity extends AppCompatActivity implements MyProfileContract.View {

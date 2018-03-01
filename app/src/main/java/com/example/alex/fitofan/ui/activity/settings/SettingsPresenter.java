@@ -8,10 +8,4 @@ public class SettingsPresenter implements SettingsContact.EventListener{
         this.view = view;
     }
 
-    @Override
-    public void onContinue(int count) {
-
-    }
-
-
 }

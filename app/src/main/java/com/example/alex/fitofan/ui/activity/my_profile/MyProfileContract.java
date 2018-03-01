@@ -1,4 +1,4 @@
-package com.example.alex.fitofan.ui.activity.MyProfile;
+package com.example.alex.fitofan.ui.activity.my_profile;
 
 import android.content.Context;
 
@@ -10,7 +10,7 @@ public interface MyProfileContract {
     }
 
     interface EventListener{
-        void onContinue(int count);
+
     }
 
 }

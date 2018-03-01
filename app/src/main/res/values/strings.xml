@@ -21,4 +21,7 @@
     <string name="exit">Sing Out</string>
     <string name="forgot_password">Password recovery</string>
     <string name="my_profile">My Profile</string>
+    <string name="training">Training</string>
+    <string name="share">Share</string>
+    <string name="publish">Publish</string>
 </resources>

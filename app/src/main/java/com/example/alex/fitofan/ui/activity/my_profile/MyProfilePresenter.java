@@ -1,4 +1,4 @@
-package com.example.alex.fitofan.ui.activity.MyProfile;
+package com.example.alex.fitofan.ui.activity.my_profile;
 
 public class MyProfilePresenter implements MyProfileContract.EventListener{
 
@@ -7,11 +7,5 @@ public class MyProfilePresenter implements MyProfileContract.EventListener{
     MyProfilePresenter(MyProfileContract.View view) {
         this.view = view;
     }
-
-    @Override
-    public void onContinue(int count) {
-
-    }
-
 
 }

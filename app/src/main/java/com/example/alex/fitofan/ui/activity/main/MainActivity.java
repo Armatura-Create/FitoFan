@@ -11,11 +11,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
-import com.example.alex.fitofan.ui.activity.MyProfile.MyProfileActivity;
+import com.example.alex.fitofan.ui.activity.my_profile.MyProfileActivity;
 import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;

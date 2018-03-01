@@ -23,10 +23,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         setContentView(R.layout.activity_sign_up);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
         presenter = new SignUpPresenter(this);
-        initLiteners();
+        initListeners();
     }
 
-    private void initLiteners() {
+    private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
