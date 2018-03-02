@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="transparent_bottom">#22000000</color>
     <color name="transparent_text_white">#77FFFFFF</color>
+    <color name="button_blue">#0b4573</color>
+    <color name="text_gray">#777777</color>
+    <color name="special_color_text">#b40772</color>
+    <color name="like_color">#bc849d</color>
+    <color name="background_fragment">#f7f7f7</color>
 </resources>

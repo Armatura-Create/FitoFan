@@ -3,6 +3,7 @@ package com.example.alex.fitofan.ui.activity.main;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,7 +12,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
 import com.example.alex.fitofan.ui.activity.my_profile.MyProfileActivity;
@@ -20,6 +25,8 @@ import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.participants.ParticiplantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
@@ -45,6 +52,21 @@ public class MainActivity extends AppCompatActivity
         mBinding.navView.setNavigationItemSelectedListener(this);
 
         initTabs();
+//        loadAvatar();
+    }
+
+    private void loadAvatar() {
+        CircleImageView imageProfile = findViewById(R.id.nav_profileImage);
+
+        Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
+        Glide.with(getContext()) //передаем контекст приложения
+                .load(uri)
+                .fitCenter()
+                .thumbnail(0.5f)
+                .priority(Priority.IMMEDIATE)
+                .placeholder(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageProfile); //ссылка на ImageView
     }
 
     private void initTabs(){

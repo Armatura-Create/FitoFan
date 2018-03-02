@@ -24,4 +24,8 @@
     <string name="training">Training</string>
     <string name="share">Share</string>
     <string name="publish">Publish</string>
+    <string name="add_training">Add Training</string>
+    <string name="like">Like</string>
+    <string name="search">Search</string>
+    <string name="send_plan">Send plan</string>
 </resources>

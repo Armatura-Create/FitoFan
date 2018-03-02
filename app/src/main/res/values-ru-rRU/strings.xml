@@ -12,5 +12,11 @@
     <string name="password">Пароль</string>
     <string name="exit">Выход</string>
     <string name="forgot_password">Восстановление пароля</string>
+    <string name="share">Поделиться</string>
+    <string name="publish">Опубликовать</string>
+    <string name="add_training">Добавить Тренеровку</string>
+    <string name="like">Нравиться</string>
+    <string name="send_plan">Отправить план</string>
+    <string name="search">Поиск</string>
 
 </resources>
