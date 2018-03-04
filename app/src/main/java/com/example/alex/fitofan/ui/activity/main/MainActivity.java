@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -23,9 +22,8 @@ import com.example.alex.fitofan.ui.activity.my_profile.MyProfileActivity;
 import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
-import com.example.alex.fitofan.ui.fragments.participants.ParticiplantFragment;
+import com.example.alex.fitofan.ui.fragments.participants.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private ActivityMainBinding mBinding;
     private MainPresenter mPresenter;
+    private String TAG = "Timer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +70,9 @@ public class MainActivity extends AppCompatActivity
 
     private void initTabs(){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new WallFragment(), "Wall");
-        adapter.addFragment(new ParticiplantFragment(), "Participlants");
-        adapter.addFragment(new MyPlansFragment(), "MyPlans");
+        adapter.addFragment(new WallFragment(), getResources().getString(R.string.tab_wall));
+        adapter.addFragment(new ParticipantFragment(), getResources().getString(R.string.tab_participants));
+        adapter.addFragment(new MyPlansFragment(), getResources().getString(R.string.tab_my_plan));
         mBinding.appBarMain.contentMain.viewpager.setAdapter(adapter);
         mBinding.appBarMain.tablayout.setupWithViewPager(mBinding.appBarMain.contentMain.viewpager);
     }

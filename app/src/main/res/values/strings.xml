@@ -10,6 +10,10 @@
     <!--facebook-->
     <string name="facebook_app_id">00000</string>
 
+    <!--name tab-->
+    <string name="tab_wall">Wall</string>
+    <string name="tab_participants">Participants</string>
+    <string name="tab_my_plan">My Plans</string>
 
     <string name="forgot_pass">Forgot password?</string>
     <string name="sing_in">Sing in</string>
@@ -28,4 +32,12 @@
     <string name="like">Like</string>
     <string name="search">Search</string>
     <string name="send_plan">Send plan</string>
+    <string name="create_plan">Create a training plan</string>
+    <string name="training_class">Training class</string>
+    <string name="description_class">Добавте класс тренировки к примеру \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
+    <string name="add_image_file">Add image class</string>
+    <string name="description_description">Добавьте  описание класса тренировки. Описывается поставка цели и задачи при выполнении данного типа тренировки.</string>
+    <string name="add_audio_file">Add audio file</string>
+    <string name="training_description">Description</string>
+
 </resources>

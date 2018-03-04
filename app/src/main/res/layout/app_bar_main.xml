@@ -29,16 +29,25 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:title="@string/app_name"/>
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="30dp"
+                        android:padding="15dp"
+                        android:src="@drawable/logo"/>
+                </android.support.v7.widget.Toolbar>
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tablayout"
-                    app:tabSelectedTextColor="@android:color/holo_blue_dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:tabGravity="fill"
-                    app:tabMode="fixed"/>
+                    app:tabIndicatorColor="@color/transparent"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@android:color/white"
+                    app:tabTextColor="@color/transparent_text_white"/>
 
             </android.support.design.widget.AppBarLayout>
 

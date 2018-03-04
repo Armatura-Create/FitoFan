@@ -21,11 +21,14 @@
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:paddingRight="100dp"
+                android:paddingLeft="100dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:src="@drawable/logo"
                 app:layout_constraintBottom_toTopOf="@+id/login_data"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginTop="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -53,29 +56,33 @@
                     android:layout_height="wrap_content"
                     android:background="#00000000"
                     android:hint="@string/Email"
+                    android:textSize="15sp"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/transparent_text_white"
                     android:textColorHint="@color/transparent_text_white"/>
 
                 <View
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="0.5dp"
                     android:background="@color/transparent_text_white"/>
 
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
+                    android:layout_marginTop="40dp"
                     android:background="#00000000"
+                    android:textSize="15sp"
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:textColor="@color/transparent_text_white"
                     android:textColorHint="@color/transparent_text_white"/>
 
                 <View
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="0.5dp"
                     android:background="@color/transparent_text_white"/>
             </LinearLayout>
 
@@ -85,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +101,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    app:cardBackgroundColor="@android:color/holo_blue_light"
+                    app:cardBackgroundColor="#1f80b5"
                     app:cardCornerRadius="4dp">
 
                     <com.balysv.materialripple.MaterialRippleLayout
@@ -110,12 +117,13 @@
                             android:layout_gravity="center"
                             android:text="@string/sing_in"
                             android:textColor="@android:color/white"
-                            android:textSize="22sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
                     </com.balysv.materialripple.MaterialRippleLayout>
                 </android.support.v7.widget.CardView>
 
                 <LinearLayout
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -138,24 +146,16 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/facebook_examp"
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/facebook_bt"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@android:color/holo_blue_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bt_login_and_forgot">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Facebook"/>
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/bt_login_and_forgot"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

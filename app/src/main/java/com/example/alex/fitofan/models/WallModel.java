@@ -6,7 +6,7 @@ public class WallModel {
     private String imageUser;
     private String namePlan;
     private String datePublication;
-    private String imageTrainig;
+    private String imageTraining;
 
 
     public String getFirstName() {
@@ -49,11 +49,11 @@ public class WallModel {
         this.datePublication = datePublication;
     }
 
-    public String getImageTrainig() {
-        return imageTrainig;
+    public String getImageTraining() {
+        return imageTraining;
     }
 
-    public void setImageTrainig(String imageTrainig) {
-        this.imageTrainig = imageTrainig;
+    public void setImageTraining(String imageTraining) {
+        this.imageTraining = imageTraining;
     }
 }

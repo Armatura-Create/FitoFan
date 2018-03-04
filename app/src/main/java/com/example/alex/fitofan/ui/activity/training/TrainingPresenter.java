@@ -1,6 +1,6 @@
 package com.example.alex.fitofan.ui.activity.training;
 
-public class TrainingPresenter implements TrainingContact.EventListener{
+public class TrainingPresenter implements TrainingContact.EventListener {
 
     private TrainingContact.View view;
 

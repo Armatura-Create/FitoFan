@@ -7,6 +7,7 @@ public interface TrainingContact {
     interface View {
         Context getContext();
 
+
     }
 
     interface EventListener{

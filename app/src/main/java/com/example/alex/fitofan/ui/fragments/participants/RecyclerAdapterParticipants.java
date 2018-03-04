@@ -1,34 +1,29 @@
-package com.example.alex.fitofan.ui.fragments.wall;
+package com.example.alex.fitofan.ui.fragments.participants;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.models.WallModel;
-
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
+public class RecyclerAdapterParticipants extends RecyclerView.Adapter<RecyclerAdapterParticipants.ViewHolder> {
 
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
 
-    private WallFragment mWallFragment;
-    private ArrayList<WallModel> mWallModels;
+    private ParticipantFragment mParticipantFragment;
+    private int count;
 
-    public RecyclerAdapterWall(ArrayList<WallModel> mWallModels, WallFragment mWallFragment) {
-        this.mWallModels = mWallModels;
-        this.mWallFragment = mWallFragment;
+    public RecyclerAdapterParticipants(int count, ParticipantFragment mParticipantFragment) {
+        this.count = count;
+        this.mParticipantFragment = mParticipantFragment;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,7 +40,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Создание нового представления
         LinearLayout linear = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_wall, parent, false);
+                .inflate(R.layout.item_participants, parent, false);
         return new ViewHolder(linear);
     }
 
@@ -54,23 +49,10 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         //Заполнение заданного представления данными
         final LinearLayout linear = holder.mLinearLayout;
 
-        CircleImageView imageUser = linear.findViewById(R.id.image_user);
-        ImageView imageTrainingPlan = linear.findViewById(R.id.image_training_plan_wall);
-        TextView tvFirstName = linear.findViewById(R.id.first_name_wall);
-        TextView tvLastName = linear.findViewById(R.id.last_name_wall);
-
-        Uri uri1 = Uri.parse(mWallModels.get(position).getImageTraining());
-        Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
-                .load(uri1)
-                .fitCenter()
-                .thumbnail(0.5f)
-                .priority(Priority.IMMEDIATE)
-                .placeholder(R.mipmap.icon)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(imageTrainingPlan); //ссылка на ImageView
+        CircleImageView imageUser = linear.findViewById(R.id.image_user_participant);
 
         Uri uri2 = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
-        Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
+        Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri2)
                 .fitCenter()
                 .thumbnail(0.5f)
@@ -83,7 +65,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
 
     @Override
     public int getItemCount() {
-        return mWallModels.size();
+        return count;
     }
 
 }
