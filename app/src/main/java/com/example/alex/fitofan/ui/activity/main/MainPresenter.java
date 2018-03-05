@@ -1,8 +1,11 @@
 package com.example.alex.fitofan.ui.activity.main;
 
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+
+import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.utils.CustomDialog;
 
 public class MainPresenter implements MainContract.EventListener {
 
@@ -14,14 +17,11 @@ public class MainPresenter implements MainContract.EventListener {
 
     @Override
     public void alertExit() {
-        AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
-        alertDialog.setTitle("Sing out");
-        alertDialog.setMessage("Are you sure?");
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", (dialogInterface, i) -> dialogInterface.cancel());
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", (dialogInterface, i) -> {
-            view.goSingOut();
-        });
-        alertDialog.show();
+
+        Dialog dialog = CustomDialog.dialogSimple(view.getContext(), "Sing Out", "Are you sure?",
+                "Yes", "No");
+        dialog.findViewById(R.id.bt_positive).setOnClickListener(v -> view.goSingOut());
+        dialog.findViewById(R.id.bt_negative).setOnClickListener(v -> dialog.dismiss());
     }
 
     @Override

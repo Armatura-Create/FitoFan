@@ -7,9 +7,6 @@ public class CreatePlanContract {
     interface View {
 
         Context getContext();
-
-        void goToMain();
-
     }
 
     interface EventListener {

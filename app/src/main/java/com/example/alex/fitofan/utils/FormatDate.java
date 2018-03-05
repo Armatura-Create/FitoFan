@@ -4,10 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-/**
- * Created by st18rai on 07.12.17.
- */
-
 public class FormatDate {
 
     public static String formatDate(String date) {

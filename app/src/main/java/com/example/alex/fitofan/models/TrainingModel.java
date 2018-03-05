@@ -1,34 +1,54 @@
 package com.example.alex.fitofan.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class TrainingModel {
 
-    private String mTotalTime;
-    private String mNameTraining;
-    private ArrayList<MapTrainingModel> mMapTrainingModels;
+    @SerializedName("time")
+    @Expose
+    private long time;
 
-    public String getTotalTime() {
-        return mTotalTime;
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    @SerializedName("exercises")
+    @Expose
+    private ArrayList<ExerciseModel> exercises;
+
+    public long getTime() {
+        return time;
     }
 
-    public void setTotalTime(String totalTime) {
-        mTotalTime = totalTime;
+    public void setTime(long time) {
+        this.time = time;
     }
 
-    public String getNameTraining() {
-        return mNameTraining;
+    public String getName() {
+        return name;
     }
 
-    public void setNameTraining(String nameTraining) {
-        mNameTraining = nameTraining;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public ArrayList<MapTrainingModel> getMapTrainingModels() {
-        return mMapTrainingModels;
+    public ArrayList<ExerciseModel> getExercises() {
+        return exercises;
     }
 
-    public void setMapTrainingModels(ArrayList<MapTrainingModel> mapTrainingModels) {
-        mMapTrainingModels = mapTrainingModels;
+    public void setExercises(ArrayList<ExerciseModel> exercises) {
+        this.exercises = exercises;
+    }
+
+    public String toJSONString() throws JSONException {
+        JSONObject json = new JSONObject();
+//        json.put("email", email);
+        return json.toString().replaceAll("\\\\", "");
     }
 }

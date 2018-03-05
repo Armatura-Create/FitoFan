@@ -34,10 +34,19 @@
     <string name="send_plan">Send plan</string>
     <string name="create_plan">Create a training plan</string>
     <string name="training_class">Training class</string>
-    <string name="description_class">Добавте класс тренировки к примеру \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
+    <string name="class_description">Добавте класс тренировки к примеру \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
     <string name="add_image_file">Add image class</string>
     <string name="description_description">Добавьте  описание класса тренировки. Описывается поставка цели и задачи при выполнении данного типа тренировки.</string>
     <string name="add_audio_file">Add audio file</string>
     <string name="training_description">Description</string>
+    <string name="save">Save</string>
+    <string name="exercise">Exercise</string>
+    <string name="number_repetitions">Number of repetitions</string>
+    <string name="time_exercise">Exercise time</string>
+    <string name="time_between_exercise">Time between exercise</string>
+    <string name="recovery_time">Recovery time</string>
+    <string name="add_exercise">Add an exercise</string>
+    <string name="save_all_plan">Save workout</string>
+    <string name="all_time_plan">Total time</string>
 
 </resources>

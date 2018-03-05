@@ -1,8 +1,11 @@
 package com.example.alex.fitofan.ui.activity.main;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,6 +27,7 @@ import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.participants.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
@@ -68,11 +72,12 @@ public class MainActivity extends AppCompatActivity
                 .into(imageProfile); //ссылка на ImageView
     }
 
-    private void initTabs(){
+    private void initTabs() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new WallFragment(), getResources().getString(R.string.tab_wall));
         adapter.addFragment(new ParticipantFragment(), getResources().getString(R.string.tab_participants));
         adapter.addFragment(new MyPlansFragment(), getResources().getString(R.string.tab_my_plan));
+        mBinding.appBarMain.contentMain.viewpager.setOffscreenPageLimit(3);
         mBinding.appBarMain.contentMain.viewpager.setAdapter(adapter);
         mBinding.appBarMain.tablayout.setupWithViewPager(mBinding.appBarMain.contentMain.viewpager);
     }
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_my_profile){
+        if (id == R.id.nav_my_profile) {
             startActivity(new Intent(this, MyProfileActivity.class));
         } else if (id == R.id.nav_wall) {
             mBinding.appBarMain.contentMain.viewpager.setCurrentItem(0);
@@ -132,7 +137,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             mPresenter.shareApp();
         } else if (id == R.id.nav_exit) {
-            //sing out
             mPresenter.alertExit();
         }
 

@@ -1,20 +1,15 @@
 package com.example.alex.fitofan.ui.activity.training;
 
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.models.MapTrainingModel;
+import com.example.alex.fitofan.models.ExerciseModel;
 
 import java.util.ArrayList;
 
@@ -23,12 +18,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapterTraining.ViewHolder> {
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
-    private ArrayList<MapTrainingModel> mMapTrainingModel;
+    private ArrayList<ExerciseModel> mExerciseModel;
     private TrainingActivity mTrainingActivity;
     private int mapPosition = 0;
 
-    public RecyclerAdapterTraining(ArrayList<MapTrainingModel> mMapTrainingModel, TrainingActivity mTrainingActivity) {
-        this.mMapTrainingModel = mMapTrainingModel;
+    public RecyclerAdapterTraining(ArrayList<ExerciseModel> mExerciseModel, TrainingActivity mTrainingActivity) {
+        this.mExerciseModel = mExerciseModel;
         this.mTrainingActivity = mTrainingActivity;
     }
 
@@ -68,8 +63,8 @@ public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapte
         TextView textViewItemDescription = linear.findViewById(R.id.current_exercise);
         LinearLayout line = linear.findViewById(R.id.line);
 
-        textViewTotalTime.setText(mMapTrainingModel.get(position).getTimeExercise());
-        textViewItemDescription.setText(mMapTrainingModel.get(position).getCurrentExercise());
+        textViewTotalTime.setText(mExerciseModel.get(position).getTime());
+        textViewItemDescription.setText(mExerciseModel.get(position).getName());
 
         if(position > mapPosition) {
             imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_white));
@@ -87,7 +82,7 @@ public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapte
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) line.getLayoutParams();
             lp.setMargins(0, 45, 0, 0);
         }
-        if (position == mMapTrainingModel.size() - 1){
+        if (position == mExerciseModel.size() - 1){
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) line.getLayoutParams();
             lp.setMargins(0, 0, 0, 45);
         }
@@ -96,7 +91,7 @@ public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return mMapTrainingModel.size();
+        return mExerciseModel.size();
     }
 
 }

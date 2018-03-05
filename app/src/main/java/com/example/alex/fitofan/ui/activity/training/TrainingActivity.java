@@ -14,10 +14,9 @@ import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
-import com.example.alex.fitofan.models.MapTrainingModel;
+import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -69,29 +68,29 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mMapTrainingModel = new TrainingModel();
 
         //Test
-        ArrayList<MapTrainingModel> arr = new ArrayList<>();
-        MapTrainingModel test1 = new MapTrainingModel();
-        test1.setTimeExercise("15:00");
-        test1.setCurrentExercise("Бег по кругу");
+        ArrayList<ExerciseModel> arr = new ArrayList<>();
+        ExerciseModel test1 = new ExerciseModel();
+        test1.setTime("15:00");
+        test1.setName("Бег по кругу");
         arr.add(test1);
-        MapTrainingModel test2 = new MapTrainingModel();
-        test2.setTimeExercise("0:30");
-        test2.setCurrentExercise("Отдых");
+        ExerciseModel test2 = new ExerciseModel();
+        test2.setTime("0:30");
+        test2.setName("Отдых");
         arr.add(test2);
-        MapTrainingModel test3 = new MapTrainingModel();
-        test3.setTimeExercise("15:00");
-        test3.setCurrentExercise("Бег по кругу");
+        ExerciseModel test3 = new ExerciseModel();
+        test3.setTime("15:00");
+        test3.setName("Бег по кругу");
         arr.add(test3);
-        MapTrainingModel test4 = new MapTrainingModel();
-        test4.setTimeExercise("0:30");
-        test4.setCurrentExercise("Отдых");
+        ExerciseModel test4 = new ExerciseModel();
+        test4.setTime("0:30");
+        test4.setName("Отдых");
         arr.add(test4);
-        MapTrainingModel test5 = new MapTrainingModel();
-        test5.setTimeExercise("15:00");
-        test5.setCurrentExercise("Бег по кругу");
+        ExerciseModel test5 = new ExerciseModel();
+        test5.setTime("15:00");
+        test5.setName("Бег по кругу");
         arr.add(test5);
 
-        mMapTrainingModel.setMapTrainingModels(arr);
+        mMapTrainingModel.setExercises(arr);
     }
 
     private void initRecyclerView() {
@@ -99,7 +98,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mBinding.contentTraining.mapTraining.setNestedScrollingEnabled(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.contentTraining.mapTraining.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterTraining(mMapTrainingModel.getMapTrainingModels(), this);
+        adapter = new RecyclerAdapterTraining(mMapTrainingModel.getExercises(), this);
         mBinding.contentTraining.mapTraining.setAdapter(adapter);
 
     }
@@ -108,7 +107,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
         mBinding.contentTraining.btPlay.setOnClickListener(v -> {
 //            Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
-            if (mMapTrainingModel.getMapTrainingModels().size() == adapter.getMapPosition() + 1) {
+            if (mMapTrainingModel.getExercises().size() == adapter.getMapPosition() + 1) {
                 Toast.makeText(this, "Please restart", Toast.LENGTH_SHORT).show();
             } else if (!isRunning()) {
                 startTimer();
@@ -146,7 +145,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
             int elapsedTime = (int) ((mTimerStart - DEFAULT_REFRESH_INTERVAL) / 1000);
             if (elapsedTime <= 0) {
-                if (mMapTrainingModel.getMapTrainingModels().size() > adapter.getMapPosition() + 1) {
+                if (mMapTrainingModel.getExercises().size() > adapter.getMapPosition() + 1) {
                     adapter.setMapPosition(adapter.getMapPosition() + 1);
                     adapter.notifyDataSetChanged();
                     //+2 sec
