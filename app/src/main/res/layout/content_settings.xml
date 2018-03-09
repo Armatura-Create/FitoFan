@@ -4,4 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <MediaController
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+
+    </MediaController>
+
 </android.support.constraint.ConstraintLayout>

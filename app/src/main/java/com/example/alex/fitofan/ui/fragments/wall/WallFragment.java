@@ -14,6 +14,8 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.models.WallModel;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
+import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
+import com.example.alex.fitofan.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 

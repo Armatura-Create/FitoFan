@@ -1,11 +1,8 @@
 package com.example.alex.fitofan.ui.activity.main;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -27,6 +24,7 @@ import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.participants.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
+import com.example.alex.fitofan.utils.Connection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         mPresenter = new MainPresenter(this);
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
+        getSupportActionBar().setElevation(0);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mBinding.drawerLayout, mBinding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,8 +53,13 @@ public class MainActivity extends AppCompatActivity
 
         mBinding.navView.setNavigationItemSelectedListener(this);
 
+        initCheckConnection();
         initTabs();
 //        loadAvatar();
+    }
+
+    private void initCheckConnection() {
+        Connection.isNetworkAvailable(mBinding.appBarMain.toolbar, this);
     }
 
     private void loadAvatar() {

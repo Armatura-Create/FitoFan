@@ -2,6 +2,7 @@ package com.example.alex.fitofan.ui.activity.main;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import com.example.alex.fitofan.R;
@@ -26,6 +27,10 @@ public class MainPresenter implements MainContract.EventListener {
 
     @Override
     public void shareApp() {
+        //TODO Разобраться с этим
+        ProgressDialog dialog = ProgressDialog.show(view.getContext(), "",
+                "Loading. Please wait...", false);
+        dialog.setCancelable(true);
         try {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");

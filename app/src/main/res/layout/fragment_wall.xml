@@ -2,6 +2,8 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="false"
+    android:isScrollContainer="false"
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
@@ -36,8 +38,8 @@
                         android:id="@+id/bt_add_training"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:mrl_rippleDuration="200"
-                        app:mrl_rippleFadeDuration="50">
+                        app:mrl_rippleDuration="150"
+                        app:mrl_rippleFadeDuration="100">
 
                         <TextView
                             android:id="@+id/text_add_training"

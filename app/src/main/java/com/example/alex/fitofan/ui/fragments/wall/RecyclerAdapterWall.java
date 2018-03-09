@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.WallModel;
+import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
+import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 
 import java.util.ArrayList;
 
@@ -59,6 +62,9 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         TextView tvFirstName = linear.findViewById(R.id.first_name_wall);
         TextView tvLastName = linear.findViewById(R.id.last_name_wall);
 
+        LinearLayout userLiner = linear.findViewById(R.id.user_liner);
+        LinearLayout planLiner = linear.findViewById(R.id.plan_liner);
+
         Uri uri1 = Uri.parse(mWallModels.get(position).getImageTraining());
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri1)
@@ -78,6 +84,14 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                 .placeholder(R.mipmap.icon)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imageUser); //ссылка на ImageView
+
+        userLiner.setOnClickListener(v -> {
+            v.getContext().startActivity(new Intent(v.getContext(), UserProfileActivity.class));
+        });
+
+        planLiner.setOnClickListener(v -> {
+            v.getContext().startActivity(new Intent(v.getContext(), PreviewPlanActivity.class));
+        });
 
     }
 

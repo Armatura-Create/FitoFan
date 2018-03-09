@@ -34,6 +34,6 @@
     <string name="add_exercise">Добавить упражнение</string>
     <string name="save_all_plan">Сохранить тренировку</string>
     <string name="all_time_plan">Общее время</string>
-
+    <string name="training_plan">Тренировочный план</string>
 
 </resources>

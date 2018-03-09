@@ -60,4 +60,7 @@ dependencies {
     //facebook
     compile 'com.facebook.android:facebook-android-sdk:4.26.0'
 
+    //ORM
+    compile 'com.github.satyan:sugar:1.4'
+
 }

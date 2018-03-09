@@ -48,5 +48,6 @@
     <string name="add_exercise">Add an exercise</string>
     <string name="save_all_plan">Save workout</string>
     <string name="all_time_plan">Total time</string>
+    <string name="training_plan">Training plan</string>
 
 </resources>
