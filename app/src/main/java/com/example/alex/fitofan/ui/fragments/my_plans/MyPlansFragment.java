@@ -1,27 +1,47 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
+import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
+import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
-import com.example.alex.fitofan.ui.fragments.wall.RecyclerAdapterWall;
+import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
+import com.example.alex.fitofan.utils.db.DatabaseHelper;
+import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
-public class MyPlansFragment extends Fragment {
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     FragmentMyPlansBinding mBinding;
     private View view;
     private RecyclerAdapterMyPlans adapter;
+    private ArrayList<TrainingModel> mModels = new ArrayList<>();
+    private Dao<TrainingModel, Integer> mTrainings;
+    private final int IS_FROM_TRAINING = 2;
 
     @Nullable
     @Override
@@ -35,25 +55,126 @@ public class MyPlansFragment extends Fragment {
 
     @Override
     public void onStart() {
+        initDB();
         initListeners();
         initRecyclerView();
         super.onStart();
     }
 
+    private void initDB() {
+        mModels.clear();
+        try {
+            mTrainings = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class).getTrainingDAO();
+            assert mTrainings != null;
+            mModels.addAll(mTrainings.queryForAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void initListeners() {
         // обработка нажатий по элементу списка
         ItemClickSupport.addTo(mBinding.rvMyPlans).setOnItemClickListener((recyclerView, position, v) -> {
-            startActivity(new Intent(view.getContext(), TrainingActivity.class));
+            goToPreview(mModels.get(position));
         });
+
+        ItemClickSupport.addTo(mBinding.rvMyPlans).setOnItemLongClickListener((recyclerView, position, v) -> {
+            Dialog dialog = CustomDialog.dialogSimple(getContext(), "select action", null,
+                    getResources().getString(R.string.remove),
+                    getResources().getString(R.string.edit));
+            dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
+                Toast.makeText(getContext(), getResources().getString(R.string.remove), Toast.LENGTH_SHORT).show();
+                deletePlan(position);
+                dialog.dismiss();
+            });
+
+            dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
+                goToEdit(mModels.get(position));
+                dialog.dismiss();
+            });
+            return false;
+        });
+
+        mBinding.searchMyPlans.setOnEditorActionListener((v, actionId, event) -> {
+            searchResult(mModels, v.getText().toString());
+            return true;
+        });
+
+        mBinding.refresh.setOnRefreshListener(this);
+    }
+
+    private void goToPreview(TrainingModel trainingModel) {
+        Intent intent = new Intent(getContext(), PreviewPlanActivity.class);
+        intent.putExtra("trainingModel", trainingModel.getId());
+        intent.putExtra("isGoTo", IS_FROM_TRAINING);
+        startActivity(intent);
+    }
+
+    private void goToEdit(TrainingModel trainingModel) {
+        Intent intent = new Intent(getContext(), CreatePlanActivity.class);
+        intent.putExtra("trainingModel", trainingModel.getId());
+        startActivity(intent);
+    }
+
+    private void deletePlan(int position) {
+        try {
+            mTrainings.deleteById(mModels.get(position).getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        onRefresh();
     }
 
     private void initRecyclerView() {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterMyPlans(5, this);
+        adapter = new RecyclerAdapterMyPlans(mModels, this);
         mBinding.rvMyPlans.setAdapter(adapter);
         mBinding.rvMyPlans.setNestedScrollingEnabled(true);
 
+    }
+
+    //TODO не работатет пока как надо
+
+    private void searchResult(ArrayList<TrainingModel> trainingModels, String text) {
+        ArrayList<TrainingModel> result = new ArrayList<>();
+        for (int i = 0; i < trainingModels.size(); i++) {
+            int temp = 0;
+            char[] chArrayModel = trainingModels.get(i).getName().toCharArray();
+            char[] chArraySearch = text.toCharArray();
+            for (char aChArrayModel : chArrayModel) {
+                for (char aChArraySearch : chArraySearch) {
+                    if (chArrayModel == chArraySearch) {
+                        temp++;
+                    } else {
+                        temp--;
+                    }
+                }
+                if (temp == chArraySearch.length){
+                    result.add(trainingModels.get(i));
+                }
+            }
+        }
+
+        adapter.setTrainings(result);
+    }
+
+    /**
+     * Called when a swipe gesture triggers a refresh.
+     */
+    @Override
+    public void onRefresh() {
+        mBinding.refresh.setRefreshing(false);
+        mModels.clear();
+        try {
+            mTrainings = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class).getTrainingDAO();
+            assert mTrainings != null;
+            mModels.addAll(mTrainings.queryForAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        adapter.setTrainings(mModels);
     }
 }

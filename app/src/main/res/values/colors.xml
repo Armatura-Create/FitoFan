@@ -7,7 +7,8 @@
     <color name="transparent_text_white">#77FFFFFF</color>
     <color name="button_blue">#0b4573</color>
     <color name="text_gray">#777777</color>
-    <color name="special_color_text">#b40772</color>
+    <color name="special_color_button">#b40772</color>
+    <color name="special_color_text">#b24287</color>
     <color name="like_color">#bc849d</color>
     <color name="background_fragment">#f7f7f7</color>
     <color name="background_delimiter">#d6d6d6</color>

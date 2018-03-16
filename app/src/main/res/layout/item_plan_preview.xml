@@ -30,7 +30,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/number_repetitions"
+                android:id="@+id/time_repetitions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp"
@@ -71,6 +71,7 @@
                 android:textSize="13sp"/>
 
             <TextView
+                android:id="@+id/tv_add_audio_exercise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -99,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="Отдых"
+                android:text="@string/relax"
                 android:textColor="@color/button_blue"
                 android:textSize="40sp"
                 android:textStyle="bold"/>

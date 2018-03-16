@@ -28,9 +28,9 @@ public class MainPresenter implements MainContract.EventListener {
     @Override
     public void shareApp() {
         //TODO Разобраться с этим
-        ProgressDialog dialog = ProgressDialog.show(view.getContext(), "",
-                "Loading. Please wait...", false);
-        dialog.setCancelable(true);
+//        ProgressDialog dialog = ProgressDialog.show(view.getContext(), "",
+//                "Loading. Please wait...", false);
+//        dialog.setCancelable(true);
         try {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");

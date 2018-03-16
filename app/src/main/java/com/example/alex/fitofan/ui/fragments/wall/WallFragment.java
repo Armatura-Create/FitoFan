@@ -1,10 +1,10 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +13,10 @@ import android.view.ViewGroup;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.models.WallModel;
-import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
-import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
-import com.example.alex.fitofan.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 
-public class WallFragment extends Fragment {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -44,7 +41,7 @@ public class WallFragment extends Fragment {
     }
 
     private void initListeners() {
-        mBinding.btAddTraining.setOnClickListener(v -> startActivity(new Intent(getContext(), CreatePlanActivity.class)));
+        mBinding.refresh.setOnRefreshListener(this);
     }
 
     private void initRecyclerView() {
@@ -76,6 +73,14 @@ public class WallFragment extends Fragment {
         mBinding.rvWall.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterWall(models, this);
         mBinding.rvWall.setAdapter(adapter);
-        mBinding.rvWall.setNestedScrollingEnabled(false);
+        mBinding.rvWall.setNestedScrollingEnabled(true);
+    }
+
+    /**
+     * Called when a swipe gesture triggers a refresh.
+     */
+    @Override
+    public void onRefresh() {
+        mBinding.refresh.setRefreshing(false);
     }
 }

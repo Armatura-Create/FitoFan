@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,6 +19,9 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
+import com.example.alex.fitofan.eventbus.MyPlansEvent;
+import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.my_profile.MyProfileActivity;
 import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
@@ -25,6 +29,16 @@ import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.participants.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
 import com.example.alex.fitofan.utils.Connection;
+import com.example.alex.fitofan.utils.db.DatabaseHelper;
+import com.example.alex.fitofan.utils.db.TrainingDAO;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.sql.SQLException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,7 +58,6 @@ public class MainActivity extends AppCompatActivity
         mPresenter = new MainPresenter(this);
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
-        getSupportActionBar().setElevation(0);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mBinding.drawerLayout, mBinding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -122,6 +135,32 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMyPlansEvent(MyPlansEvent event) {
+        Log.e("onMyPlansEvent: ", "111");
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        mBinding.appBarMain.contentMain.viewpager.setCurrentItem(2);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -142,10 +181,11 @@ public class MainActivity extends AppCompatActivity
             mPresenter.shareApp();
         } else if (id == R.id.nav_exit) {
             mPresenter.alertExit();
+        } else if (id == R.id.nav_add_plan) {
+            startActivity(new Intent(getContext(), CreatePlanActivity.class));
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

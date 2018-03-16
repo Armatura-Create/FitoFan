@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_dialog"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp">
 
@@ -21,26 +21,27 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="10">
 
             <ImageView
-                android:layout_width="35dp"
+                android:layout_width="match_parent"
                 android:layout_height="27dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:src="@drawable/icon_dialog"/>
 
             <TextView
-                android:id="@+id/title_dialog_create_plan"
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_weight="8"
+                android:layout_weight="2"
                 android:gravity="center"
+                android:singleLine="false"
                 android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
@@ -48,11 +49,11 @@
 
             <TextView
                 android:id="@+id/cancel_dialog"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:gravity="end|top"
                 android:paddingRight="15dp"
                 android:text="X"
@@ -110,9 +111,16 @@
                                 android:layout_marginTop="8dp"
                                 android:background="#00000000"
                                 android:gravity="end"
+                                android:hint="00"
+                                android:imeOptions="actionNext"
                                 android:inputType="number"
-                                android:text="15"
+                                android:maxLength="3"
+                                android:nextFocusRight="@+id/select_time_sec"
+                                android:paddingEnd="5dp"
+                                android:paddingStart="5dp"
+                                android:singleLine="true"
                                 android:textColor="@color/button_blue"
+                                android:textColorHint="@color/text_gray"
                                 android:textSize="45sp"
                                 android:textStyle="bold"/>
 
@@ -126,8 +134,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="7dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
                             android:gravity="center"
                             android:text=":"
                             android:textColor="@color/button_blue"/>
@@ -147,9 +155,14 @@
                                 android:layout_marginTop="8dp"
                                 android:background="#00000000"
                                 android:gravity="start"
+                                android:hint="00"
                                 android:inputType="number"
-                                android:text="30"
+                                android:maxLength="2"
+                                android:paddingEnd="5dp"
+                                android:paddingStart="5dp"
+                                android:singleLine="true"
                                 android:textColor="@color/button_blue"
+                                android:textColorHint="@color/text_gray"
                                 android:textSize="45sp"
                                 android:textStyle="bold"/>
 
@@ -170,11 +183,11 @@
                     android:layout_marginEnd="25dp"
                     android:layout_marginStart="25dp"
                     android:layout_marginTop="15dp"
-                    app:cardBackgroundColor="@color/special_color_text"
+                    app:cardBackgroundColor="@color/special_color_button"
                     app:cardCornerRadius="6dp">
 
                     <com.balysv.materialripple.MaterialRippleLayout
-                        android:id="@+id/bt_dialog_add"
+                        android:id="@+id/bt_save_time"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:mrl_rippleDuration="200"

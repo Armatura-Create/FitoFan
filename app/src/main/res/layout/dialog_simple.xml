@@ -20,26 +20,27 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="10">
 
             <ImageView
-                android:layout_width="35dp"
+                android:layout_width="match_parent"
                 android:layout_height="27dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:src="@drawable/icon_dialog"/>
 
             <TextView
-                android:id="@+id/title_dialog_simple"
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_weight="8"
+                android:layout_weight="2"
                 android:gravity="center"
+                android:singleLine="false"
                 android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
@@ -47,11 +48,11 @@
 
             <TextView
                 android:id="@+id/cancel_dialog"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:gravity="end|top"
                 android:paddingRight="15dp"
                 android:text="X"
@@ -61,7 +62,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="180dp"
             app:cardBackgroundColor="@color/background_fragment"
             app:cardCornerRadius="10dp">
 
@@ -83,6 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:gravity="center"
                         android:text="Are you sure?"
                         android:textColor="@color/button_blue"
                         android:textSize="16sp"
@@ -91,8 +93,9 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:gravity="bottom"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -104,7 +107,7 @@
                         android:layout_marginStart="25dp"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
-                        app:cardBackgroundColor="@color/special_color_text"
+                        app:cardBackgroundColor="@color/special_color_button"
                         app:cardCornerRadius="6dp">
 
                         <com.balysv.materialripple.MaterialRippleLayout
@@ -134,7 +137,7 @@
                         android:layout_marginStart="25dp"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
-                        app:cardBackgroundColor="@color/special_color_text"
+                        app:cardBackgroundColor="@color/special_color_button"
                         app:cardCornerRadius="6dp">
 
                         <com.balysv.materialripple.MaterialRippleLayout

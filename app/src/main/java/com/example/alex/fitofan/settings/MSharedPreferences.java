@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 public class MSharedPreferences {
 
     private static final String SHARED_PACKAGE = "user_info";
+    private static final String TRAINING_PLANS = "training_plans";
 
     private static MSharedPreferences loader;
     private SharedPreferences sharedPref;
@@ -19,5 +20,13 @@ public class MSharedPreferences {
     public static MSharedPreferences getInstance() {
         if (loader == null) loader = new MSharedPreferences();
         return loader;
+    }
+
+    public String getPlans() {
+        return sharedPref.getString(TRAINING_PLANS, null);
+    }
+
+    public void setPlans(String plans) {
+        sharedPref.edit().putString(TRAINING_PLANS, plans).apply();
     }
 }

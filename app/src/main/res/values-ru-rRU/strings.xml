@@ -1,8 +1,4 @@
 <resources>
-    <string name="app_name">FitoFan</string>
-
-    <string name="navigation_drawer_open">Открыть меню</string>
-    <string name="navigation_drawer_close">Закрыть меню</string>
 
     <string name="action_settings">Настройки</string>
     <string name="forgot_pass">Забыли пароль?</string>
@@ -10,6 +6,7 @@
     <string name="registration">Регистрация</string>
     <string name="Email">Эл.почта</string>
     <string name="password">Пароль</string>
+    <string name="my_profile">Мой профиль</string>
     <string name="exit">Выход</string>
     <string name="forgot_password">Восстановление пароля</string>
     <string name="share">Поделиться</string>
@@ -22,7 +19,7 @@
     <string name="add_image_file">Добавить картинку</string>
     <string name="training_class">Класс тренировки</string>
     <string name="tab_wall">Стена</string>
-    <string name="tab_participants">Участники</string>
+    <string name="tab_participants">Рейтинг</string>
     <string name="tab_my_plan">Мои планы</string>
     <string name="save">Сохранить</string>
     <string name="add_audio_file">Добавить аудиотрек</string>
@@ -30,10 +27,19 @@
     <string name="number_repetitions">Количество повторений</string>
     <string name="time_exercise">Время упражнения</string>
     <string name="time_between_exercise">Время отдыха между упражнениями</string>
-    <string name="recovery_time">Время на восстановление</string>
+    <string name="relax_time">Время на восстановление</string>
     <string name="add_exercise">Добавить упражнение</string>
     <string name="save_all_plan">Сохранить тренировку</string>
     <string name="all_time_plan">Общее время</string>
     <string name="training_plan">Тренировочный план</string>
+    <string name="close">Закрыть</string>
+    <string name="hide">Свернуть</string>
+    <string name="back">назд</string>
+    <string name="next">вперед</string>
+    <string name="relax">Отдых</string>
+    <string name="start_training">Начать тренировку</string>
+    <string name="remove">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="select_action">Выбирете действие</string>
 
 </resources>

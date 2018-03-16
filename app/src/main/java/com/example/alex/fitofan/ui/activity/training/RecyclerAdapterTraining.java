@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModel;
+import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
 
@@ -63,35 +64,48 @@ public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapte
         TextView textViewItemDescription = linear.findViewById(R.id.current_exercise);
         LinearLayout line = linear.findViewById(R.id.line);
 
-        textViewTotalTime.setText(mExerciseModel.get(position).getTime());
+        textViewTotalTime.setText(FormatTime.formatTime(mExerciseModel.get(position).getTime()));
         textViewItemDescription.setText(mExerciseModel.get(position).getName());
 
         if(position > mapPosition) {
-            imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_white));
+            setParamsSmall(imageViewItemPic, textViewTotalTime, textViewItemDescription, 2);
         } else  if(position == mapPosition){
-            imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_red));
-            textViewItemDescription.setTextSize(24);
-            textViewItemDescription.setTypeface(null, Typeface.BOLD);
+            setParamsBig(imageViewItemPic, textViewTotalTime, textViewItemDescription);
         } else {
-            imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_blue));
-            textViewItemDescription.setTextSize(16);
-            textViewItemDescription.setTypeface(null, Typeface.NORMAL);
+            setParamsSmall(imageViewItemPic, textViewTotalTime, textViewItemDescription, 1);
         }
 
-        if(position == 0){
+        if (position == 0) {
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) line.getLayoutParams();
             lp.setMargins(0, 45, 0, 0);
         }
-        if (position == mExerciseModel.size() - 1){
+        if (position == mExerciseModel.size() - 1) {
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) line.getLayoutParams();
             lp.setMargins(0, 0, 0, 45);
         }
+    }
 
+    private void setParamsSmall(CircleImageView imageViewItemPic, TextView textViewTotalTime, TextView textViewItemDescription, int color) {
+        if (color == 1)
+            imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_blue));
+        else
+            imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_white));
+        textViewTotalTime.setTextSize(16);
+        textViewItemDescription.setTextSize(16);
+        textViewItemDescription.setTypeface(null, Typeface.NORMAL);
+        textViewTotalTime.setTypeface(null, Typeface.NORMAL);
+    }
+
+    private void setParamsBig(CircleImageView imageViewItemPic, TextView textViewTotalTime, TextView textViewItemDescription) {
+        imageViewItemPic.setImageDrawable(mTrainingActivity.getResources().getDrawable(R.drawable.background_red));
+        textViewTotalTime.setTextSize(24);
+        textViewItemDescription.setTextSize(24);
+        textViewItemDescription.setTypeface(null, Typeface.BOLD);
+        textViewTotalTime.setTypeface(null, Typeface.BOLD);
     }
 
     @Override
     public int getItemCount() {
         return mExerciseModel.size();
     }
-
 }

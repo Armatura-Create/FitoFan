@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FitoFan</string>
+    <string name="app_name">FitoFan planner</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -12,7 +12,7 @@
 
     <!--name tab-->
     <string name="tab_wall">Wall</string>
-    <string name="tab_participants">Participants</string>
+    <string name="tab_participants">Rating</string>
     <string name="tab_my_plan">My Plans</string>
 
     <string name="forgot_pass">Forgot password?</string>
@@ -34,9 +34,10 @@
     <string name="send_plan">Send plan</string>
     <string name="create_plan">Create a training plan</string>
     <string name="training_class">Training class</string>
-    <string name="class_description">Добавте класс тренировки к примеру \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
+    <string name="class_description">Добавте класс тренировки к примеру: \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
     <string name="add_image_file">Add image class</string>
-    <string name="description_description">Добавьте  описание класса тренировки. Описывается поставка цели и задачи при выполнении данного типа тренировки.</string>
+    <string name="description_description_plan">Добавьте  описание класса тренировки. \nОписывается поставка цели и задачи при выполнении данного типа тренировки.</string>
+    <string name="description_description_exercise">Добавьте  описание класса уражнения, правиьность и особенность его выполнения.</string>
     <string name="add_audio_file">Add audio file</string>
     <string name="training_description">Description</string>
     <string name="save">Save</string>
@@ -44,10 +45,24 @@
     <string name="number_repetitions">Number of repetitions</string>
     <string name="time_exercise">Exercise time</string>
     <string name="time_between_exercise">Time between exercise</string>
-    <string name="recovery_time">Recovery time</string>
+    <string name="relax_time">Relax time</string>
     <string name="add_exercise">Add an exercise</string>
     <string name="save_all_plan">Save workout</string>
     <string name="all_time_plan">Total time</string>
     <string name="training_plan">Training plan</string>
+    <string name="close">Close</string>
+    <string name="hide">Hide</string>
+    <string name="back">back</string>
+    <string name="next">next</string>
+    <string name="number_repetitions_description">Добавте количество повторений на выполнение упражнения, к примеру: \"5\", \"15\", \"100\" и т.д. \nВ зависимости от класса тренировки количество упражнений может ровняться \"1\". </string>
+    <string name="exercise_name_description">Добавте упражнение к примеру: \"бег трусцой\", \"боковой удар по груше\", \"отжимания от пола\" и т.д. </string>
+    <string name="time_exercise_description">Добавте время на упражения, к примеру: \"12:00\", \"0:30\", \"120:00\" и т.д. \nВ зависимости от класса тренировки время упражнения может ровняться \"0\".</string>
+    <string name="time_between_exercise_description">Добавте время отдыха между выполнением упражнения, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимоти от класса тренировки время отдыха может ровняться \"0\".</string>
+    <string name="relax_time_description">Добавте время отдыха на восстановление. Этот вид времени устанавливаеться между разными видами упражнений, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимотсти от класса теринировки, время на восстановление может ровняться \"0\".</string>
+    <string name="relax">Relax</string>
+    <string name="start_training">Start training</string>
+    <string name="remove">Remove</string>
+    <string name="edit">Edit</string>
+    <string name="select_action">Select an action</string>
 
 </resources>
