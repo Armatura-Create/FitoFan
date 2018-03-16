@@ -8,26 +8,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
-import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
-import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -80,11 +73,13 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
 
         ItemClickSupport.addTo(mBinding.rvMyPlans).setOnItemLongClickListener((recyclerView, position, v) -> {
-            Dialog dialog = CustomDialog.dialogSimple(getContext(), "select action", null,
+            Dialog dialog = CustomDialog.dialogSimple(getContext(),
+                    getResources().getString(R.string.select_action),
+                    null,
                     getResources().getString(R.string.remove),
                     getResources().getString(R.string.edit));
             dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                Toast.makeText(getContext(), getResources().getString(R.string.remove), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.removed), Toast.LENGTH_SHORT).show();
                 deletePlan(position);
                 dialog.dismiss();
             });

@@ -63,6 +63,10 @@
     <string name="start_training">Start training</string>
     <string name="remove">Remove</string>
     <string name="edit">Edit</string>
-    <string name="select_action">Select an action</string>
+    <string name="removed">Removed</string>
+    <string name="select_action">Select action</string>
+    <string name="first_exercise">This is the first exercise</string>
+    <string name="last_exercise">This is the last exercise</string>
+    <string name="saved">Saved</string>
 
 </resources>

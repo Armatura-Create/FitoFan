@@ -34,12 +34,17 @@
     <string name="training_plan">Тренировочный план</string>
     <string name="close">Закрыть</string>
     <string name="hide">Свернуть</string>
-    <string name="back">назд</string>
+    <string name="back">назад</string>
     <string name="next">вперед</string>
     <string name="relax">Отдых</string>
     <string name="start_training">Начать тренировку</string>
     <string name="remove">Удалить</string>
     <string name="edit">Редактировать</string>
+    <string name="removed">Удалено</string>
     <string name="select_action">Выбирете действие</string>
+    <string name="first_exercise">Это первое упражнение</string>
+    <string name="last_exercise">Это последнее упражнение</string>
+    <string name="create_plan">Создание тренировки</string>
+    <string name="saved">Сохранено</string>
 
 </resources>

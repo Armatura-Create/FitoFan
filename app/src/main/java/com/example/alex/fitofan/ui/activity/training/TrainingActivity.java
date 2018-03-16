@@ -85,25 +85,15 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 return false;
             if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
                 if (adapter.getMapPosition() > 0) {
-                    adapter.setMapPosition(adapter.getMapPosition() - 1);
-                    mBinding.contentTraining.tvDescriptionExercise.setText(
-                            mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
-                    );
-                    setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
-                    adapter.notifyDataSetChanged();
+                    moveExeercise(1);
                 } else {
-                    Toast.makeText(getContext(), "Это первое упражнение", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.first_exercise), Toast.LENGTH_SHORT).show();
                 }
             } else if (e2.getX() + e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
                 if (adapter.getMapPosition() < mTrainingModel.getExercises().size() - 1) {
-                    adapter.setMapPosition(adapter.getMapPosition() + 1);
-                    mBinding.contentTraining.tvDescriptionExercise.setText(
-                            mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
-                    );
-                    setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
-                    adapter.notifyDataSetChanged();
+                    moveExeercise(-1);
                 } else {
-                    Toast.makeText(getContext(), "Это последние упражнение", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.last_exercise), Toast.LENGTH_SHORT).show();
                 }
             }
             return false;
@@ -117,6 +107,15 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         soundIdPoint = sp.load(this, R.raw.point, 1);
 
+    }
+
+    void moveExeercise(int i){
+        adapter.setMapPosition(adapter.getMapPosition() + i);
+        mBinding.contentTraining.tvDescriptionExercise.setText(
+                mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
+        );
+        setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
+        adapter.notifyDataSetChanged();
     }
 
     private void startMusicExercise(String audioUri) {
@@ -206,26 +205,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             startMain.addCategory(Intent.CATEGORY_HOME);
             startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startMain);
-        });
-
-        mBinding.contentTraining.btNextPlan.setOnClickListener(v -> {
-            if (adapter.getMapPosition() < mTrainingModel.getExercises().size() - 1) {
-                adapter.setMapPosition(adapter.getMapPosition() + 1);
-                mBinding.contentTraining.mapTraining.smoothScrollToPosition(adapter.getMapPosition());
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, "Это последние упражнение", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mBinding.contentTraining.btBackPlan.setOnClickListener(v -> {
-            if (adapter.getMapPosition() > 0) {
-                adapter.setMapPosition(adapter.getMapPosition() - 1);
-                mBinding.contentTraining.mapTraining.smoothScrollToPosition(adapter.getMapPosition());
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, "Это первое упражнение", Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
