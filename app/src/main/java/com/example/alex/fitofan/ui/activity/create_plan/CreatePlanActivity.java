@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
+import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -112,6 +114,7 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
                 setPlans(mModel);
                 dialog.dismiss();
             });
+
             dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
                 goToMyPlans();
                 dialog.dismiss();
@@ -190,7 +193,7 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
                         if (data.getData() != null) {
                             Uri uriPlan = data.getData();
                             mModel.setImage(uriPlan.toString());
-                            adapter.setImage(uriPlan, imageExercise, cvExercise, tempPosition, 0);
+                            adapter.setImage(uriPlan, imageExercise, cvExercise);
                         }
                 }
                 break;
@@ -199,7 +202,9 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
                     if (data != null)
                         if (data.getData() != null) {
                             Uri uriExercise = data.getData();
-                            adapter.setImage(uriExercise, imageExercise, cvExercise, tempPosition, 1);
+                            mModel.getExercises().get(tempPosition - 1).setImage(uriExercise.toString());
+                            Log.e("onActivityResult: ", new Gson().toJson(mModel));
+                            adapter.setImage(uriExercise, imageExercise, cvExercise);
                         }
                 }
                 break;
@@ -216,7 +221,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
     }
 
     void setPlans(TrainingModel modelTraining) {
-        mModel.setExercises(adapter.getExerciseModels());
         Toast.makeText(this, getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
 
         try {

@@ -27,6 +27,7 @@ import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -48,20 +49,15 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     }
 
     void addItem() {
-        mTrainingModel.getExercises().add(mTrainingModel.getExercises().size() - 1, new ExerciseModel());
-        new Handler(Looper.getMainLooper()).post(RecyclerAdapterCreatePlan.this::notifyDataSetChanged);
-
+        mTrainingModel.getExercises().add(mTrainingModel.getExercises().size(), new ExerciseModel());
+        this.notifyItemInserted(mTrainingModel.getExercises().size() + 1);
+//        this.notifyDataSetChanged();
     }
 
     void delItem(int position) {
         mTrainingModel.getExercises().remove(position - 1);
-        new Handler(Looper.getMainLooper()).post(RecyclerAdapterCreatePlan.this::notifyDataSetChanged);
+        this.notifyItemRemoved(position - 1);
     }
-
-    ArrayList<ExerciseModel> getExerciseModels() {
-        return mTrainingModel.getExercises();
-    }
-
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         //Определение класса ViewHolder
@@ -351,6 +347,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             });
 
             btSaveTraining.setOnClickListener(v -> {
+                Log.e("onBindViewHolder: ", new Gson().toJson(mTrainingModel));
                 mCreatePlanActivity.setPlans(mTrainingModel);
             });
 
@@ -405,17 +402,12 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
 
     void setAudio(Uri uriExercise, int position) {
-        mTrainingModel.getExercises().get(position).setAudio(uriExercise.toString());
+        mTrainingModel.getExercises().get(position - 1).setAudio(uriExercise.toString());
     }
 
-    void setImage(Uri uriExercise, ImageView imageExercise, CardView cvExercise, int position, int type) {
+    void setImage(Uri uriExercise, ImageView imageExercise, CardView cvExercise) {
         cvExercise.setVisibility(View.VISIBLE);
         Glide.with(mCreatePlanActivity.getContext()).load(uriExercise).into(imageExercise);
-        if (type == 1)
-            mTrainingModel.getExercises().get(position).setImage(uriExercise.toString());
-        else
-            mTrainingModel.setImage(uriExercise.toString());
-
     }
 
     @Override
