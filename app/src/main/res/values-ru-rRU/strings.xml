@@ -7,6 +7,7 @@
     <string name="Email">Эл.почта</string>
     <string name="password">Пароль</string>
     <string name="my_profile">Мой профиль</string>
+    <string name="sing_out">Выход с профиля</string>
     <string name="exit">Выход</string>
     <string name="forgot_password">Восстановление пароля</string>
     <string name="share">Поделиться</string>
@@ -46,5 +47,8 @@
     <string name="last_exercise">Это последнее упражнение</string>
     <string name="create_plan">Создание тренировки</string>
     <string name="saved">Сохранено</string>
+    <string name="saved_question">Сохранить?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
 </resources>

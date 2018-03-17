@@ -3,7 +3,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_exercise_create_plan"
         android:layout_width="match_parent"

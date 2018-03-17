@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityProfileUserBinding;
@@ -16,6 +17,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
     //TODO: Будет хорошо, если вы будете использовать DataBinding
     private ActivityProfileUserBinding mBinding;
     private UserProfilePresenter presenter;
+    private RecyclerAdapterUserProfile adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,16 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_profile_user);
         presenter = new UserProfilePresenter(this);
         initListeners();
+        initRecycler();
+    }
+
+    private void initRecycler() {
+        mBinding.content.rvUserProfile.setNestedScrollingEnabled(false);
+        mBinding.content.rvUserProfile.setHasFixedSize(false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mBinding.content.rvUserProfile.setLayoutManager(linearLayoutManager);
+        adapter = new RecyclerAdapterUserProfile(this);
+        mBinding.content.rvUserProfile.setAdapter(adapter);
     }
 
     private void initListeners() {

@@ -3,19 +3,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background"/>
-
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/shape"
             tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
 
             <android.support.design.widget.AppBarLayout
@@ -28,7 +19,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:title="User Profile"
+                    app:title=" "
                     app:navigationIcon="?attr/homeAsUpIndicator"
                     app:titleTextColor="@android:color/white"/>
 
@@ -38,7 +29,5 @@
                 android:id="@+id/content"
                 layout="@layout/content_user_profile"/>
         </android.support.design.widget.CoordinatorLayout>
-    </FrameLayout>
-
 
 </layout>

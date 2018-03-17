@@ -4,17 +4,14 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,7 +21,6 @@ import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
-import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -109,11 +105,15 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
 
             Dialog dialog = CustomDialog.dialogSimple(this,
                     getResources().getString(R.string.exit),
-                    "Are you sure?",
-                    "Yes",
-                    "No");
+                    getResources().getString(R.string.saved_question),
+                    getResources().getString(R.string.yes),
+                    getResources().getString(R.string.no));
             dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
                 setPlans(mModel);
+                dialog.dismiss();
+            });
+            dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
+                goToMyPlans();
                 dialog.dismiss();
             });
         });
@@ -127,7 +127,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterCreatePlan(this, mModel, id);
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setAdapter(adapter);
-
     }
 
     void delItemExercise(int position) {

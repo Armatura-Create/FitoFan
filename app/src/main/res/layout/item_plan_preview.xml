@@ -4,13 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background_fragment"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="6dp">
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,8 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:textColor="@color/button_blue"
-                android:text="Добавить аудио"/>
+                android:text="Добавить аудио"
+                android:textColor="@color/button_blue"/>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -86,9 +90,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="6dp">
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"

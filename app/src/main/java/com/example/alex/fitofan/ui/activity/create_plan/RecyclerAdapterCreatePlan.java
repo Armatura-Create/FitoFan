@@ -385,16 +385,16 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     }
 
     private void setDataEditExercise(int position, EditText etNameExercise, EditText etDescription, EditText etNumberRepetition, EditText etTimeExercise, EditText etTimeBetweenExercise, EditText etRelaxTime, ImageView image, CardView cvImage) {
-        etNameExercise.setText(mTrainingModel.getExercises().get(position).getName());
-        etDescription.setText(mTrainingModel.getExercises().get(position).getDescription());
-        etNumberRepetition.setText(String.valueOf(mTrainingModel.getExercises().get(position).getCountRepetitions()));
-        etTimeExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position).getTime()));
-        etTimeBetweenExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position).getTimeBetween()));
-        etRelaxTime.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position).getRecoveryTime()));
-        if (mTrainingModel.getExercises().get(position).getImage() != null) {
+        etNameExercise.setText(mTrainingModel.getExercises().get(position - 1).getName());
+        etDescription.setText(mTrainingModel.getExercises().get(position - 1).getDescription());
+        etNumberRepetition.setText(String.valueOf(mTrainingModel.getExercises().get(position - 1).getCountRepetitions()));
+        etTimeExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTime()));
+        etTimeBetweenExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTimeBetween()));
+        etRelaxTime.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getRecoveryTime()));
+        if (mTrainingModel.getExercises().get(position - 1).getImage() != null) {
             cvImage.setVisibility(View.VISIBLE);
             Glide.with(mCreatePlanActivity.getContext())
-                    .load(Uri.parse(mTrainingModel.getExercises().get(position).getImage()))
+                    .load(Uri.parse(mTrainingModel.getExercises().get(position - 1).getImage()))
                     .placeholder(R.mipmap.icon)
                     .fitCenter()
                     .thumbnail(0.5f)
@@ -422,5 +422,4 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     public int getItemCount() {
         return mTrainingModel.getExercises() == null ? 0 : mTrainingModel.getExercises().size() + 2;
     }
-
 }
