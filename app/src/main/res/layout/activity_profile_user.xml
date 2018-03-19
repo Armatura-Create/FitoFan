@@ -6,7 +6,7 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shape"
+            android:background="@drawable/shape_special"
             tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
 
             <android.support.design.widget.AppBarLayout

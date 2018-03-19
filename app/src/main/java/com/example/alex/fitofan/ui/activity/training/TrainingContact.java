@@ -9,12 +9,10 @@ public interface TrainingContact {
 
         void onBackPressed();
 
-        void close();
     }
 
     interface EventListener{
 
-        void close();
     }
 
 }

@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -43,7 +44,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private ActivityTrainingBinding mBinding;
     private TrainingPresenter mPresenter;
     private TrainingModel mTrainingModel;
-    private RecyclerAdapterTraining adapter;
     private Dao<TrainingModel, Integer> mTrainings;
     private GestureDetectorCompat mSwipeDetector;
     private MediaPlayer mMediaPlayer;
@@ -56,6 +56,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private ScheduledExecutorService mTimerThread = null;
     private SoundPool sp;
     private int soundIdPoint;
+    private int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,10 +67,21 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mPresenter = new TrainingPresenter(this);
 
+        mBinding.content.descriptionExercise.setMovementMethod(new ScrollingMovementMethod());
+        position = 0;
         initListeners();
         initTraining(getIntent().getIntExtra("trainingModel", -1));
         initSoundPoint();
-        initRecyclerView();
+    }
+
+    /**
+     * Called when pointer capture is enabled or disabled for the current window.
+     *
+     * @param hasCapture True if the window has pointer capture.
+     */
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     protected class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -81,20 +93,12 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_DISTANCE)
+            if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_DISTANCE)
                 return false;
-            if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
-                if (adapter.getMapPosition() > 0) {
-                    moveExeercise(1);
-                } else {
-                    Toast.makeText(getContext(), getResources().getString(R.string.first_exercise), Toast.LENGTH_SHORT).show();
-                }
-            } else if (e2.getX() + e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
-                if (adapter.getMapPosition() < mTrainingModel.getExercises().size() - 1) {
-                    moveExeercise(-1);
-                } else {
-                    Toast.makeText(getContext(), getResources().getString(R.string.last_exercise), Toast.LENGTH_SHORT).show();
-                }
+            if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
+                Toast.makeText(TrainingActivity.this, "-1", Toast.LENGTH_SHORT).show();
+            } else if (e2.getY() + e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
+                Toast.makeText(TrainingActivity.this, "+1", Toast.LENGTH_SHORT).show();
             }
             return false;
         }
@@ -109,34 +113,34 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     }
 
-    void moveExeercise(int i){
-        adapter.setMapPosition(adapter.getMapPosition() + i);
-        mBinding.contentTraining.tvDescriptionExercise.setText(
-                mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
-        );
-        setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
-        adapter.notifyDataSetChanged();
-    }
-
-    private void startMusicExercise(String audioUri) {
-        if (audioUri != null) {
-            Log.e("startMusicExercise: ", audioUri);
-            Uri bufUri = Uri.parse(audioUri);
-            try {
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(this, bufUri);
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.e("startMusicExercise: ", "beda");
-            Toast.makeText(getContext(), "No audio", Toast.LENGTH_SHORT).show();
-        }
-    }
-
+    //    void moveExercise(int i){
+//        adapter.setMapPosition(adapter.getMapPosition() + i);
+//        mBinding.content.tvDescriptionExercise.setText(
+//                mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
+//        );
+//        setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
+//        adapter.notifyDataSetChanged();
+//    }
+//
+//    private void startMusicExercise(String audioUri) {
+//        if (audioUri != null) {
+//            Log.e("startMusicExercise: ", audioUri);
+//            Uri bufUri = Uri.parse(audioUri);
+//            try {
+//                mMediaPlayer = new MediaPlayer();
+//                mMediaPlayer.setDataSource(this, bufUri);
+//                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.start();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Log.e("startMusicExercise: ", "beda");
+//            Toast.makeText(getContext(), "No audio", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
     private void initTraining(int trainingModel) {
         if (trainingModel >= 0) {
             try {
@@ -151,55 +155,28 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         }
     }
 
-    private void initRecyclerView() {
-
-        mBinding.contentTraining.mapTraining.setNestedScrollingEnabled(false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mBinding.contentTraining.mapTraining.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterTraining(mTrainingModel.getExercises(), this);
-        mBinding.contentTraining.mapTraining.setAdapter(adapter);
-
-        mBinding.contentTraining.tvDescriptionExercise.setText(
-                mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
-        );
-        setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
-
-    }
-
     private void initListeners() {
 
         mSwipeDetector = new GestureDetectorCompat(this, new MyGestureListener());
-        mBinding.contentTraining.swipeTraining.setOnTouchListener(new View.OnTouchListener() {
+        mBinding.content.swipeTraining.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return mSwipeDetector.onTouchEvent(event);
             }
         });
 
-        mBinding.contentTraining.btPlay.setOnClickListener(v -> {
-//            Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
-            if (mTrainingModel.getExercises().size() == adapter.getMapPosition()) {
-                Toast.makeText(this, "Please restart", Toast.LENGTH_SHORT).show();
-            } else if (!isRunning()) {
-                startTimer(mTrainingModel.getExercises().get(adapter.getMapPosition()).getTime());
-            } else {
-                Toast.makeText(this, "Already start", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mBinding.contentTraining.btStop.setOnClickListener(v -> {
-            stopTimer();
-        });
-        mBinding.contentTraining.btReset.setOnClickListener(v -> {
+        mBinding.content.btStart.setOnClickListener(v -> {
             if (!isRunning()) {
-                adapter.setMapPosition(0);
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, "Firstly stoped", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
+                startTimer(10000);
             }
         });
-        mBinding.tvClose.setOnClickListener(v -> {
-            mPresenter.close();
+
+        mBinding.content.btReset.setOnClickListener(v -> {
+            stopTimer();
+            Toast.makeText(this, "Stoped", Toast.LENGTH_SHORT).show();
         });
+
         mBinding.tvHide.setOnClickListener(v -> {
             Intent startMain = new Intent(Intent.ACTION_MAIN);
             startMain.addCategory(Intent.CATEGORY_HOME);
@@ -210,29 +187,18 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     private void startTimer(long timerStart) {
         final long[] tempTime = {timerStart};
-        mBinding.contentTraining.timer.setText(FormatTime.formatTime(tempTime[0]));
-        startMusicExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getAudio());
+        mBinding.content.timer.setText(FormatTime.formatTime(tempTime[0]));
+//        startMusicExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getAudio());
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
             long elapsedTime = tempTime[0] - DEFAULT_REFRESH_INTERVAL;
             if (elapsedTime <= 0) {
-                if (mTrainingModel.getExercises().size() > adapter.getMapPosition() + 1) {
-                    adapter.setMapPosition(adapter.getMapPosition() + 1);
-                    adapter.notifyDataSetChanged();
-                    stopTimer();
-                    sp.play(soundIdPoint, 1, 1, 0, 0, 1);
-                    startMusicExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getAudio());
-                    //+1 sec
-                    startTimer(mTrainingModel.getExercises().get(adapter.getMapPosition()).getTime() + 1000L);
-                } else {
-                    Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
-                    stopTimer();
-                }
+                stopTimer();
             }
             tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
 
             Log.e("startTimer: ", String.valueOf(elapsedTime));
-            mBinding.contentTraining.timer.setText(FormatTime.formatTime(elapsedTime));
+            mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
@@ -244,7 +210,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                     .fitCenter()
                     .thumbnail(0.5f)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mBinding.contentTraining.imageTrainingExercise);
+                    .into(mBinding.content.imageExercise);
         }
     }
 
@@ -299,13 +265,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     @Override
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 
-    }
-
-    @Override
-    public void close() {
-        stopTimer();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
     }
 
     @Override

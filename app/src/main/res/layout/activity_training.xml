@@ -58,7 +58,7 @@
             </LinearLayout>
 
             <include
-                android:id="@+id/content_training"
+                android:id="@+id/content"
                 layout="@layout/content_training"/>
         </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>

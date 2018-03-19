@@ -23,7 +23,7 @@ import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
-import com.example.alex.fitofan.ui.fragments.participants.ParticipantFragment;
+import com.example.alex.fitofan.ui.fragments.rainting.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
 import com.example.alex.fitofan.utils.Connection;
 

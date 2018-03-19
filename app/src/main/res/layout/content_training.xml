@@ -2,180 +2,345 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/activity_training">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
         android:id="@+id/swipe_training"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        tools:context=".ui.activity.training.TrainingActivity">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/liner_name_training"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
 
             <LinearLayout
+                android:id="@+id/linear_name_training"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:background="@color/transparent_top_training"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/tv_name_training"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Name Training"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="2"
+                    android:text="NameTraining"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/tv_count_exercise"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/total_time_training"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="12 раз"
+                    android:layout_marginEnd="13dp"
+                    android:layout_weight="3"
+                    android:gravity="end"
+                    android:text="234:00"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/liner_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="35dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/liner_name_training">
-
-            <android.support.v7.widget.CardView
+            <LinearLayout
+                android:id="@+id/card_end"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                app:cardCornerRadius="6dp">
+                android:layout_height="0dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"
+                android:background="@drawable/radius_bottom_card"
+                android:bottomRightRadius="10dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintBottom_toTopOf="@+id/liner_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linet_prebottom">
+
+                <TextView
+                    android:id="@+id/next_next_name_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:text="Удар рукой по голове"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
+
+                <TextView
+                    android:id="@+id/next_next_time_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="2"
+                    android:gravity="end|center_vertical"
+                    android:text="13:33"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/liner_top"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/radius_top_card"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/card_front"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear_name_training">
 
                 <ImageView
-                    android:id="@+id/image_training_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1.1"
+                    android:src="@mipmap/icon"/>
+
+                <TextView
+                    android:id="@+id/back_name_exercise"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Rest"
+                    android:textColor="@android:color/white"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/shape_white_transporent"/>
+
+                <TextView
+                    android:id="@+id/back_time_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.1"
+                    android:gravity="center"
+                    android:text="12:00"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linet_prebottom"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginBottom="38dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:background="@drawable/radius_prebottom_card"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                app:layout_constraintBottom_toTopOf="@+id/liner_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_front">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1.1"
                     android:src="@mipmap/icon"/>
+
+                <TextView
+                    android:id="@+id/next_name_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Rest"
+                    android:textColor="@android:color/white"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/shape_white_transporent"/>
+
+                <TextView
+                    android:id="@+id/next_time_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.1"
+                    android:gravity="center"
+                    android:text="12:00"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_front"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="83dp"
+                android:layout_marginEnd="13dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="63dp"
+                app:cardBackgroundColor="@android:color/darker_gray"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/liner_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear_name_training">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/image_exercise"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/test"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.5"
+                        android:background="@color/background_card_view_bottom_training"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/name_exercise"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="5dp"
+                            android:text="Удар ногой себе по груди"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginStart="20dp"
+                            android:background="@drawable/shape_white_transporent"/>
+
+                        <TextView
+                            android:id="@+id/description_exercise"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="5dp"
+                            android:maxLines="100"
+                            android:scrollbars="vertical"
+                            android:text="Много много тескта Много много тескта Много много Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта"
+                            android:textColor="@android:color/white"
+                            android:textSize="12dp"/>
+                    </LinearLayout>
+                </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
-            <ScrollView
-                android:paddingTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="70dp">
-
-                <TextView
-                    android:id="@+id/tv_description_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|bottom"
-                    android:text="Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки "
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"/>
-            </ScrollView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/timer_liner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/liner_image">
-
             <TextView
                 android:id="@+id/timer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
-                android:gravity="center"
-                android:text="00:00"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="8dp"
+                android:text="12:34"
                 android:textColor="@android:color/white"
-                android:textSize="50sp"/>
+                android:textSize="36sp"
+                android:translationZ="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/card_front"
+                app:layout_constraintEnd_toEndOf="@+id/card_front"
+                app:layout_constraintTop_toTopOf="@+id/card_front"
+                app:layout_constraintVertical_bias="0.699"/>
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/liner_front"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/card_front"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/map_training"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/liner_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timer_liner"
-            tools:listitem="@layout/part_training_map"/>
+            </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/liner_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:background="@color/transparent_bottom"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/bt_play"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+            <LinearLayout
+                android:id="@+id/liner_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_weight="1"
-                android:src="@drawable/play"/>
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:id="@+id/bt_stop"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:src="@drawable/stop"/>
+                <Button
+                    android:id="@+id/bt_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_bg_left"
+                    android:text="Start"
+                    android:textColor="@android:color/white"/>
 
-            <ImageView
-                android:id="@+id/bt_reset"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:src="@drawable/reset"/>
-        </LinearLayout>
+                <Button
+                    android:id="@+id/bt_reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_bg_right"
+                    android:text="Reset"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
 
-
-    </android.support.constraint.ConstraintLayout>
-
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </layout>
