@@ -34,8 +34,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     public int getItemViewType(int position) {
         if (position == 0)
             return 0;
-        else
+        if (position == 1)
             return 1;
+        else
+            return 2;
 
     }
 
@@ -49,6 +51,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                         .inflate(R.layout.item_user_data, parent, false);
                 break;
             case 1:
+                linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_user_sub, parent, false);
+                break;
+            case 2:
                 linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_user_trainig, parent, false);
                 break;

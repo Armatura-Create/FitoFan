@@ -35,10 +35,8 @@
             </android.support.design.widget.AppBarLayout>
 
             <include
-                android:id="@+id/content_sing_up"
+                android:id="@+id/content"
                 layout="@layout/content_sing_up"/>
         </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>
-
-
 </layout>

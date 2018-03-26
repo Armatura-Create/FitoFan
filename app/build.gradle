@@ -46,13 +46,13 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
 
-    compile 'com.kovachcode:timePickerWithSeconds:1.0.1'
+    //cardRecycler
+    compile 'com.github.adgvcxz:cardlayoutmanager:0.2.1'
 
     //circleImageView
     compile 'de.hdodenhof:circleimageview:2.2.0'
 
     //animation
-    compile 'com.balysv:material-ripple:1.0.2'
 
     //retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -62,7 +62,12 @@ dependencies {
     compile "com.googlecode.json-simple:json-simple:1.1"
 
     //Glide
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    compile 'com.makeramen:roundedimageview:2.3.0'
 
     //facebook
     compile 'com.facebook.android:facebook-android-sdk:4.26.0'

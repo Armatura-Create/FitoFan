@@ -1,8 +1,7 @@
 package com.example.alex.fitofan.ui.activity.signup;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 
+import android.widget.Toast;
 
 class SignUpPresenter implements SignUpContract.EventListener {
 
@@ -15,11 +14,12 @@ class SignUpPresenter implements SignUpContract.EventListener {
 
     @Override
     public void register(String name, String email, String password, String phone) {
+        Toast.makeText(view.getContext(), "Register", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void goToMain() {
-        view.goToMain();
+    public void goToSingIn() {
+        view.goToSingIn();
     }
 
 }

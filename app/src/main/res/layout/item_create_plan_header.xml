@@ -30,62 +30,76 @@
                 android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
-                <TextView
+
+                <LinearLayout
+                    android:id="@+id/liner_name_training"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/training_class"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="17sp"
-                    android:textStyle="bold"/>
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/et_training_name_create"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/training_class"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <EditText
+                        android:id="@+id/et_training_name_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="#00000000"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:textColor="@color/button_blue"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="15sp"/>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/background_delimiter"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/liner_description_training"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="#00000000"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:hint="Нажмите что бы ввести"
-                    android:longClickable="false"
-                    android:textColor="@color/button_blue"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="15sp"/>
+                    android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@color/background_delimiter"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/training_description"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="@string/training_description"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="17sp"
-                    android:textStyle="bold"/>
+                    <EditText
+                        android:id="@+id/ed_description_training"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="#00000000"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:longClickable="false"
+                        android:textColor="@color/button_blue"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="12sp"/>
 
-                <EditText
-                    android:id="@+id/ed_description_training"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="#00000000"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:hint="Нажмите что бы ввести"
-                    android:longClickable="false"
-                    android:textColor="@color/button_blue"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="12sp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@color/background_delimiter"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/background_delimiter"/>
+                </LinearLayout>
             </LinearLayout>
 
             <android.support.v7.widget.CardView
@@ -109,33 +123,20 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <Button
+                android:id="@+id/bt_add_image_training"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginBottom="15dp"
                 android:layout_marginEnd="35dp"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="15dp"
-                app:cardBackgroundColor="@color/button_blue"
-                app:cardCornerRadius="6dp">
-
-                <com.balysv.materialripple.MaterialRippleLayout
-                    android:id="@+id/bt_add_image_training"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:mrl_rippleDuration="200"
-                    app:mrl_rippleFadeDuration="50">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/add_image_file"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"/>
-                </com.balysv.materialripple.MaterialRippleLayout>
-            </android.support.v7.widget.CardView>
+                android:background="@drawable/ripple_bg_blue_button"
+                android:text="@string/add_image_file"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

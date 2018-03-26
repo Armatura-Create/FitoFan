@@ -8,307 +8,264 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_margin="5dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:background="@drawable/radius_liner">
 
-        <TextView
-            android:id="@+id/tv_cancel_item_create_plan"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:gravity="end|top"
-            android:text="X"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:visibility="gone"/>
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
 
-        <TextView
+            <TextView
+                android:id="@+id/exercise_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise"
+                android:textColor="@color/button_blue"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/et_exercise_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="15sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/training_description"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/et_description_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="12sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/image_exercise_card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/exercise"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/et_exercise_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="@string/training_description"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/et_description_exercise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="12sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
-    </LinearLayout>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/image_exercise_card"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        app:cardCornerRadius="6dp">
-
-        <ImageView
-            android:id="@+id/image_exercise_create"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="180dp"
             android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/play"/>
+            android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            app:cardCornerRadius="6dp">
 
-    </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/image_exercise_create"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/play"/>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
-        app:cardBackgroundColor="@color/button_blue"
-        app:cardCornerRadius="6dp">
+        </android.support.v7.widget.CardView>
 
-        <com.balysv.materialripple.MaterialRippleLayout
+        <Button
             android:id="@+id/bt_add_image_exercise"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:mrl_rippleDuration="200"
-            app:mrl_rippleFadeDuration="50">
+            android:layout_height="35dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ripple_bg_blue_button"
+            android:text="@string/add_image_file"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/add_image_file"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-        </com.balysv.materialripple.MaterialRippleLayout>
-    </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/audio_exercise_card"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            app:cardCornerRadius="6dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/audio_exercise_card"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        app:cardCornerRadius="6dp">
+        </android.support.v7.widget.CardView>
 
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="35dp"
-        app:cardBackgroundColor="@color/button_blue"
-        app:cardCornerRadius="6dp">
-
-        <com.balysv.materialripple.MaterialRippleLayout
+        <Button
             android:id="@+id/bt_add_audio_exercise"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:mrl_rippleDuration="200"
-            app:mrl_rippleFadeDuration="50">
+            android:layout_height="35dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
+            android:background="@drawable/ripple_bg_blue_button"
+            android:text="@string/add_audio_file"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/add_audio_file"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
+                android:text="@string/number_repetitions"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="17sp"
                 android:textStyle="bold"/>
-        </com.balysv.materialripple.MaterialRippleLayout>
-    </android.support.v7.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+            <EditText
+                android:id="@+id/et_number_repetitions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="15sp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/number_repetitions"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
 
-        <EditText
-            android:id="@+id/et_number_repetitions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/time_exercise"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
+            <EditText
+                android:id="@+id/et_exercise_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="15sp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="@string/time_exercise"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
 
-        <EditText
-            android:id="@+id/et_exercise_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/time_between_exercise"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
+            <EditText
+                android:id="@+id/et_time_between_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="15sp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="@string/time_between_exercise"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
 
-        <EditText
-            android:id="@+id/et_time_between_exercise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/relax_time"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
+            <EditText
+                android:id="@+id/et_recovery_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#00000000"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColor="@color/button_blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="15sp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="@string/relax_time"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="17sp"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/et_recovery_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#00000000"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:hint="Нажмите что бы ввести"
-            android:longClickable="false"
-            android:textColor="@color/button_blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_delimiter"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/background_delimiter"/>
+        </LinearLayout>
     </LinearLayout>
-
-    <View
-        android:id="@+id/delimiter_exercise"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/shape_special"/>
 </LinearLayout>

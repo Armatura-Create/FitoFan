@@ -50,5 +50,10 @@
     <string name="saved_question">Сохранить?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="password_again">Повторить пароль</string>
+    <string name="del_exercise">Удалить упражнение</string>
+    <string name="subscribe">Подписаться</string>
 
 </resources>

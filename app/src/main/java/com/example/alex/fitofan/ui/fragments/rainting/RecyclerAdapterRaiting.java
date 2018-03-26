@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -56,7 +57,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 break;
             case 1:
                 linear = (LinearLayout) LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_raiting, parent, false);
+                        .inflate(R.layout.item_rating, parent, false);
                 break;
         }
         return new ViewHolder(linear);
@@ -68,18 +69,18 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
         final LinearLayout linear = holder.mLinearLayout;
 
         CircleImageView imageUser = linear.findViewById(R.id.image_user_raiting);
+        TextView number = linear.findViewById(R.id.number_participant);
 
         if (position > 0) {
 
             Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
             Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                     .load(uri)
-                    .fitCenter()
-                    .thumbnail(0.5f)
-                    .priority(Priority.IMMEDIATE)
-                    .placeholder(R.mipmap.icon)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageUser); //ссылка на ImageView
+        }
+
+        if (position > 0) {
+            number.setText(position + 3 + ".");
         }
     }
 

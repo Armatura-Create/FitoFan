@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.WallModel;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
@@ -25,13 +26,14 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
 
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
-
+    private final RequestOptions mRequestOptions;
     private WallFragment mWallFragment;
     private ArrayList<WallModel> mWallModels;
 
     public RecyclerAdapterWall(ArrayList<WallModel> mWallModels, WallFragment mWallFragment) {
         this.mWallModels = mWallModels;
         this.mWallFragment = mWallFragment;
+        mRequestOptions = new RequestOptions();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,21 +70,13 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         Uri uri1 = Uri.parse(mWallModels.get(position).getImageTraining());
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri1)
-                .fitCenter()
-                .thumbnail(0.5f)
-                .priority(Priority.IMMEDIATE)
-                .placeholder(R.mipmap.icon)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .apply(mRequestOptions)
                 .into(imageTrainingPlan); //ссылка на ImageView
 
         Uri uri2 = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri2)
-                .fitCenter()
-                .thumbnail(0.5f)
-                .priority(Priority.IMMEDIATE)
-                .placeholder(R.mipmap.icon)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .apply(mRequestOptions)
                 .into(imageUser); //ссылка на ImageView
 
         userLiner.setOnClickListener(v -> {

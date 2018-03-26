@@ -8,7 +8,7 @@ public class SignUpContract {
 
         Context getContext();
 
-        void goToMain();
+        void goToSingIn();
 
     }
 
@@ -16,6 +16,6 @@ public class SignUpContract {
 
         void register(String name, String email, String password, String phone);
 
-        void goToMain();
+        void goToSingIn();
     }
 }

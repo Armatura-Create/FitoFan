@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,8 +24,8 @@ public final class CustomDialog {
         mDialog.setContentView(R.layout.dialog_simple);
         TextView tvTitle = mDialog.findViewById(R.id.title);
         TextView tvMassage = mDialog.findViewById(R.id.massage_dialog_simple);
-        TextView tvBtPositive = mDialog.findViewById(R.id.tv_positive);
-        TextView tvBtNegative = mDialog.findViewById(R.id.tv_negative);
+        Button tvBtPositive = mDialog.findViewById(R.id.bt_positive);
+        Button tvBtNegative = mDialog.findViewById(R.id.bt_negative);
         TextView tvClose = mDialog.findViewById(R.id.cancel_dialog);
 
         tvTitle.setText(title);
@@ -51,7 +52,7 @@ public final class CustomDialog {
         mDialog.setContentView(R.layout.dialog);
         TextView tvTitle = mDialog.findViewById(R.id.title);
         TextView tvDescription = mDialog.findViewById(R.id.dialog_description);
-        TextView tvBtAdd = mDialog.findViewById(R.id.tv_add_dialog);
+        Button tvBtAdd = mDialog.findViewById(R.id.bt_dialog_add);
         TextView tvClose = mDialog.findViewById(R.id.cancel_dialog);
         EditText et = mDialog.findViewById(R.id.et_add_field_dialog);
 
@@ -81,7 +82,7 @@ public final class CustomDialog {
         mDialog.setContentView(R.layout.dialog_time);
         TextView tvTitle = mDialog.findViewById(R.id.title);
         TextView tvDescription = mDialog.findViewById(R.id.dialog_description);
-        TextView tvBtAdd = mDialog.findViewById(R.id.tv_add_dialog);
+        Button tvBtAdd = mDialog.findViewById(R.id.bt_save_time);
         TextView tvClose = mDialog.findViewById(R.id.cancel_dialog);
 
         tvTitle.setText(title);

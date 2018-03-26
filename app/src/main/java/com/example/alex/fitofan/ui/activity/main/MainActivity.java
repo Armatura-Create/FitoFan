@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
 import com.example.alex.fitofan.eventbus.MyPlansEvent;
@@ -71,11 +72,6 @@ public class MainActivity extends AppCompatActivity
         Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
         Glide.with(getApplicationContext()) //передаем контекст приложения
                 .load(uri)
-                .fitCenter()
-                .thumbnail(0.5f)
-                .priority(Priority.IMMEDIATE)
-                .placeholder(R.mipmap.ic_launcher)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imageProfile); //ссылка на ImageView
     }
 

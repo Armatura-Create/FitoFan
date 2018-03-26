@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,197 +7,202 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/data_publication"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20sp"
-        android:layout_marginTop="5dp"
-        android:text="12.03.2018"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="10sp"/>
-
     <LinearLayout
+        android:id="@+id/plan_liner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="5">
 
-            <TextView
-                android:id="@+id/text_training_plan"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Тренировочный план"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp"/>
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_training_name_my_plan"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/text_training_plan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Тренировочный план"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_training_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text="Развитие скорости"
+                    android:textColor="@color/button_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:text="Развитие скорости"
-                android:textColor="@color/button_blue"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:layout_weight="3"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:weightSum="10">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="27dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/icon_timer_gray"/>
+
+                <TextView
+                    android:id="@+id/tv_total_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="4"
+                    android:gravity="end"
+                    android:text="23мин"
+                    android:textColor="@color/button_blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:weightSum="10">
+            android:layout_height="230dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:cardCornerRadius="6dp">
+
 
             <ImageView
+                android:id="@+id/image_training"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginStart="27dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_weight="7"
-                android:src="@drawable/icon_timer_gray"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/play"/>
 
-            <TextView
-                android:id="@+id/tv_total_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="4"
-                android:gravity="end"
-                android:text="23мин"
-                android:textColor="@color/button_blue"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+        </android.support.v7.widget.CardView>
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|bottom"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:text="Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки "
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_description_my_plan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки "
-        android:textColor="@color/button_blue"
-        android:textSize="13sp"/>
-
-
     <LinearLayout
+        android:id="@+id/liner_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
         android:orientation="horizontal"
         android:weightSum="3">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/ripple_back"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <com.balysv.materialripple.MaterialRippleLayout
+            <LinearLayout
                 android:id="@+id/ripple_like_my_plan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:mrl_rippleDuration="200"
-                app:mrl_rippleFadeDuration="50">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:text="@string/like"
-                        android:textColor="@color/like_color"/>
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:id="@+id/ripple_send_my_plan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:mrl_rippleDuration="200"
-                app:mrl_rippleFadeDuration="50">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
-                        android:text="@string/send_plan"
-                        android:textColor="@android:color/darker_gray"/>
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
+                    android:layout_margin="5dp"
+                    android:text="@string/like"
+                    android:textColor="@color/like_color"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/ripple_back"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:id="@+id/ripple_share_my_plan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:mrl_rippleDuration="200"
-                app:mrl_rippleFadeDuration="50">
+            <LinearLayout
+                android:id="@+id/ripple_send_my_plan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="@string/send_plan"
+                    android:textColor="@color/button_blue"/>
+            </LinearLayout>
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:text="@string/share"
-                        android:textColor="@android:color/darker_gray"/>
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ripple_share_my_plan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@drawable/ripple_back"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:text="@string/share"
+                    android:textColor="@color/button_blue"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -208,4 +214,6 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="15dp"
         android:background="@color/background_delimiter"/>
+
 </LinearLayout>
+

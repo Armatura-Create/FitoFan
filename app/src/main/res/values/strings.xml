@@ -72,5 +72,10 @@
     <string name="saved_question">Saved?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="first_name">Name</string>
+    <string name="last_name">Last name</string>
+    <string name="password_again">Password again</string>
+    <string name="del_exercise">Delete exercise</string>
+    <string name="subscribe">Subscribe</string>
 
 </resources>

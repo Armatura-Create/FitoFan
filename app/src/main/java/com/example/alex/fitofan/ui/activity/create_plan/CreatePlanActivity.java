@@ -132,10 +132,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setAdapter(adapter);
     }
 
-    void delItemExercise(int position) {
-        adapter.delItem(position);
-    }
-
     void addItemExercise() {
         adapter.addItem();
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setVerticalScrollbarPosition(adapter.getItemCount() - 1);

@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <MediaController
-        android:layout_width="match_parent"
-        android:layout_height="30dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
 
-    </MediaController>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
 
-</android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+        </LinearLayout>
+</layout>

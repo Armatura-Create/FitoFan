@@ -109,10 +109,6 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             if (trainingModel.getExercises().get(position - 1).getImage() != null) {
                 Glide.with(mPreviewPlanActivity.getContext())
                         .load(Uri.parse(trainingModel.getExercises().get(position - 1).getImage()))
-                        .placeholder(R.mipmap.icon)
-                        .fitCenter()
-                        .thumbnail(0.5f)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(imageExercise);
             } else {
                 Toast.makeText(mPreviewPlanActivity.getContext(), "Изображение уражнения №" + (position) + " Не найденно", Toast.LENGTH_SHORT).show();

@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -14,14 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
@@ -29,7 +26,6 @@ import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdapterCreatePlan.ViewHolder> {
@@ -51,12 +47,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     void addItem() {
         mTrainingModel.getExercises().add(mTrainingModel.getExercises().size(), new ExerciseModel());
         this.notifyItemInserted(mTrainingModel.getExercises().size() + 1);
-//        this.notifyDataSetChanged();
     }
 
-    void delItem(int position) {
-        mTrainingModel.getExercises().remove(position - 1);
-        this.notifyItemRemoved(position - 1);
+    void delItem() {
+        mTrainingModel.getExercises().remove(getItemCount() - 3);
+        this.notifyItemRemoved(getItemCount() - 1);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -109,19 +104,20 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         Log.e("onBindViewHolder: ", String.valueOf(getItemCount()));
 
         //header view
+        LinearLayout linerNameTraining = linear.findViewById(R.id.liner_name_training);
+        LinearLayout linerDescriptionTraining = linear.findViewById(R.id.liner_description_training);
         TextView nameTraining = linear.findViewById(R.id.et_training_name_create);
         TextView nameTrainingDescription = linear.findViewById(R.id.ed_description_training);
-        MaterialRippleLayout btAddImageTraining = linear.findViewById(R.id.bt_add_image_training);
+        Button btAddImageTraining = linear.findViewById(R.id.bt_add_image_training);
         ImageView imageTraining = linear.findViewById(R.id.image_training_plan_create);
         CardView cvImageTraining = linear.findViewById(R.id.image_training_plan_card);
 
         //body view
-        TextView delItemPlan = linear.findViewById(R.id.tv_cancel_item_create_plan);
-        View delimiter = linear.findViewById(R.id.delimiter_exercise);
+        TextView exerciseNumber = linear.findViewById(R.id.exercise_number);
         EditText etNameExercise = linear.findViewById(R.id.et_exercise_name);
         EditText etDescription = linear.findViewById(R.id.et_description_exercise);
-        MaterialRippleLayout btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
-        MaterialRippleLayout btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
+        Button btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
+        Button btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
         EditText etNumberRepetition = linear.findViewById(R.id.et_number_repetitions);
         EditText etTimeExercise = linear.findViewById(R.id.et_exercise_time);
         EditText etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
@@ -130,8 +126,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         CardView cvImageExercise = linear.findViewById(R.id.image_exercise_card);
 
         //footer
-        MaterialRippleLayout btAddEcercise = linear.findViewById(R.id.bt_add_item_exercise);
-        MaterialRippleLayout btSaveTraining = linear.findViewById(R.id.bt_save_all_plan);
+        Button btAddExercise = linear.findViewById(R.id.bt_add_exercise);
+        Button btDelExercise = linear.findViewById(R.id.bt_del_exercise);
+        Button btSaveTraining = linear.findViewById(R.id.bt_save_plan);
         TextView totalTimeTraining = linear.findViewById(R.id.tv_total_time);
 
         //header methods
@@ -150,7 +147,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                     mCreatePlanActivity.choosePicturePlan(position, imageTraining, cvImageTraining);
             });
 
-            nameTraining.setOnClickListener(v -> {
+            linerNameTraining.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.training_class),
                         mCreatePlanActivity.getResources().getString(R.string.class_description),
@@ -164,7 +161,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
 
-            nameTrainingDescription.setOnClickListener(v -> {
+            linerDescriptionTraining.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.training_description),
                         mCreatePlanActivity.getResources().getString(R.string.description_description_plan),
@@ -178,26 +175,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
         }
+
         //body methods
         if (position > 0 && position != getItemCount() - 1) {
-
-            //разделитель и кнопка удаления упражнения
-            if (position < mTrainingModel.getExercises().size() + 1) {
-                delItemPlan.setVisibility(View.GONE);
-                delimiter.setVisibility(View.VISIBLE);
-            }
-
-            if (position == 1) {
-                delItemPlan.setVisibility(View.GONE);
-                delimiter.setVisibility(View.GONE);
-                if (mTrainingModel.getExercises().size() > 1) {
-                    delimiter.setVisibility(View.VISIBLE);
-                }
-
-            } else if (position == mTrainingModel.getExercises().size()) {
-                delItemPlan.setVisibility(View.VISIBLE);
-                delimiter.setVisibility(View.GONE);
-            }
 
             if (id > 0) {
                 setDataEditExercise(position,
@@ -210,13 +190,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                         imageExercise, cvImageExercise);
             }
 
-            delItemPlan.setOnClickListener(v -> {
-                mCreatePlanActivity.delItemExercise(position);
-            });
-
             btAddAudio.setOnClickListener(v ->
                     mCreatePlanActivity.chooseAudioExercise(position)
             );
+
+            exerciseNumber.setText(mCreatePlanActivity.getResources().getString(R.string.exercise) + " #" + position);
 
             etRelaxTime.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialogTime(mCreatePlanActivity.getContext(),
@@ -342,7 +320,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
         //footer methods
         if (position == getItemCount() - 1) {
-            btAddEcercise.setOnClickListener(v -> {
+            btAddExercise.setOnClickListener(v -> {
                 mCreatePlanActivity.addItemExercise();
             });
 
@@ -352,6 +330,12 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             });
 
             totalTimeTraining.setText(setAllTime());
+
+            btDelExercise.setOnClickListener(v -> {
+                if (getItemCount() > 3) {
+                    delItem();
+                }
+            });
         }
     }
 
@@ -362,10 +346,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             cvImageTraining.setVisibility(View.VISIBLE);
             Glide.with(mCreatePlanActivity.getContext())
                     .load(Uri.parse(mTrainingModel.getImage()))
-                    .placeholder(R.mipmap.icon)
-                    .fitCenter()
-                    .thumbnail(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageTraining);
         }
     }
@@ -392,10 +372,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             cvImage.setVisibility(View.VISIBLE);
             Glide.with(mCreatePlanActivity.getContext())
                     .load(Uri.parse(mTrainingModel.getExercises().get(position - 1).getImage()))
-                    .placeholder(R.mipmap.icon)
-                    .fitCenter()
-                    .thumbnail(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(image);
         }
     }

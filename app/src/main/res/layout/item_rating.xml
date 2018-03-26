@@ -13,42 +13,43 @@
         android:weightSum="10">
 
         <TextView
-            android:layout_weight="1"
-            android:layout_gravity="center"
             android:id="@+id/number_participant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/transparent_text_white"/>
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="4."
+            android:textColor="@color/button_blue"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_weight="1"
             android:id="@+id/image_user_raiting"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_weight="1"
             android:src="@drawable/background"
             app:civ_border_color="@color/button_blue"
             app:civ_border_width="1dp"/>
 
         <TextView
-            android:layout_weight="7"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:id="@+id/name_user_participant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="7"
+            android:gravity="start"
             android:text="Александр Данильев"
-            android:textColor="@color/transparent_text_white"/>
+            android:textColor="@color/button_blue"/>
 
         <TextView
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="end"
+            android:textStyle="bold"
             android:id="@+id/rating_participant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end"
             android:text="156"
-            android:textColor="@color/transparent_text_white"/>
+            android:textColor="@color/button_blue"/>
 
     </LinearLayout>
 </layout>
