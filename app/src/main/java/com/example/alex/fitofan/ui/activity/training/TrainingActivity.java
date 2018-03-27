@@ -10,21 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adgvcxz.cardlayoutmanager.CardLayoutManager;
-import com.adgvcxz.cardlayoutmanager.CardSnapHelper;
-import com.adgvcxz.cardlayoutmanager.OnCardSwipeListener;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -51,7 +45,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private int soundIdPoint;
     private CardLayoutManager layoutManager;
     private RecyclerAdapter adapter;
-    private TextView time;
     private int mPosition = 0;
 
     @Override
@@ -63,7 +56,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mPresenter = new TrainingPresenter(this);
 
-        time = findViewById(R.id.tv_timer);
         initListeners();
         initTraining(getIntent().getIntExtra("trainingModel", -1));
         initSoundPoint();
@@ -124,55 +116,17 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            mBinding.content.totalTimeTraining.setText(FormatTime.formatTime(mTrainingModel.getTime()));
-            mBinding.content.tvNameTraining.setText(mTrainingModel.getName());
         } else {
             mTrainingModel = new TrainingModel();
         }
-        initRecycler(mTrainingModel);
+        initRecycler();
     }
 
-    private void initRecycler(TrainingModel trainingModel) {
-        mBinding.content.rvTraining.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-        layoutManager = new CardLayoutManager(CardLayoutManager.TransX.NONE, CardLayoutManager.TransY.NONE);
-        layoutManager.setVerticalSwipe(false);
-        mBinding.content.rvTraining.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapter(this, trainingModel);
-        mBinding.content.rvTraining.setAdapter(adapter);
-        new CardSnapHelper().attachToRecyclerView(mBinding.content.rvTraining);
-        layoutManager.setYInterval(24);
-        layoutManager.setSwipeMinVelocity(30);
-        layoutManager.setShowCardCount(3);
-        layoutManager.setOnCardSwipeListener(new OnCardSwipeListener() {
-            @Override
-            public void onSwipe(View view, int position, int dx, int dy) {
-
-            }
-
-            @Override
-            public void onAnimOutStart(View view, int position, int direction) {
-                if (isRunning()) {
-                    layoutManager.setHorizontalSwipe(true);
-                }
-            }
-
-            @Override
-            public void onAnimOutStop(View view, int position, int direction) {
-                if (isRunning()) {
-                    layoutManager.setHorizontalSwipe(false);
-                }
-            }
-
-            @Override
-            public void onAnimInStart(View view, int position) {
-
-            }
-
-            @Override
-            public void onAnimInStop(View view, int position) {
-
-            }
-        });
+    private void initRecycler() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mBinding.content.rv.setLayoutManager(linearLayoutManager);
+        adapter = new RecyclerAdapter(this, mTrainingModel);
+        mBinding.content.rv.setAdapter(adapter);
     }
 
     private void initListeners() {
@@ -190,28 +144,11 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 stopTimer();
             }
         });
-
-        mBinding.content.btReset.setOnClickListener(v -> {
-            if (!isRunning()) {
-                Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show();
-                layoutManager.setHorizontalSwipe(true);
-                layoutManager.scrollToPosition(0);
-                mBinding.content.rvTraining.smoothScrollToPosition(0);
-                mPosition = 0;
-            } else {
-                Toast.makeText(this, "First stop", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mBinding.content.back.setOnClickListener(v -> {
-            layoutManager.setHorizontalSwipe(true);
-            mBinding.content.rvTraining.smoothScrollToPosition(layoutManager.getTopPosition() - 1);
-        });
     }
 
     private void preparationTimer() {
         final long[] time = {5000L};
-        setTime(time[0]);
+//        setTime(time[0]);
         layoutManager.setHorizontalSwipe(false);
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
@@ -222,14 +159,14 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 startTimer(mTrainingModel.getExercises().get(layoutManager.getTopPosition()).getTime());
             }
             time[0] -= DEFAULT_REFRESH_INTERVAL;
-            setTime(elapsedTime);
+//            setTime(elapsedTime);
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     private void startTimer(long timerStart) {
         layoutManager.setHorizontalSwipe(false);
         final long[] tempTime = {timerStart};
-        setTime(timerStart);
+//        setTime(timerStart);
         if (mMediaPlayer != null) {
             releaseMP();
         }
@@ -241,7 +178,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             if (elapsedTime <= 0) {
                 stopTimer();
                 if (layoutManager.getTopPosition() < adapter.getItemCount() - 1) {
-                    mBinding.content.rvTraining.smoothScrollToPosition(layoutManager.getTopPosition() + 1);
+                    mBinding.content.rv.smoothScrollToPosition(0);
                     startTimer(mTrainingModel.getExercises().get(layoutManager.getTopPosition() + 1).getTime());
                 } else {
                     Toast.makeText(getContext(), "Complite", Toast.LENGTH_SHORT).show();
@@ -250,14 +187,14 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 sp.play(soundIdPoint, 1, 1, 0, 0, 1);
             }
             tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
-            setTime(elapsedTime);
+//            setTime(elapsedTime);
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    private void setTime(long timerStart) {
-        adapter.setTime(timerStart, layoutManager.getTopPosition());
-        adapter.notifyItemChanged(layoutManager.getTopPosition());
-    }
+//    private void setTime(long timerStart) {
+//        adapter.setTime(timerStart, layoutManager.getTopPosition());
+//        adapter.notifyItemChanged(layoutManager.getTopPosition());
+//    }
 
     private void releaseMP() {
         if (mMediaPlayer != null) {

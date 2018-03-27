@@ -25,9 +25,9 @@
     <string name="save">Сохранить</string>
     <string name="add_audio_file">Добавить аудиотрек</string>
     <string name="exercise">Упражнение</string>
-    <string name="number_repetitions">Количество повторений</string>
-    <string name="time_exercise">Время упражнения</string>
-    <string name="time_between_exercise">Время отдыха между упражнениями</string>
+    <string name="number_approaches">Количество подходов</string>
+    <string name="duration_exercise">Длительность/Вес/Расстояние</string>
+    <string name="time_between_exercise">Время отдыха между подходами</string>
     <string name="relax_time">Время на восстановление</string>
     <string name="add_exercise">Добавить упражнение</string>
     <string name="save_all_plan">Сохранить тренировку</string>
@@ -47,7 +47,7 @@
     <string name="last_exercise">Это последнее упражнение</string>
     <string name="create_plan">Создание тренировки</string>
     <string name="saved">Сохранено</string>
-    <string name="saved_question">Сохранить?</string>
+    <string name="save_question">Сохранить?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="first_name">Имя</string>

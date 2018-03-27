@@ -107,7 +107,7 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
 
             Dialog dialog = CustomDialog.dialogSimple(this,
                     getResources().getString(R.string.exit),
-                    getResources().getString(R.string.saved_question),
+                    getResources().getString(R.string.save_question),
                     getResources().getString(R.string.yes),
                     getResources().getString(R.string.no));
             dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
@@ -123,7 +123,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
     }
 
     private void initRecyclerView(int id) {
-
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setNestedScrollingEnabled(false);
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setHasFixedSize(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());

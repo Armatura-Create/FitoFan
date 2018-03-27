@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
-        android:id="@+id/swipe_training"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,72 +18,67 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/image_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/test"
+                app:layout_constraintBottom_toTopOf="@+id/guideline3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <LinearLayout
-                android:id="@+id/linear_name_training"
+                android:id="@+id/liner_exercise"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@color/transparent_top_training"
-                android:orientation="horizontal"
-                android:weightSum="5"
+                android:layout_height="0dp"
+                android:background="#604286f4"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/guideline3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:background="@drawable/ripple_back"
-                    android:id="@+id/back"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2"
-                    android:paddingBottom="15dp"
-                    android:paddingTop="15dp"
-                    android:rotation="180"
-                    android:src="@drawable/play"/>
-
                 <TextView
-                    android:id="@+id/tv_name_training"
+                    android:id="@+id/timer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginStart="13dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1"
-                    android:text="NameTraining"
+                    android:gravity="center"
+                    android:shadowColor="@android:color/black"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="12:22"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textSize="50sp"
+                    android:textStyle="bold"
+                    android:translationZ="10dp"/>
 
                 <TextView
-                    android:id="@+id/total_time_training"
+                    android:id="@+id/description_exercise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="13dp"
-                    android:layout_weight="2"
-                    android:gravity="end"
-                    android:text="234:00"
+                    android:gravity="center"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
+                    android:text="Много много тескта Много много Много много тескта Много много Много много тескта Много много тескта Много много Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="12dp"/>
+
+
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_training"
-                android:layout_width="0dp"
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:scrollbars="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_name_training"
-                tools:listitem="@layout/item_timer">
-
-            </android.support.v7.widget.RecyclerView>
+                app:layout_constraintTop_toTopOf="@+id/guideline3"
+                tools:listitem="@layout/item_exercise"/>
 
             <Button
                 android:id="@+id/bt_start"
@@ -129,6 +123,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.87"/>
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.4"/>
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>

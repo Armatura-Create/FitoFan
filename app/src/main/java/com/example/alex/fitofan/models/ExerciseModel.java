@@ -34,7 +34,7 @@ public class ExerciseModel implements Serializable, Parcelable {
     @DatabaseField(columnName = "count_repetitions")
     @SerializedName("count_repetitions")
     @Expose
-    private int countRepetitions;
+    private int countRepetitions = 1;
 
     @DatabaseField(columnName = "audio")
     private String audio;

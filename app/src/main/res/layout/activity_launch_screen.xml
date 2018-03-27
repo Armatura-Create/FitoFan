@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/bacground_lauch_screen"/>
+            android:src="@drawable/background"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

@@ -12,11 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
@@ -113,12 +117,18 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         CardView cvImageTraining = linear.findViewById(R.id.image_training_plan_card);
 
         //body view
+        LinearLayout linerNameExercise = linear.findViewById(R.id.liner_name_exercise);
+        LinearLayout linerDescriptionExercise = linear.findViewById(R.id.liner_description_exercise);
+        LinearLayout linerTimeBetweenExercise = linear.findViewById(R.id.liner_time_between_exercise);
+        LinearLayout linerRecoveryTime = linear.findViewById(R.id.liner_recovery_time);
+        LinearLayout linerExerciseTime = linear.findViewById(R.id.liner_exercise_time);
+        LinearLayout linerNumberApproaches = linear.findViewById(R.id.liner_number_approaches);
         TextView exerciseNumber = linear.findViewById(R.id.exercise_number);
         EditText etNameExercise = linear.findViewById(R.id.et_exercise_name);
         EditText etDescription = linear.findViewById(R.id.et_description_exercise);
         Button btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
         Button btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
-        EditText etNumberRepetition = linear.findViewById(R.id.et_number_repetitions);
+        EditText etNumberRepetition = linear.findViewById(R.id.et_number_approaches);
         EditText etTimeExercise = linear.findViewById(R.id.et_exercise_time);
         EditText etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
         EditText etRelaxTime = linear.findViewById(R.id.et_recovery_time);
@@ -153,6 +163,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                         mCreatePlanActivity.getResources().getString(R.string.class_description),
                         mCreatePlanActivity.getResources().getString(R.string.save), 1);
 
+                //set text if !null
+                setDataEt(dialog, nameTraining);
+
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
                     nameTraining.setText(et.getText());
@@ -167,6 +180,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                         mCreatePlanActivity.getResources().getString(R.string.description_description_plan),
                         mCreatePlanActivity.getResources().getString(R.string.save), 1);
 
+                //set text if !null
+                setDataEt(dialog, nameTrainingDescription);
+
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
                     nameTrainingDescription.setText(et.getText());
@@ -178,6 +194,8 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
         //body methods
         if (position > 0 && position != getItemCount() - 1) {
+
+            etNumberRepetition.setText("1");
 
             if (id > 0) {
                 setDataEditExercise(position,
@@ -196,7 +214,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
             exerciseNumber.setText(mCreatePlanActivity.getResources().getString(R.string.exercise) + " #" + position);
 
-            etRelaxTime.setOnClickListener(v -> {
+            linerRecoveryTime.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialogTime(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.relax_time),
                         mCreatePlanActivity.getResources().getString(R.string.relax_time_description),
@@ -220,7 +238,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
             });
 
-            etTimeBetweenExercise.setOnClickListener(v -> {
+            linerTimeBetweenExercise.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialogTime(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.time_between_exercise),
                         mCreatePlanActivity.getResources().getString(R.string.time_between_exercise_description),
@@ -244,36 +262,77 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
             });
 
-            etTimeExercise.setOnClickListener(v -> {
-                Dialog dialog = CustomDialog.dialogTime(mCreatePlanActivity.getContext(),
-                        mCreatePlanActivity.getResources().getString(R.string.time_exercise),
+            linerExerciseTime.setOnClickListener(v -> {
+                Dialog dialog = CustomDialog.dialogSpinner(mCreatePlanActivity.getContext(),
+                        mCreatePlanActivity.getResources().getString(R.string.duration_exercise),
                         mCreatePlanActivity.getResources().getString(R.string.time_exercise_description),
-                        mCreatePlanActivity.getResources().getString(R.string.save));
+                        mCreatePlanActivity.getResources().getString(R.string.save), 2);
 
-                dialog.findViewById(R.id.bt_save_time).setOnClickListener(viev -> {
-                    EditText min = dialog.findViewById(R.id.select_time_min),
-                            sec = dialog.findViewById(R.id.select_time_sec);
-                    if (Objects.equals(String.valueOf(min.getText()), "")) {
-                        min.setText("0");
+                LinearLayout time = dialog.findViewById(R.id.liner_time);
+                LinearLayout text = dialog.findViewById(R.id.liner_text);
+                Spinner sp = dialog.findViewById(R.id.spinner_type);
+
+                String[] data = {"Time", "Distance", "Weight", "Count"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(mCreatePlanActivity.getContext(), R.layout.spinner_item, data);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                sp.setAdapter(adapter);
+                sp.setSelection(0);
+                sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int p, long id) {
+                        switch (p) {
+                            case 0:
+                                time.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.GONE);
+                                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(viev -> {
+                                    EditText min = dialog.findViewById(R.id.select_time_min),
+                                            sec = dialog.findViewById(R.id.select_time_sec);
+                                    if (Objects.equals(String.valueOf(min.getText()), "")) {
+                                        min.setText("0");
+                                    }
+                                    if (Objects.equals(String.valueOf(sec.getText()), "")) {
+                                        sec.setText("0");
+                                    }
+                                    long temp_time = Integer.valueOf(String.valueOf(min.getText())) * MILISEC_MIN;
+                                    temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
+                                    mTrainingModel.getExercises().get(position - 1).setTime(temp_time * 10 + p);
+                                    etTimeExercise.setText(FormatTime.formatTime(temp_time));
+                                    RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
+                                    Log.e("onItemSelected: ", String.valueOf(mTrainingModel.getExercises().get(position).getTime()));
+                                    dialog.dismiss();
+                                });
+                                break;
+                            default:
+                                time.setVisibility(View.GONE);
+                                text.setVisibility(View.VISIBLE);
+                                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
+                                    EditText et = dialog.findViewById(R.id.et_add_field_dialog);
+                                    long temp = Integer.valueOf(String.valueOf(et.getText()));
+                                    mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + p);
+                                    etTimeExercise.setText(et.getText());
+                                    RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
+                                    Log.e("onItemSelected: ", String.valueOf(mTrainingModel.getExercises().get(position).getTime()));
+                                    dialog.dismiss();
+                                });
+                                break;
+                        }
                     }
-                    if (Objects.equals(String.valueOf(sec.getText()), "")) {
-                        sec.setText("0");
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
-                    long temp_time = Integer.valueOf(String.valueOf(min.getText())) * MILISEC_MIN;
-                    temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
-                    mTrainingModel.getExercises().get(position - 1).setTime(temp_time);
-                    etTimeExercise.setText(FormatTime.formatTime(temp_time));
-                    this.notifyItemChanged(getItemCount() - 1);
-                    dialog.dismiss();
                 });
-
             });
 
-            etNameExercise.setOnClickListener(v -> {
+            linerNameExercise.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.exercise),
                         mCreatePlanActivity.getResources().getString(R.string.exercise_name_description),
                         mCreatePlanActivity.getResources().getString(R.string.save), 1);
+
+                //set text if !null
+                setDataEt(dialog, etNameExercise);
 
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
@@ -283,11 +342,14 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
 
-            etDescription.setOnClickListener(v -> {
+            linerDescriptionExercise.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.training_description),
                         mCreatePlanActivity.getResources().getString(R.string.description_description_plan),
                         mCreatePlanActivity.getResources().getString(R.string.save), 1);
+
+                //set text if !null
+                setDataEt(dialog, etDescription);
 
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
@@ -297,11 +359,14 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
 
-            etNumberRepetition.setOnClickListener(v -> {
+            linerNumberApproaches.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
-                        mCreatePlanActivity.getResources().getString(R.string.number_repetitions),
+                        mCreatePlanActivity.getResources().getString(R.string.number_approaches),
                         mCreatePlanActivity.getResources().getString(R.string.number_repetitions_description),
                         mCreatePlanActivity.getResources().getString(R.string.save), 2);
+
+                //set text if !null
+                setDataEt(dialog, etNumberRepetition);
 
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
@@ -336,6 +401,13 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                     delItem();
                 }
             });
+        }
+    }
+
+    private void setDataEt(Dialog dialog, TextView nameTraining) {
+        if (nameTraining.getText().length() > 0) {
+            EditText et = dialog.findViewById(R.id.et_add_field_dialog);
+            et.setText(nameTraining.getText());
         }
     }
 
@@ -375,7 +447,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                     .into(image);
         }
     }
-
 
     void setAudio(Uri uriExercise, int position) {
         mTrainingModel.getExercises().get(position - 1).setAudio(uriExercise.toString());

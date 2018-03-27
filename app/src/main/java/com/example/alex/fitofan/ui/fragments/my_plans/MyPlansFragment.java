@@ -50,7 +50,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onStart() {
         initDB();
         initListeners();
-        initRecyclerView();
         super.onStart();
     }
 
@@ -60,10 +59,20 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mTrainings = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class).getTrainingDAO();
             assert mTrainings != null;
             mModels.addAll(mTrainings.queryForAll());
+            mModels = sort(mModels);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        initRecyclerView(mModels);
+    }
 
+    public ArrayList<TrainingModel> sort(ArrayList<TrainingModel> massive) {
+        for (int i = 0; i < massive.size() / 2; i++) {
+            TrainingModel tmp = massive.get(i);
+            massive.set(i, massive.get(massive.size() - i - 1));
+            massive.set(massive.size() - i - 1, tmp);
+        }
+        return massive;
     }
 
     private void initListeners() {
@@ -121,11 +130,11 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         onRefresh();
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(ArrayList<TrainingModel> models) {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterMyPlans(mModels, this);
+        adapter = new RecyclerAdapterMyPlans(models, this);
         mBinding.rvMyPlans.setAdapter(adapter);
         mBinding.rvMyPlans.setNestedScrollingEnabled(true);
 
@@ -147,7 +156,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         temp--;
                     }
                 }
-                if (temp == chArraySearch.length){
+                if (temp == chArraySearch.length) {
                     result.add(trainingModels.get(i));
                 }
             }
@@ -161,15 +170,17 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void onRefresh() {
-        mBinding.refresh.setRefreshing(false);
         mModels.clear();
         try {
             mTrainings = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class).getTrainingDAO();
             assert mTrainings != null;
             mModels.addAll(mTrainings.queryForAll());
+            mModels = sort(mModels);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         adapter.setTrainings(mModels);
+        adapter.notifyDataSetChanged();
+        mBinding.refresh.setRefreshing(false);
     }
 }
