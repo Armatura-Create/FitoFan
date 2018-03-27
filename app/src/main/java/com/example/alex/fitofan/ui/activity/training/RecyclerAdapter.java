@@ -10,20 +10,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.utils.FormatTime;
+
+import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private final RequestOptions mRequestOptions;
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private TrainingActivity trainingActivity;
-    private TrainingModel trainingModel;
-    private TextView timer;
+    private ArrayList<ExerciseModelFromTraining> model;
 
-    public RecyclerAdapter(TrainingActivity trainingActivity, TrainingModel trainingModel) {
+    public RecyclerAdapter(TrainingActivity trainingActivity, ArrayList<ExerciseModelFromTraining> model) {
         mRequestOptions = new RequestOptions();
         this.trainingActivity = trainingActivity;
-        this.trainingModel = trainingModel;
+        this.model = model;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -49,32 +52,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //Заполнение заданного представления данными
         final LinearLayout linear = holder.mLinearLayout;
 
-//        TextView name = linear.findViewById(R.id.name_exercise);
-//        TextView description = linear.findViewById(R.id.description_exercise);
-//        ImageView imageExercise = linear.findViewById(R.id.image_exercise);
-//        TextView postDescription = linear.findViewById(R.id.back_name_exercise);
-//        TextView postTime = linear.findViewById(R.id.back_time_exercise);
-//        TextView nextDescription = linear.findViewById(R.id.next_name_exercise);
-//        TextView nextTime = linear.findViewById(R.id.next_time_exercise);
-//        TextView nextNextDescription = linear.findViewById(R.id.next_next_name_exercise);
-//        TextView nextNextTime = linear.findViewById(R.id.next_next_time_exercise);
+        TextView name = linear.findViewById(R.id.tv_name_exercise);
+        TextView time = linear.findViewById(R.id.tv_time);
+        TextView number = linear.findViewById(R.id.tv_number);
 
-
-    }
-
-    private int countingExercises() {
-        int result = 0;
-        if (trainingModel.getExercises() != null) {
-            for (int i = 0; i < trainingModel.getExercises().size(); i++) {
-                result += trainingModel.getExercises().get(i).getCountRepetitions() * 2;
-            }
-            return result;
-        }
-        return 0;
+        name.setText(model.get(position).getName());
+        time.setText(FormatTime.formatTime(model.get(position).getTime()));
+        number.setText(String.valueOf(position + 1));
     }
 
     @Override
     public int getItemCount() {
-        return countingExercises();
+        return model != null ? model.size() : 0;
     }
 }

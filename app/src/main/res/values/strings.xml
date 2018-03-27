@@ -45,8 +45,8 @@
     <string name="exercise">Exercise</string>
     <string name="number_approaches">Number of approaches</string>
     <string name="duration_exercise">Duration/Weight/Distance</string>
-    <string name="time_between_exercise">Rest time between approaches</string>
-    <string name="relax_time">Rest</string>
+    <string name="time_between_exercise">Rest</string>
+    <string name="relax_time">Relax Time</string>
     <string name="add_exercise">Add an exercise</string>
     <string name="save_all_plan">Save workout</string>
     <string name="all_time_plan">Total time</string>

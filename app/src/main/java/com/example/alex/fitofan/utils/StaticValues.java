@@ -12,4 +12,11 @@ public abstract class StaticValues {
     public static final String GO_TO_SETTINGS = "Go to settings";
     public static final String REGISTRATION_ERROR = "Registration error";
     public static final String TRY_AGAIN = "Try again";
+
+    //for type
+    public static final int TIME = 0;
+    public static final int DISTANCE = 1;
+    public static final int WEIGHT = 2;
+    public static final int COUNT = 3;
+
 }

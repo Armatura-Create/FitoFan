@@ -298,7 +298,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                                     mTrainingModel.getExercises().get(position - 1).setTime(temp_time * 10 + p);
                                     etTimeExercise.setText(FormatTime.formatTime(temp_time));
                                     RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
-                                    Log.e("onItemSelected: ", String.valueOf(mTrainingModel.getExercises().get(position).getTime()));
                                     dialog.dismiss();
                                 });
                                 break;
@@ -311,7 +310,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                                     mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + p);
                                     etTimeExercise.setText(et.getText());
                                     RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
-                                    Log.e("onItemSelected: ", String.valueOf(mTrainingModel.getExercises().get(position).getTime()));
                                     dialog.dismiss();
                                 });
                                 break;

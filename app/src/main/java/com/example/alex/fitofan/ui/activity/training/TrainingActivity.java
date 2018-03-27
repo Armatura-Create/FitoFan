@@ -19,6 +19,7 @@ import com.adgvcxz.cardlayoutmanager.CardLayoutManager;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -125,7 +126,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private void initRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.content.rv.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapter(this, mTrainingModel);
+        adapter = new RecyclerAdapter(this, UnpackingTraining.buildExercises(mTrainingModel));
         mBinding.content.rv.setAdapter(adapter);
     }
 
