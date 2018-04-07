@@ -8,14 +8,9 @@ public class UserProfileContract {
 
         Context getContext();
 
-        void goToMain();
-
     }
 
     interface EventListener {
 
-        void register(String name, String email, String password, String phone);
-
-        void goToMain();
     }
 }

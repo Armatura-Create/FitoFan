@@ -37,46 +37,46 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     //design
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.android.support:animated-vector-drawable:26.1.0'
-    compile 'com.android.support:customtabs:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:animated-vector-drawable:26.1.0'
+    implementation 'com.android.support:customtabs:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
 
     //cardRecycler
-    compile 'com.github.adgvcxz:cardlayoutmanager:0.2.1'
+    implementation 'com.github.adgvcxz:cardlayoutmanager:0.2.1'
 
     //circleImageView
-    compile 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     //animation
 
     //retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Json
-    compile "com.googlecode.json-simple:json-simple:1.1"
+    implementation "com.googlecode.json-simple:json-simple:1.1"
 
     //Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.github.bumptech.glide:glide:4.0.0'
-    compile 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //facebook
-    compile 'com.facebook.android:facebook-android-sdk:4.26.0'
+    implementation 'com.facebook.android:facebook-android-sdk:4.26.0'
 
     //ORM
-    compile 'com.j256.ormlite:ormlite-android:5.0'
-    compile 'com.j256.ormlite:ormlite-core:5.0'
+    implementation 'com.j256.ormlite:ormlite-android:5.0'
+    implementation 'com.j256.ormlite:ormlite-core:5.0'
 
     //EventBus
-    compile 'org.greenrobot:eventbus:3.1.1'
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
 }

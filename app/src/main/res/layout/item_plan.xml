@@ -89,14 +89,13 @@
             android:layout_marginRight="8dp"
             app:cardCornerRadius="6dp">
 
-
             <ImageView
                 android:id="@+id/image_training"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                android:src="@drawable/play"/>
+                android:src="@drawable/logo_fitofan"/>
 
         </android.support.v7.widget.CardView>
 

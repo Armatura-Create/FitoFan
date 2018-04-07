@@ -1,7 +1,9 @@
 package com.example.alex.fitofan.ui.activity.training;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -13,12 +15,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.adgvcxz.cardlayoutmanager.CardLayoutManager;
+import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.utils.CustomDialog;
+import com.example.alex.fitofan.utils.CustomFontsLoader;
+import com.example.alex.fitofan.utils.FormatTime;
+import com.example.alex.fitofan.utils.ItemClickSupport;
+import com.example.alex.fitofan.utils.StaticValues;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -26,6 +34,7 @@ import com.j256.ormlite.dao.Dao;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -44,9 +53,9 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private ScheduledExecutorService mTimerThread = null;
     private SoundPool sp;
     private int soundIdPoint;
-    private CardLayoutManager layoutManager;
     private RecyclerAdapter adapter;
     private int mPosition = 0;
+    private boolean isStop = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +130,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             mTrainingModel = new TrainingModel();
         }
         initRecycler();
+        setData();
     }
 
     private void initRecycler() {
@@ -131,71 +141,199 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     }
 
     private void initListeners() {
+        try {
+            mBinding.content.timer.setTypeface(CustomFontsLoader.getTypeface(this, 0));
+        } catch (Exception e) {
+            Log.e("initListeners: ", String.valueOf(e));
+        }
+
 
         mBinding.content.btStart.setOnClickListener(v -> {
-            if (!isRunning()) {
-                Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
-                mBinding.content.btStart.setText("STOP");
-                layoutManager.setHorizontalSwipe(false);
+            if (!isRunning() && isStop) {
+                isStop = false;
+                mBinding.content.btStart.setText("DONE");
+                mBinding.content.btReset.setText("STOP");
                 preparationTimer();
+            } else if (!isStop && !isRunning()) {
+                if (mPosition < adapter.getItemCount() - 1) {
+                    mPosition++;
+                    if (adapter.getModel().get(mPosition).getTime() % 10 != 0) {
+                        setData();
+                    } else {
+                        startTimer(adapter.getModel().get(mPosition).getTime() / 10);
+                    }
+                } else {
+                    isStop = true;
+                    mBinding.content.btStart.setText("START");
+                    mBinding.content.btReset.setText("RESET");
+                }
+            }
+        });
+
+        mBinding.content.btReset.setOnClickListener(v -> {
+            if (!isRunning() && isStop) {
+
+                Dialog dialog = CustomDialog.dialogSimple(getContext(),
+                        null,
+                        "Reset?",
+                        "Yes",
+                        "No");
+                dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
+                    mPosition = 0;
+                    setData();
+                    dialog.dismiss();
+                });
             } else {
-                Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
-                mBinding.content.btStart.setText("START");
-                layoutManager.setHorizontalSwipe(true);
-                stopTimer();
+                Dialog dialog = CustomDialog.dialogSimple(getContext(),
+                        null,
+                        "Stop?",
+                        "Yes",
+                        "No");
+                dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
+                    isStop = true;
+                    mBinding.content.btStart.setText("START");
+                    mBinding.content.btReset.setText("RESET");
+                    stopTimer();
+                    dialog.dismiss();
+                });
+            }
+        });
+
+        ItemClickSupport.addTo(mBinding.content.rv).setOnItemClickListener((recyclerView, position, v) -> {
+            if (!isRunning() && isStop) {
+                mPosition = position;
+                setData();
+            } else {
+                Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void preparationTimer() {
-        final long[] time = {5000L};
-//        setTime(time[0]);
-        layoutManager.setHorizontalSwipe(false);
-        mTimerThread = Executors.newSingleThreadScheduledExecutor();
-        mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
-            long elapsedTime = time[0] - DEFAULT_REFRESH_INTERVAL;
-            if (elapsedTime <= 0) {
-                stopTimer();
-                sp.play(soundIdPoint, 1, 1, 0, 0, 1);
-                startTimer(mTrainingModel.getExercises().get(layoutManager.getTopPosition()).getTime());
-            }
-            time[0] -= DEFAULT_REFRESH_INTERVAL;
-//            setTime(elapsedTime);
-        }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
+        if (mPosition < adapter.getItemCount()) {
+            final long[] time = {5000L};
+            mBinding.content.timer.setText(FormatTime.formatTime(time[0]));
+            mTimerThread = Executors.newSingleThreadScheduledExecutor();
+            mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
+                long elapsedTime = time[0] - DEFAULT_REFRESH_INTERVAL;
+                if (elapsedTime <= 0) {
+                    stopTimer();
+                    sp.play(soundIdPoint, 1, 1, 0, 0, 1);
+                    startTimer(adapter.getModel().get(mPosition).getImage() != "rest" ?
+                            adapter.getModel().get(mPosition).getTime() / 10 :
+                            adapter.getModel().get(mPosition).getTime());
+                } else {
+                    time[0] -= DEFAULT_REFRESH_INTERVAL;
+                    mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
+                }
+            }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
+        } else {
+            stopTimer();
+            Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
+            mBinding.content.btStart.setText("START");
+        }
     }
 
     private void startTimer(long timerStart) {
-        layoutManager.setHorizontalSwipe(false);
+        setData();
+
         final long[] tempTime = {timerStart};
-//        setTime(timerStart);
         if (mMediaPlayer != null) {
             releaseMP();
         }
-        Log.e("position: ", String.valueOf(layoutManager.getTopPosition()));
-        startMusicExercise(mTrainingModel.getExercises().get(layoutManager.getTopPosition()).getAudio());
+        if (adapter.getModel().get(mPosition).getName() != getResources().getString(R.string.rest)) {
+            startMusicExercise(
+                    mTrainingModel.getExercises().get(adapter.getModel().get(mPosition).getPosition())
+                            .getAudio());
+        }
+
+        if (adapter.getModel().get(mPosition).getTime() % 10 != 0) {
+            stopTimer();
+            isStop = false;
+            return;
+        }
+
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
             long elapsedTime = tempTime[0] - DEFAULT_REFRESH_INTERVAL;
             if (elapsedTime <= 0) {
+                mPosition++;
                 stopTimer();
-                if (layoutManager.getTopPosition() < adapter.getItemCount() - 1) {
-                    mBinding.content.rv.smoothScrollToPosition(0);
-                    startTimer(mTrainingModel.getExercises().get(layoutManager.getTopPosition() + 1).getTime());
+                if (mPosition < adapter.getItemCount()) {
+                    startTimer(adapter.getModel().get(mPosition).getImage() != "rest" ?
+                            adapter.getModel().get(mPosition).getTime() / 10 :
+                            adapter.getModel().get(mPosition).getTime());
                 } else {
-                    Toast.makeText(getContext(), "Complite", Toast.LENGTH_SHORT).show();
+                    stopTimer();
+                    Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
                     mBinding.content.btStart.setText("START");
+                    mBinding.content.btReset.setText("RESET");
+                    isStop = true;
                 }
                 sp.play(soundIdPoint, 1, 1, 0, 0, 1);
+            } else {
+                tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
+                mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
             }
-            tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
-//            setTime(elapsedTime);
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
+
     }
 
-//    private void setTime(long timerStart) {
-//        adapter.setTime(timerStart, layoutManager.getTopPosition());
-//        adapter.notifyItemChanged(layoutManager.getTopPosition());
-//    }
+    private void setData() {
+
+        mBinding.content.rv.smoothScrollToPosition(mPosition);
+
+        if (adapter.getModel().get(mPosition).getImage() != null && adapter.getModel().get(mPosition).getImage() != "rest") {
+            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Glide.with(getContext())
+                    .load(Uri.parse(adapter.getModel().get(mPosition).getImage()))
+                    .into(mBinding.content.imageExercise);
+        } else if (adapter.getModel().get(mPosition).getImage() != null && adapter.getModel().get(mPosition).getImage() == "rest") {
+            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            Glide.with(getContext())
+                    .load(R.drawable.icon_fitofan)
+                    .into(mBinding.content.imageExercise);
+        } else {
+            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            Glide.with(getContext())
+                    .load(R.drawable.logo_fitofan)
+                    .into(mBinding.content.imageExercise);
+        }
+
+        mBinding.content.tvNameExercise.setText(adapter.getModel().get(mPosition).getName());
+
+        if (!Objects.equals(adapter.getModel().get(mPosition).getName(), getResources().getString(R.string.rest)))
+            mBinding.content.descriptionExercise.setText(adapter.getModel().get(mPosition).getDescription());
+        else
+            mBinding.content.descriptionExercise.setText(getResources().getString(R.string.rest));
+
+        String temp = null;
+        switch ((int) (adapter.getModel().get(mPosition).getTime() % 10)) {
+            case StaticValues.TIME:
+                if (adapter.getModel().get(mPosition).getImage() != "rest")
+                    mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                else
+                    mBinding.content.timer.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
+
+                temp = "Time";
+                break;
+            case StaticValues.DISTANCE:
+                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                temp = "Distance" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
+                break;
+            case StaticValues.WEIGHT:
+                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                temp = "Weight" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
+                break;
+            case StaticValues.COUNT:
+                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                temp = "Count" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
+                break;
+        }
+        mBinding.content.type.setText(temp);
+        adapter.notifyDataSetChanged();
+    }
+
 
     private void releaseMP() {
         if (mMediaPlayer != null) {
@@ -234,7 +372,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     }
 
     public synchronized void stopTimer() {
-        layoutManager.setHorizontalSwipe(true);
         if (mTimerThread == null) return;
 
         releaseMP();
@@ -256,5 +393,9 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         super.onDestroy();
         releaseMP();
         stopTimer();
+    }
+
+    public int getPosition() {
+        return mPosition;
     }
 }

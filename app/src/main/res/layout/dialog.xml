@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
-    android:layout_gravity="center"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
     app:cardCornerRadius="10dp">
 
     <ImageView
@@ -94,13 +94,15 @@
 
                     <EditText
                         android:id="@+id/et_add_field_dialog"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:background="#00000000"
+                        android:background="@null"
                         android:textColor="@color/button_blue"
                         android:textColorHint="@color/button_blue"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        android:isScrollContainer="true"
+                        android:typeface="serif"/>
 
                     <View
                         android:layout_width="match_parent"

@@ -12,6 +12,8 @@ public class ExerciseModelFromTraining {
 
     private int type;
 
+    private String image = null;
+
     public int getType() {
         return type;
     }
@@ -52,4 +54,11 @@ public class ExerciseModelFromTraining {
         this.position = position;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

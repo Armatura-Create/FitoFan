@@ -3,31 +3,15 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_special"
-            tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_special"
+        tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
 
-            <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent">
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:title=" "
-                    app:navigationIcon="?attr/homeAsUpIndicator"
-                    app:titleTextColor="@android:color/white"/>
-
-            </android.support.design.widget.AppBarLayout>
-
-            <include
-                android:id="@+id/content"
-                layout="@layout/content_user_profile"/>
-        </android.support.design.widget.CoordinatorLayout>
+        <include
+            android:id="@+id/content"
+            layout="@layout/content_user_profile"/>
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

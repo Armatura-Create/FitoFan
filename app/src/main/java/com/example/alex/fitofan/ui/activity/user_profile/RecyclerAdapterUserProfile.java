@@ -2,10 +2,12 @@ package com.example.alex.fitofan.ui.activity.user_profile;
 
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.alex.fitofan.R;
@@ -66,8 +68,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //Заполнение заданного представления данными
         final ConstraintLayout linear = holder.mLinearLayout;
-
-        Log.e("onBindViewHolder: ", String.valueOf(getItemCount()));
+        ImageView back = linear.findViewById(R.id.bt_back);
 
         //header view
 
@@ -75,7 +76,18 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
 
         //header methods
+        if (position == 0) {
+            back.setOnClickListener(v -> {
+                mUserProfileActivity.onBackPressed();
+            });
 
+            final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mUserProfileActivity.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            final RecyclerAdapterInAdapter adapter = new RecyclerAdapterInAdapter(mUserProfileActivity);
+            recyclerView.setAdapter(adapter);
+        }
         //body methods
 
     }

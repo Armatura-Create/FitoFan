@@ -55,5 +55,6 @@
     <string name="password_again">Повторить пароль</string>
     <string name="del_exercise">Удалить упражнение</string>
     <string name="subscribe">Подписаться</string>
+    <string name="rest">Отдых</string>
 
 </resources>

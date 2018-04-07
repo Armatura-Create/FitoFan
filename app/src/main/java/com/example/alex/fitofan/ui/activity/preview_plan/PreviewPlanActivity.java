@@ -3,16 +3,19 @@ package com.example.alex.fitofan.ui.activity.preview_plan;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -50,6 +53,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            mBinding.content.tvTrainingName.setText(mModel.getName());
         } else {
             mModel = new TrainingModel();
         }
@@ -57,16 +61,18 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        mBinding.content.btGoToTraining.setOnClickListener(v -> {
+            goTraining();
+        });
     }
 
     private void initRecyclerView() {
 
-        mBinding.content.rvTrainingPlan.setNestedScrollingEnabled(false);
-        mBinding.content.rvTrainingPlan.setHasFixedSize(false);
+        mBinding.content.rv.setHasFixedSize(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mBinding.content.rvTrainingPlan.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterPreviewPlan(mModel, this, isGoTo);
-        mBinding.content.rvTrainingPlan.setAdapter(adapter);
+        mBinding.content.rv.setLayoutManager(linearLayoutManager);
+        adapter = new RecyclerAdapterPreviewPlan(this, UnpackingTraining.buildExercises(mModel));
+        mBinding.content.rv.setAdapter(adapter);
 
     }
 

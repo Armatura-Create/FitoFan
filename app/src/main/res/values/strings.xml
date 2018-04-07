@@ -77,5 +77,6 @@
     <string name="password_again">Password again</string>
     <string name="del_exercise">Delete exercise</string>
     <string name="subscribe">Subscribe</string>
+    <string name="rest">Rest</string>
 
 </resources>

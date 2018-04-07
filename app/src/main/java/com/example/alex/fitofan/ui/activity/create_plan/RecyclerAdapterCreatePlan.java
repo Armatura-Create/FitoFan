@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
@@ -124,14 +123,14 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         LinearLayout linerExerciseTime = linear.findViewById(R.id.liner_exercise_time);
         LinearLayout linerNumberApproaches = linear.findViewById(R.id.liner_number_approaches);
         TextView exerciseNumber = linear.findViewById(R.id.exercise_number);
-        EditText etNameExercise = linear.findViewById(R.id.et_exercise_name);
-        EditText etDescription = linear.findViewById(R.id.et_description_exercise);
+        TextView etNameExercise = linear.findViewById(R.id.et_exercise_name);
+        TextView etDescription = linear.findViewById(R.id.et_description_exercise);
         Button btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
         Button btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
-        EditText etNumberRepetition = linear.findViewById(R.id.et_number_approaches);
-        EditText etTimeExercise = linear.findViewById(R.id.et_exercise_time);
-        EditText etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
-        EditText etRelaxTime = linear.findViewById(R.id.et_recovery_time);
+        TextView etNumberRepetition = linear.findViewById(R.id.et_number_approaches);
+        TextView etTimeExercise = linear.findViewById(R.id.et_exercise_time);
+        TextView etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
+        TextView etRelaxTime = linear.findViewById(R.id.et_recovery_time);
         ImageView imageExercise = linear.findViewById(R.id.image_exercise_create);
         CardView cvImageExercise = linear.findViewById(R.id.image_exercise_card);
 
@@ -233,6 +232,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                     temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
                     mTrainingModel.getExercises().get(position - 1).setRecoveryTime(temp_time);
                     etRelaxTime.setText(FormatTime.formatTime(temp_time));
+                    this.notifyItemChanged(getItemCount() - 1);
                     dialog.dismiss();
                 });
 
@@ -308,7 +308,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
                                     long temp = Integer.valueOf(String.valueOf(et.getText()));
                                     mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + p);
-                                    etTimeExercise.setText(et.getText());
+                                    etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
                                     RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
                                     dialog.dismiss();
                                 });
@@ -424,18 +424,20 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         long allTime = 0L;
 
         for (int i = 0; i < mTrainingModel.getExercises().size(); i++) {
-            allTime += mTrainingModel.getExercises().get(i).getTime();
-            allTime += mTrainingModel.getExercises().get(i).getTimeBetween();
+            if (mTrainingModel.getExercises().get(i).getTime() % 10 == 0)
+                allTime += mTrainingModel.getExercises().get(i).getTime() / 10 * mTrainingModel.getExercises().get(i).getCountRepetitions();
+            allTime += mTrainingModel.getExercises().get(i).getTimeBetween() * mTrainingModel.getExercises().get(i).getCountRepetitions();
+            allTime += mTrainingModel.getExercises().get(i).getRecoveryTime() * mTrainingModel.getExercises().get(i).getCountRepetitions();
         }
         mTrainingModel.setTime(allTime);
         return FormatTime.formatTime(allTime);
     }
 
-    private void setDataEditExercise(int position, EditText etNameExercise, EditText etDescription, EditText etNumberRepetition, EditText etTimeExercise, EditText etTimeBetweenExercise, EditText etRelaxTime, ImageView image, CardView cvImage) {
+    private void setDataEditExercise(int position, TextView etNameExercise, TextView etDescription, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, ImageView image, CardView cvImage) {
         etNameExercise.setText(mTrainingModel.getExercises().get(position - 1).getName());
         etDescription.setText(mTrainingModel.getExercises().get(position - 1).getDescription());
         etNumberRepetition.setText(String.valueOf(mTrainingModel.getExercises().get(position - 1).getCountRepetitions()));
-        etTimeExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTime()));
+        etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
         etTimeBetweenExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTimeBetween()));
         etRelaxTime.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getRecoveryTime()));
         if (mTrainingModel.getExercises().get(position - 1).getImage() != null) {

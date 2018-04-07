@@ -9,14 +9,4 @@ class UserProfilePresenter implements UserProfileContract.EventListener {
         this.view = view;
     }
 
-
-    @Override
-    public void register(String name, String email, String password, String phone) {
-    }
-
-    @Override
-    public void goToMain() {
-        view.goToMain();
-    }
-
 }

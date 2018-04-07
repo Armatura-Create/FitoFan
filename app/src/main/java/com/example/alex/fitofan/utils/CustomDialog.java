@@ -67,7 +67,7 @@ public final class CustomDialog {
 
         switch (inputMode) {
             case 1:
-                et.setInputType(InputType.TYPE_CLASS_TEXT);
+                et.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 break;
             case 2:
                 et.setInputType(InputType.TYPE_CLASS_NUMBER);
