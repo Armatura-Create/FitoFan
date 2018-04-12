@@ -56,6 +56,6 @@ public class RecyclerAdapterInAdapter extends RecyclerView.Adapter<RecyclerAdapt
 
     @Override
     public int getItemCount() {
-        return 7;
+        return 5;
     }
 }

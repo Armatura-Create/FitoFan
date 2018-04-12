@@ -1,16 +1,21 @@
 package com.example.alex.fitofan.ui.activity.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -39,6 +44,9 @@ public class MainActivity extends AppCompatActivity
 
     private ActivityMainBinding mBinding;
     private MainPresenter mPresenter;
+    private  View navHeader;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int SELECT_IMAGE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,8 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
 
+        navHeader = mBinding.navView.getHeaderView(0);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mBinding.drawerLayout, mBinding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mBinding.drawerLayout.addDrawerListener(toggle);
@@ -59,21 +69,70 @@ public class MainActivity extends AppCompatActivity
 
         initCheckConnection();
         initTabs();
-//        loadAvatar();
+        initListeners();
+        loadHeader();
+    }
+
+    private void initListeners() {
+        navHeader.findViewById(R.id.nav_profileImage).setOnClickListener(view -> {
+            requestMultiplePermissions();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                chooseAvatar();
+        });
+    }
+
+    void chooseAvatar() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, SELECT_IMAGE);
+    }
+
+    public void requestMultiplePermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SELECT_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    if (data != null)
+                        if (data.getData() != null) {
+                            loadHeader(data);
+                        }
+                }
+                break;
+        }
     }
 
     private void initCheckConnection() {
         Connection.isNetworkAvailable(mBinding.appBarMain.toolbar, this);
     }
 
-    private void loadAvatar() {
-        CircleImageView imageProfile = findViewById(R.id.nav_profileImage);
-
+    private void loadHeader() {
+        CircleImageView imageProfile = navHeader.findViewById(R.id.nav_profileImage);
         Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
         Glide.with(getApplicationContext()) //передаем контекст приложения
                 .load(uri)
                 .into(imageProfile); //ссылка на ImageView
+
+        //TODO Доделать подгрузку имени
     }
+
+    private void loadHeader(Intent data) {
+        CircleImageView imageProfile = navHeader.findViewById(R.id.nav_profileImage);
+        Glide.with(getApplicationContext()) //передаем контекст приложения
+                .load(data.getData())
+                .into(imageProfile); //ссылка на ImageView
+    }
+
+
 
     private void initTabs() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

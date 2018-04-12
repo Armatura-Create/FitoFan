@@ -1,88 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/bt_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/ripple_back"
-        android:rotation="180"
-        android:src="@drawable/play"
-        android:translationZ="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    <include
+        layout="@layout/item_medal_silver"/>
 
     <ImageView
         android:id="@+id/user_photo"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="@drawable/background_launch_screen"
+        android:src="@drawable/background_launch_screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:src="@drawable/background_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/first_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:text="FirstName"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="Александр"
         android:textColor="@android:color/white"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/last_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/last_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:text="LastName"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="Данильев"
         android:textColor="@android:color/white"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/city"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/city"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:text="New York"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/liner_information_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/liner_information_user"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:orientation="horizontal"
         android:weightSum="3"
         app:layout_constraintBottom_toTopOf="@+id/bio"
@@ -99,7 +104,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_pedestal"/>
+                android:src="@drawable/icon_pedestal" />
 
             <TextView
                 android:id="@+id/tv_place"
@@ -109,7 +114,7 @@
                 android:layout_marginStart="5dp"
                 android:text="23456"
                 android:textColor="@android:color/white"
-                android:textSize="17sp"/>
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -124,7 +129,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_timer"/>
+                android:src="@drawable/icon_timer" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -134,7 +139,7 @@
                 android:layout_marginStart="5dp"
                 android:text="86"
                 android:textColor="@android:color/white"
-                android:textSize="17sp"/>
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -149,7 +154,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_subscrierse"/>
+                android:src="@drawable/icon_subscrierse" />
 
             <TextView
                 android:id="@+id/tv_subscrierse"
@@ -159,7 +164,7 @@
                 android:layout_marginStart="5dp"
                 android:text="12"
                 android:textColor="@android:color/white"
-                android:textSize="17sp"/>
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -170,26 +175,46 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:text="New York New York New York New York New York New York New York New York New York New York New York New York New YorkNew York New Yorkv "
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="New York New York New York New York New York New York New York New York New York New York New York New York New York New York New York New YorkNew York New Yorkv "
         android:textColor="@color/transparent_text_white"
-        app:layout_constraintBottom_toTopOf="@+id/rv_group"
+        app:layout_constraintBottom_toTopOf="@+id/linear_group"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_group"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/linear_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/item_group"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/show_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/show_all" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:listitem="@layout/item_group" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

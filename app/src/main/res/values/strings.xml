@@ -78,5 +78,7 @@
     <string name="del_exercise">Delete exercise</string>
     <string name="subscribe">Subscribe</string>
     <string name="rest">Rest</string>
+    <string name="user_profile">User profile</string>
+    <string name="show_all">Show All</string>
 
 </resources>

@@ -39,7 +39,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
     }
 
     private void initListeners() {
-//        mBinding.btBack.setOnClickListener(v -> onBackPressed());
+        mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
     }
 
     @Override

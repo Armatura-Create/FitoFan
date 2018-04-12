@@ -81,25 +81,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
             goToPreview(mModels.get(position));
         });
 
-        ItemClickSupport.addTo(mBinding.rvMyPlans).setOnItemLongClickListener((recyclerView, position, v) -> {
-            Dialog dialog = CustomDialog.dialogSimple(getContext(),
-                    getResources().getString(R.string.select_action),
-                    null,
-                    getResources().getString(R.string.remove),
-                    getResources().getString(R.string.edit));
-            dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                Toast.makeText(getContext(), getResources().getString(R.string.removed), Toast.LENGTH_SHORT).show();
-                deletePlan(position);
-                dialog.dismiss();
-            });
-
-            dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
-                goToEdit(mModels.get(position));
-                dialog.dismiss();
-            });
-            return false;
-        });
-
         mBinding.searchMyPlans.setOnEditorActionListener((v, actionId, event) -> {
             searchResult(mModels, v.getText().toString());
             return true;
@@ -113,21 +94,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         intent.putExtra("trainingModel", trainingModel.getId());
         intent.putExtra("isGoTo", IS_FROM_TRAINING);
         startActivity(intent);
-    }
-
-    private void goToEdit(TrainingModel trainingModel) {
-        Intent intent = new Intent(getContext(), CreatePlanActivity.class);
-        intent.putExtra("trainingModel", trainingModel.getId());
-        startActivity(intent);
-    }
-
-    private void deletePlan(int position) {
-        try {
-            mTrainings.deleteById(mModels.get(position).getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        onRefresh();
     }
 
     private void initRecyclerView(ArrayList<TrainingModel> models) {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 
@@ -68,7 +69,6 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //Заполнение заданного представления данными
         final ConstraintLayout linear = holder.mLinearLayout;
-        ImageView back = linear.findViewById(R.id.bt_back);
 
         //header view
 
@@ -77,8 +77,9 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
         //header methods
         if (position == 0) {
-            back.setOnClickListener(v -> {
-                mUserProfileActivity.onBackPressed();
+
+            linear.findViewById(R.id.show_all).setOnClickListener(view -> {
+                Toast.makeText(mUserProfileActivity.getContext(), "Show All", Toast.LENGTH_SHORT).show();
             });
 
             final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);

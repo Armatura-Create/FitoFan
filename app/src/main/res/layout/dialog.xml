@@ -94,15 +94,17 @@
 
                     <EditText
                         android:id="@+id/et_add_field_dialog"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:background="@null"
                         android:textColor="@color/button_blue"
                         android:textColorHint="@color/button_blue"
                         android:textSize="18sp"
+                        android:maxLines = "5"
+                        android:scrollbars = "vertical"
                         android:isScrollContainer="true"
-                        android:typeface="serif"/>
+                        android:typeface="monospace"/>
 
                     <View
                         android:layout_width="match_parent"

@@ -57,25 +57,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/card"
                 tools:listitem="@layout/item_exercise"/>
 
-            <LinearLayout
-                android:id="@+id/bt_go_to_training"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/go_to_training"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                app:borderWidth="0dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/ripple_go_training"
+                android:src="@android:drawable/ic_media_play"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <ImageView
-                    android:paddingStart="13dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ripple_back"
-                    android:src="@drawable/play"/>
-            </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>

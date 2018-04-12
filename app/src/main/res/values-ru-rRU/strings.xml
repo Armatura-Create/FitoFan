@@ -56,5 +56,6 @@
     <string name="del_exercise">Удалить упражнение</string>
     <string name="subscribe">Подписаться</string>
     <string name="rest">Отдых</string>
+    <string name="show_all">Показать все</string>
 
 </resources>
