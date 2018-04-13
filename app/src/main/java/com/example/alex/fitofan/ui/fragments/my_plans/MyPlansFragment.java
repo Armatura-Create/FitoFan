@@ -82,7 +82,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
 
         mBinding.searchMyPlans.setOnEditorActionListener((v, actionId, event) -> {
-            searchResult(mModels, v.getText().toString());
+            searchResult(v.getText().toString());
             return true;
         });
 
@@ -106,24 +106,12 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     }
 
-    //TODO не работатет пока как надо
-
-    private void searchResult(ArrayList<TrainingModel> trainingModels, String text) {
+    private void searchResult(String text) {
         ArrayList<TrainingModel> result = new ArrayList<>();
-        for (int i = 0; i < trainingModels.size(); i++) {
-            int temp = 0;
-            char[] chArrayModel = trainingModels.get(i).getName().toCharArray();
-            char[] chArraySearch = text.toCharArray();
-            for (char aChArrayModel : chArrayModel) {
-                for (char aChArraySearch : chArraySearch) {
-                    if (chArrayModel == chArraySearch) {
-                        temp++;
-                    } else {
-                        temp--;
-                    }
-                }
-                if (temp == chArraySearch.length) {
-                    result.add(trainingModels.get(i));
+        for (int i = 0; i < mModels.size(); i++) {
+            if (mModels.get(i).getName() != null) {
+                if (mModels.get(i).getName().contains(text)) {
+                    result.add(mModels.get(i));
                 }
             }
         }
@@ -146,7 +134,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
             e.printStackTrace();
         }
         adapter.setTrainings(mModels);
-        adapter.notifyDataSetChanged();
         mBinding.refresh.setRefreshing(false);
     }
 }

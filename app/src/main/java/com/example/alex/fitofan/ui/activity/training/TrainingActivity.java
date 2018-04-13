@@ -3,7 +3,6 @@ package com.example.alex.fitofan.ui.activity.training;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -15,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,7 +34,6 @@ import com.j256.ormlite.dao.Dao;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,6 +55,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private RecyclerAdapter adapter;
     private int mPosition = 0;
     private boolean isStop = true;
+    private int positionMusic = -1;
+    private float volume = (float) 0.6;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,16 +72,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         initSoundPoint();
     }
 
-    /**
-     * Called when pointer capture is enabled or disabled for the current window.
-     *
-     * @param hasCapture True if the window has pointer capture.
-     */
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
     private void initSoundPoint() {
         sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         sp.setOnLoadCompleteListener(this);
@@ -89,30 +80,22 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     }
 
-    //    void moveExercise(int i){
-//        adapter.setMapPosition(adapter.getMapPosition() + i);
-//        mBinding.content.tvDescriptionExercise.setText(
-//                mTrainingModel.getExercises().get(adapter.getMapPosition()).getDescription()
-//        );
-//        setImageExercise(mTrainingModel.getExercises().get(adapter.getMapPosition()).getImage());
-//        adapter.notifyDataSetChanged();
-//    }
-//
     private void startMusicExercise(String audioUri) {
         if (audioUri != null) {
-            Log.e("startMusicExercise: ", audioUri);
             Uri bufUri = Uri.parse(audioUri);
             try {
                 mMediaPlayer = new MediaPlayer();
                 mMediaPlayer.setDataSource(this, bufUri);
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setLooping(true);
+                mMediaPlayer.setVolume(volume, volume);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Failed, please re-select music", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Log.e("startMusicExercise: ", "beda");
             Toast.makeText(getContext(), "No audio", Toast.LENGTH_SHORT).show();
         }
     }
@@ -150,22 +133,21 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mBinding.content.btStart.setOnClickListener(v -> {
             if (!isRunning() && isStop) {
-                isStop = false;
                 mBinding.content.btStart.setText("DONE");
                 mBinding.content.btReset.setText("STOP");
                 preparationTimer();
             } else if (!isStop && !isRunning()) {
                 if (mPosition < adapter.getItemCount() - 1) {
                     mPosition++;
-                    if (adapter.getModel().get(mPosition).getTime() % 10 != 0) {
-                        setData();
-                    } else {
-                        startTimer(adapter.getModel().get(mPosition).getTime() / 10);
-                    }
+                    ifMethod();
+                    sp.play(soundIdPoint, 1, 1, 0, 0, 1);
                 } else {
                     isStop = true;
+                    releaseMP();
+                    Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
                     mBinding.content.btStart.setText("START");
                     mBinding.content.btReset.setText("RESET");
+                    positionMusic = -1;
                 }
             }
         });
@@ -181,6 +163,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
                     mPosition = 0;
                     setData();
+                    positionMusic = -1;
                     dialog.dismiss();
                 });
             } else {
@@ -194,6 +177,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                     mBinding.content.btStart.setText("START");
                     mBinding.content.btReset.setText("RESET");
                     stopTimer();
+                    releaseMP();
+                    positionMusic = -1;
                     dialog.dismiss();
                 });
             }
@@ -209,50 +194,52 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         });
     }
 
-    private void preparationTimer() {
+    private void ifMethod() {
+        setData();
         if (mPosition < adapter.getItemCount()) {
-            final long[] time = {5000L};
-            mBinding.content.timer.setText(FormatTime.formatTime(time[0]));
-            mTimerThread = Executors.newSingleThreadScheduledExecutor();
-            mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
-                long elapsedTime = time[0] - DEFAULT_REFRESH_INTERVAL;
-                if (elapsedTime <= 0) {
-                    stopTimer();
-                    sp.play(soundIdPoint, 1, 1, 0, 0, 1);
-                    startTimer(adapter.getModel().get(mPosition).getImage() != "rest" ?
-                            adapter.getModel().get(mPosition).getTime() / 10 :
-                            adapter.getModel().get(mPosition).getTime());
-                } else {
-                    time[0] -= DEFAULT_REFRESH_INTERVAL;
-                    mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
-                }
-            }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
-        } else {
-            stopTimer();
-            Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
-            mBinding.content.btStart.setText("START");
+
+            if (!adapter.getModel().get(mPosition).isRest() && positionMusic != adapter.getModel().get(mPosition).getPosition()) {
+                releaseMP();
+                positionMusic = adapter.getModel().get(mPosition).getPosition();
+                startMusicExercise(mTrainingModel.getExercises().get(positionMusic).getAudio());
+            } else if (!adapter.getModel().get(mPosition).isRest()) {
+                playMP();
+            }
+
+            if (adapter.getModel().get(mPosition).getTime() % 10 == 0) {
+                startTimer(!adapter.getModel().get(mPosition).isRest() ?
+                        adapter.getModel().get(mPosition).getTime() / 10 :
+                        adapter.getModel().get(mPosition).getTime());
+            } else {
+                isStop = false;
+            }
         }
+
+    }
+
+    private void preparationTimer() {
+        final long[] preparationTime = {5000L};
+        mBinding.content.tvNameExercise.setText(getResources().getString(R.string.prepare_time));
+        mBinding.content.type.setText("Time");
+        mBinding.content.descriptionExercise.setText("");
+        mBinding.content.timer.setText(FormatTime.formatTime(preparationTime[0]));
+        mTimerThread = Executors.newSingleThreadScheduledExecutor();
+        mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
+            long elapsedTime = preparationTime[0] - DEFAULT_REFRESH_INTERVAL;
+            if (elapsedTime <= 0) {
+                stopTimer();
+                sp.play(soundIdPoint, 1, 1, 0, 0, 1);
+                ifMethod();
+            } else {
+                preparationTime[0] -= DEFAULT_REFRESH_INTERVAL;
+                mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
+            }
+        }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     private void startTimer(long timerStart) {
-        setData();
 
         final long[] tempTime = {timerStart};
-        if (mMediaPlayer != null) {
-            releaseMP();
-        }
-        if (adapter.getModel().get(mPosition).getName() != getResources().getString(R.string.rest)) {
-            startMusicExercise(
-                    mTrainingModel.getExercises().get(adapter.getModel().get(mPosition).getPosition())
-                            .getAudio());
-        }
-
-        if (adapter.getModel().get(mPosition).getTime() % 10 != 0) {
-            stopTimer();
-            isStop = false;
-            return;
-        }
-
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
             long elapsedTime = tempTime[0] - DEFAULT_REFRESH_INTERVAL;
@@ -260,11 +247,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 mPosition++;
                 stopTimer();
                 if (mPosition < adapter.getItemCount()) {
-                    startTimer(adapter.getModel().get(mPosition).getImage() != "rest" ?
-                            adapter.getModel().get(mPosition).getTime() / 10 :
-                            adapter.getModel().get(mPosition).getTime());
+                    ifMethod();
                 } else {
                     stopTimer();
+                    releaseMP();
                     Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
                     mBinding.content.btStart.setText("START");
                     mBinding.content.btReset.setText("RESET");
@@ -283,12 +269,13 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mBinding.content.rv.smoothScrollToPosition(mPosition);
 
-        if (adapter.getModel().get(mPosition).getImage() != null && adapter.getModel().get(mPosition).getImage() != "rest") {
+        if (!adapter.getModel().get(mPosition).isRest() &&
+                adapter.getModel().get(mPosition).getImage() != null) {
             mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(getContext())
                     .load(Uri.parse(adapter.getModel().get(mPosition).getImage()))
                     .into(mBinding.content.imageExercise);
-        } else if (adapter.getModel().get(mPosition).getImage() != null && adapter.getModel().get(mPosition).getImage() == "rest") {
+        } else if (adapter.getModel().get(mPosition).isRest()) {
             mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(getContext())
                     .load(R.drawable.icon_fitofan)
@@ -302,7 +289,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mBinding.content.tvNameExercise.setText(adapter.getModel().get(mPosition).getName());
 
-        if (!Objects.equals(adapter.getModel().get(mPosition).getName(), getResources().getString(R.string.rest)))
+        if (!adapter.getModel().get(mPosition).isRest())
             mBinding.content.descriptionExercise.setText(adapter.getModel().get(mPosition).getDescription());
         else
             mBinding.content.descriptionExercise.setText(getResources().getString(R.string.rest));
@@ -310,7 +297,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         String temp = null;
         switch ((int) (adapter.getModel().get(mPosition).getTime() % 10)) {
             case StaticValues.TIME:
-                if (adapter.getModel().get(mPosition).getImage() != "rest")
+                if (!adapter.getModel().get(mPosition).isRest())
                     mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 else
                     mBinding.content.timer.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
@@ -332,6 +319,26 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         }
         mBinding.content.type.setText(temp);
         adapter.notifyDataSetChanged();
+    }
+
+    private void pauseMP() {
+        if (mMediaPlayer != null) {
+            try {
+                mMediaPlayer.pause();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void playMP() {
+        if (mMediaPlayer != null) {
+            try {
+                mMediaPlayer.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -374,7 +381,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     public synchronized void stopTimer() {
         if (mTimerThread == null) return;
 
-        releaseMP();
         mTimerThread.shutdown();
         mTimerThread = null;
     }
@@ -390,9 +396,9 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         releaseMP();
         stopTimer();
+        super.onDestroy();
     }
 
     public int getPosition() {

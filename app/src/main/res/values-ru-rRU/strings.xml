@@ -57,5 +57,6 @@
     <string name="subscribe">Подписаться</string>
     <string name="rest">Отдых</string>
     <string name="show_all">Показать все</string>
+    <string name="prepare_time">Время на подготовку</string>
 
 </resources>

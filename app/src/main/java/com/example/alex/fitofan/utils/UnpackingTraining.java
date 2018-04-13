@@ -27,10 +27,11 @@ public final class UnpackingTraining {
                         ExerciseModelFromTraining temp_2 = new ExerciseModelFromTraining();
                         temp_2.setTime(model.getExercises().get(i).getTimeBetween());
                         temp_2.setImage("rest");
+                        temp_2.setIsRest(true);
                         temp_2.setName(MApplication.getInstance().getMResources().getString(R.string.rest));
                         result.add(temp_2);
                     }
-                } else {
+                } else if (i < model.getExercises().size() - 1) {
                     ExerciseModelFromTraining temp = new ExerciseModelFromTraining();
                     temp.setName(model.getExercises().get(i).getName());
                     temp.setDescription(model.getExercises().get(i).getDescription());
@@ -42,9 +43,19 @@ public final class UnpackingTraining {
                         ExerciseModelFromTraining temp_2 = new ExerciseModelFromTraining();
                         temp_2.setTime(model.getExercises().get(i).getRecoveryTime());
                         temp_2.setImage("rest");
+                        temp_2.setIsRest(true);
+                        temp_2.setIsRestRest(true);
                         temp_2.setName(MApplication.getInstance().getMResources().getString(R.string.rest));
                         result.add(temp_2);
                     }
+                } else {
+                    ExerciseModelFromTraining temp = new ExerciseModelFromTraining();
+                    temp.setName(model.getExercises().get(i).getName());
+                    temp.setDescription(model.getExercises().get(i).getDescription());
+                    temp.setPosition(i);
+                    temp.setTime(model.getExercises().get(i).getTime());
+                    temp.setImage(model.getExercises().get(i).getImage());
+                    result.add(temp);
                 }
             }
 

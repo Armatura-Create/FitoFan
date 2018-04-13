@@ -20,4 +20,5 @@
     <color name="background_card_view_bottom_training">#566991</color>
     <color name="background_bt_training_left">#ae4b84</color>
     <color name="background_bt_training_right">#566991</color>
+    <color name="background_like">#6e86ac</color>
 </resources>

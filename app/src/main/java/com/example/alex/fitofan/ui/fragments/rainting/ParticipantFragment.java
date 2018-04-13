@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentRaintingBinding;
@@ -54,6 +55,13 @@ public class ParticipantFragment extends Fragment{
 //            }, CookingTimeHour[0], CookingTimeMin[0], CookingTimeSec[0], true);
 //            tpd.show();
 //        });
+        mBinding.allRating.setOnClickListener(view1 -> {
+            Toast.makeText(getContext(), "all rating", Toast.LENGTH_SHORT).show();
+        });
+
+        mBinding.friendRating.setOnClickListener(view1 -> {
+            Toast.makeText(getContext(), "friend rating", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void initRecyclerView() {

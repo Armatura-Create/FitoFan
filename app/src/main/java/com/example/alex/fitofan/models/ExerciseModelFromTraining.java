@@ -14,6 +14,10 @@ public class ExerciseModelFromTraining {
 
     private String image = null;
 
+    private boolean isRest = false;
+
+    private boolean isRestRest = false;
+
     public int getType() {
         return type;
     }
@@ -60,5 +64,21 @@ public class ExerciseModelFromTraining {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setIsRest(boolean isRest) {
+        this.isRest = isRest;
+    }
+
+    public boolean isRest() {
+        return isRest;
+    }
+
+    public void setIsRestRest(boolean isRestRest) {
+        this.isRestRest = isRestRest;
+    }
+
+    public boolean isRestRest() {
+        return isRestRest;
     }
 }

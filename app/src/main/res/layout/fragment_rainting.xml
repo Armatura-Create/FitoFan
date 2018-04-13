@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -9,104 +8,84 @@
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp">
 
-        <android.support.design.widget.CoordinatorLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background_fragment">
 
-            <android.support.design.widget.AppBarLayout
+            <LinearLayout
+                android:id="@+id/top_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                app:elevation="0dp">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <android.support.design.widget.CollapsingToolbarLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="40dp"
-                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+                    android:layout_height="30dp"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/all_rating"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_gravity="bottom"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:text="All rating"
+                        android:textColor="@color/button_blue"
+                        android:weightSum="1" />
 
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@android:color/white">
+                    <TextView
+                        android:id="@+id/friend_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:text="Friend rating"
+                        android:textColor="@color/button_blue"
+                        android:weightSum="1" />
+                </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingBottom="5dp"
-                                android:paddingTop="5dp"
-                                android:weightSum="2">
-
-                                <TextView
-                                    android:id="@+id/all_rating"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="All rating"
-                                    android:textColor="@color/button_blue"/>
-
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@android:color/white">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingBottom="5dp"
-                                android:paddingTop="5dp"
-                                android:weightSum="2">
-
-                                <TextView
-                                    android:id="@+id/friend_rating"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="Friend rating"
-                                    android:textColor="@color/button_blue"/>
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
-                    </LinearLayout>
-
-                </android.support.design.widget.CollapsingToolbarLayout>
-
-            </android.support.design.widget.AppBarLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@color/background_delimiter" />
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_raiting"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/item_rating"/>
-        </android.support.design.widget.CoordinatorLayout>
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/bottom_linear"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_linear"
+                tools:listitem="@layout/item_rating" />
 
+            <LinearLayout
+                android:id="@+id/bottom_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_special_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <include layout="@layout/item_rating_your" />
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </layout>
 

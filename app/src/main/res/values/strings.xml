@@ -80,5 +80,7 @@
     <string name="rest">Rest</string>
     <string name="user_profile">User profile</string>
     <string name="show_all">Show All</string>
+    <string name="prepare_time">Preparation time</string>
+    <string name="my_place">My place</string>
 
 </resources>
