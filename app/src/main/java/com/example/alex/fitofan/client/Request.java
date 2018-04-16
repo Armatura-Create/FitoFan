@@ -1,5 +1,17 @@
 package com.example.alex.fitofan.client;
 
+import android.util.Log;
+
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.models.AuthenotificationKey;
+import com.example.alex.fitofan.models.RegisterModel;
+import com.example.alex.fitofan.models.SingInModel;
+import com.example.alex.fitofan.models.TokenAtRegistration;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Singleton class for passing your requests
  * TODO: Extend it if necessary and divide on subclasses
@@ -17,38 +29,76 @@ public class Request {
         return request;
     }
 
-//    public void getAllStudios(final GetBannerCode getBannerCode) {
-//        String token = MSharedPreferences.getInstance().getKey();
-//        Call<List<AllStudios>> call = RetrofitClient.getAPI().getAllStudios(token);
-//        call.enqueue(new Callback<List<AllStudios>>() {
-//            @Override
-//            public void onResponse(Call<List<AllStudios>> call, Response<List<AllStudios>> response) {
-//                if (response.isSuccessful()) {
-////                    List<AllStudios> allStudios = new ArrayList<>();
-////                    allStudios = response.body();
-//                    getBannerCode.getBannerCode(response.body().get(0).getBanner().toString());
-//                    //videoCode = response.body().get(0).getBanner().toString();
-//
-////                    if (allStudios != null && allStudios.get(0).getTeachers().length > 0) {
-////
-////                    }
-////                    MSharedPreferences.getInstance().setTeachers(new Gson().toJson(teachers));
-//
-//                    Log.e("getAllStudios", response.body().get(0).getBanner().toString());
-//                } else {
-//                    Log.e("getAllStudios", response.code() + " " + response.message());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<AllStudios>> call, Throwable t) {
-//                Log.e("getAllStudios", t.getMessage());
-//            }
-//        });
-//
-//
-//    }
-//
+    public void singUp(RegisterModel model, final ILoadingStatus loader) {
+        Call<TokenAtRegistration> call;
+        call = RetrofitClient.getAPI().registration(model);
+
+        call.enqueue(new Callback<TokenAtRegistration>() {
+            @Override
+            public void onResponse(Call<TokenAtRegistration> call, Response<TokenAtRegistration> response) {
+
+                if (response.isSuccessful()) {
+                    loader.onSuccess(response.message());
+
+                } else {
+                    //if responce is failed we send message with error body to alertDialog
+//                    String errMessage = "";
+//                    try {
+//                        errMessage = response.errorBody().string();
+//                        loader.onFailure(errMessage);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenAtRegistration> call, Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void singIn(SingInModel model, final ILoadingStatus loader) {
+        Call<AuthenotificationKey> call;
+        call = RetrofitClient.getAPI().loginUser(model);
+
+        call.enqueue(new Callback<AuthenotificationKey>() {
+            @Override
+            public void onResponse(Call<AuthenotificationKey> call, Response<AuthenotificationKey> response) {
+
+                if (response.isSuccessful()) {
+                    loader.onSuccess(response.message());
+
+                } else {
+                    //if responce is failed we send message with error body to alertDialog
+//                    String errMessage = "";
+//                    try {
+//                        errMessage = response.errorBody().string();
+//                        loader.onFailure(errMessage);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthenotificationKey> call, Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
 //    public void uploadAvatar(String pathAvatar, UploadUserAvatar<String> uploadUserAvatar) {
 //        String token = MSharedPreferences.getInstance().getKey();
 //

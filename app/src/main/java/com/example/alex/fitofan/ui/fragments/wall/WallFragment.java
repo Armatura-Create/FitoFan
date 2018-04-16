@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.models.WallModel;
+import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,8 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void initListeners() {
         mBinding.refresh.setOnRefreshListener(this);
+
+        mBinding.fabAddTraining.setOnClickListener(view1 -> startActivity(new Intent(getContext(), CreatePlanActivity.class)));
     }
 
     private void initRecyclerView() {

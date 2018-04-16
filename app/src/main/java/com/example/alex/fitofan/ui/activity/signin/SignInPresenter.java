@@ -3,7 +3,9 @@ package com.example.alex.fitofan.ui.activity.signin;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
+import com.example.alex.fitofan.models.SingInModel;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -22,8 +24,12 @@ class SignInPresenter implements SignInContract.EventListener {
     }
 
     @Override
-    public void signIn(String password, String phone_number) {
+    public void signIn(String password, String email) {
+        SingInModel model = new SingInModel();
+        model.setEmail(email);
+        model.setPassword(password);
 
+        Request.getInstance().singIn(model, this);
     }
 
     public void loginWithFB() {
@@ -72,5 +78,15 @@ class SignInPresenter implements SignInContract.EventListener {
 
     public CallbackManager getCallbackManager() {
         return mCallbackManager;
+    }
+
+    @Override
+    public void onSuccess(String info) {
+        Toast.makeText(view.getContext(), info + "Success", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(view.getContext(), message + "Failure", Toast.LENGTH_SHORT).show();
     }
 }

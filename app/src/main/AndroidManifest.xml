@@ -51,7 +51,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.signup.SignUpActivity"
+            android:name=".ui.activity.signup.SingUpActivity"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"

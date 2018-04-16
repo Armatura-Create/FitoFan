@@ -18,6 +18,7 @@ import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
+import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
@@ -85,6 +86,8 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
             searchResult(v.getText().toString());
             return true;
         });
+
+        mBinding.fabAddTraining.setOnClickListener(view1 -> startActivity(new Intent(getContext(), CreatePlanActivity.class)));
 
         mBinding.refresh.setOnRefreshListener(this);
     }

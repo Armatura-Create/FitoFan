@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCheckConnection() {
-        Connection.isNetworkAvailable(mBinding.appBarMain.toolbar, this);
+        Connection.isNetworkAvailable(mBinding.appBarMain.contentMain.container, this);
     }
 
     private void loadHeader() {

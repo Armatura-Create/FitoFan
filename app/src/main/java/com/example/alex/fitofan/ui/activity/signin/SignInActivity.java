@@ -14,7 +14,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
 import com.example.alex.fitofan.ui.activity.forgot_password.ForgotPasswordActivity;
 import com.example.alex.fitofan.ui.activity.main.MainActivity;
-import com.example.alex.fitofan.ui.activity.signup.SignUpActivity;
+import com.example.alex.fitofan.ui.activity.signup.SingUpActivity;
 import com.example.alex.fitofan.utils.CheckerInputData;
 
 import java.util.Arrays;
@@ -41,28 +41,29 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     private void initListeners() {
         mBinding.btLogin.setOnClickListener(v -> {
-//            boolean isEmpty = false;
-//            List<EditText> list = Arrays.asList(
-//                    mBinding.login,
-//                    mBinding.password
-//            );
-//            for (EditText edit : list) {
-//                if (TextUtils.isEmpty(edit.getText().toString().trim())) {
-//                    edit.setError("Обязательное поле");
-//                    isEmpty = true;
-//                }
-//            }
-//
-//            if (isEmpty) return;
-//            if (!CheckerInputData.isEmail(mBinding.login.getText().toString().trim())) {
-//                Toast.makeText(this, "Логин не валидный.\nExample:example@gmail.com", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            if (!CheckerInputData.isPassword(mBinding.password.getText().toString().trim())) {
-//                Toast.makeText(this, "Пароль должен содержать не менее 8 символов, цифры, буквы верхнего и нижнего регистра", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-            presenter.goToMain();
+            boolean isEmpty = false;
+            List<EditText> list = Arrays.asList(
+                    mBinding.login,
+                    mBinding.password
+            );
+            for (EditText edit : list) {
+                if (TextUtils.isEmpty(edit.getText().toString().trim())) {
+                    edit.setError("Обязательное поле");
+                    isEmpty = true;
+                }
+            }
+
+            if (isEmpty) return;
+            if (!CheckerInputData.isEmail(mBinding.login.getText().toString().trim())) {
+                Toast.makeText(this, "Логин не валидный.\nExample:example@gmail.com", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!CheckerInputData.isPassword(mBinding.password.getText().toString().trim())) {
+                Toast.makeText(this, "Пароль должен содержать не менее 8 символов", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            presenter.signIn(mBinding.login.getText().toString().trim(),
+                    mBinding.password.getText().toString().trim());
         });
         mBinding.forgotPass.setOnClickListener(v -> presenter.goToForgotPass());
         mBinding.registration.setOnClickListener(v -> presenter.goToRegistration());
@@ -88,7 +89,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @Override
     public void goToSignUp() {
-        startActivity(new Intent(this, SignUpActivity.class));
+        startActivity(new Intent(this, SingUpActivity.class));
     }
 
     @Override

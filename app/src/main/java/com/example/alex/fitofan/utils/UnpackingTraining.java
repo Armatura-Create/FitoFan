@@ -28,6 +28,7 @@ public final class UnpackingTraining {
                         temp_2.setTime(model.getExercises().get(i).getTimeBetween());
                         temp_2.setImage("rest");
                         temp_2.setIsRest(true);
+                        temp_2.setPosition(i);
                         temp_2.setName(MApplication.getInstance().getMResources().getString(R.string.rest));
                         result.add(temp_2);
                     }
@@ -45,6 +46,7 @@ public final class UnpackingTraining {
                         temp_2.setImage("rest");
                         temp_2.setIsRest(true);
                         temp_2.setIsRestRest(true);
+                        temp_2.setPosition(i);
                         temp_2.setName(MApplication.getInstance().getMResources().getString(R.string.rest));
                         result.add(temp_2);
                     }

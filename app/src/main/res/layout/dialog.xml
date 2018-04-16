@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/shape_special"/>
+        android:src="@drawable/shape_special" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                 android:layout_height="27dp"
                 android:layout_gravity="center"
                 android:layout_weight="4"
-                android:src="@drawable/icon_dialog"/>
+                android:src="@drawable/icon_dialog" />
 
             <TextView
                 android:id="@+id/title"
@@ -48,7 +47,7 @@
                 android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cancel_dialog"
@@ -61,19 +60,20 @@
                 android:paddingRight="15dp"
                 android:text="X"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             app:cardBackgroundColor="@color/background_fragment"
             app:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="5">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,16 +81,19 @@
                     android:layout_marginLeft="27dp"
                     android:layout_marginRight="27dp"
                     android:layout_marginTop="15dp"
-                    android:orientation="vertical">
+                    android:layout_weight="4"
+                    android:orientation="vertical"
+                    android:weightSum="2">
 
                     <TextView
                         android:id="@+id/dialog_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:layout_weight="1"
                         android:text="@string/class_description"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <EditText
                         android:id="@+id/et_add_field_dialog"
@@ -98,38 +101,43 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:background="@null"
+                        android:scrollHorizontally="false"
+                        android:scrollbars="vertical"
+                        android:singleLine="false"
                         android:textColor="@color/button_blue"
-                        android:textColorHint="@color/button_blue"
-                        android:textSize="18sp"
-                        android:maxLines = "5"
-                        android:scrollbars = "vertical"
-                        android:isScrollContainer="true"
-                        android:typeface="monospace"/>
+                        android:textSize="18sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginTop="3dp"
-                        android:background="@color/background_delimiter"/>
+                        android:background="@color/background_delimiter" />
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/bt_dialog_add"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/ripple_bg_special_button"
-                    android:text="@string/add_image_file"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"/>
+                    android:gravity="bottom"
+                    android:orientation="vertical">
 
+                    <Button
+
+                        android:id="@+id/bt_dialog_add"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/ripple_bg_special_button"
+                        android:text="@string/add_image_file"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>

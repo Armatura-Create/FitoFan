@@ -2,6 +2,8 @@ package com.example.alex.fitofan.ui.activity.signin;
 
 import android.content.Context;
 
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
+
 interface SignInContract {
 
     interface View {
@@ -16,7 +18,7 @@ interface SignInContract {
         void goToForgotPass();
     }
 
-    interface EventListener {
+    interface EventListener extends ILoadingStatus<String> {
 
         void signIn(String password, String phone_number);
     }

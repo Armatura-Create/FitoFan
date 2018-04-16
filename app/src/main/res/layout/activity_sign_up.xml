@@ -16,7 +16,7 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
+            tools:context="com.example.alex.fitofan.ui.activity.signup.SingUpActivity">
 
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"

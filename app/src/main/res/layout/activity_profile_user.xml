@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_special"
-        tools:context="com.example.alex.fitofan.ui.activity.signup.SignUpActivity">
+        tools:context="com.example.alex.fitofan.ui.activity.signup.SingUpActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"

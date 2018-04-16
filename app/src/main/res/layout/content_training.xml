@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/background"/>
+            android:src="@drawable/background" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/guideline3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/liner_exercise"
@@ -50,7 +50,7 @@
                     android:shadowRadius="4"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/timer"
@@ -63,7 +63,7 @@
                     android:shadowRadius="4"
                     android:textColor="@android:color/white"
                     android:textSize="120sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/type"
@@ -76,7 +76,7 @@
                     android:shadowRadius="4"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/description_exercise"
@@ -89,7 +89,7 @@
                     android:scrollbars="vertical"
                     android:text="Много много тескта Много много Много много тескта Много много Много много тескта Много много тескта Много много Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта Много много тескта"
                     android:textColor="@android:color/white"
-                    android:textSize="12dp"/>
+                    android:textSize="12dp" />
 
 
             </LinearLayout>
@@ -98,60 +98,34 @@
                 android:id="@+id/rv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
                 android:scrollbars="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/bt_reset"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline3"
-                tools:listitem="@layout/item_exercise"/>
+                tools:listitem="@layout/item_exercise" />
 
-            <Button
+
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/bt_start"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_bg_left"
-                android:text="Start"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv"/>
-
-            <Button
-                android:id="@+id/bt_reset"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_bg_right"
-                android:text="Reset"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/rv"/>
-
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5"/>
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:src="@drawable/play"
+                app:borderWidth="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.4"/>
+                app:layout_constraintGuide_percent="0.4" />
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>

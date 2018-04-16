@@ -2,7 +2,9 @@ package com.example.alex.fitofan.ui.activity.signup;
 
 import android.content.Context;
 
-public class SignUpContract {
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
+
+public class SingUpContract {
 
     interface View {
 
@@ -12,7 +14,7 @@ public class SignUpContract {
 
     }
 
-    interface EventListener {
+    interface EventListener extends ILoadingStatus<String> {
 
         void register(String name, String email, String password, String phone);
 

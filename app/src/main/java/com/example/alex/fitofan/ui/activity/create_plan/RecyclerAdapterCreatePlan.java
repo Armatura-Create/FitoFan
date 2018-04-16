@@ -194,6 +194,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         //body methods
         if (position > 0 && position != getItemCount() - 1) {
 
+            etRelaxTime.setText(FormatTime.formatTime(0));
+            etTimeBetweenExercise.setText(FormatTime.formatTime(0));
+            etTimeExercise.setText(FormatTime.formatTime(0));
+            etNameExercise.setText("");
+            etDescription.setText("");
             etNumberRepetition.setText("1");
 
             if (id > 0) {
@@ -306,7 +311,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                                 text.setVisibility(View.VISIBLE);
                                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
                                     EditText et = dialog.findViewById(R.id.et_add_field_dialog);
-                                    long temp = String.valueOf(et.getText()) == "" ? 0 : Integer.valueOf(String.valueOf(et.getText()));
+                                    long temp = et.getText().length() <= 0 ? 0 : Integer.valueOf(String.valueOf(et.getText()));
                                     mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + p);
                                     etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
                                     RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
@@ -377,8 +382,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             btAddImageExercise.setOnClickListener(v ->
                     mCreatePlanActivity.choosePictureExercise(position, imageExercise, cvImageExercise)
             );
-
-
         }
 
         //footer methods
