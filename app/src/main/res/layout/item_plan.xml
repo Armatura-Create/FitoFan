@@ -133,7 +133,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ripple_like_my_plan"
+                android:id="@+id/like_my_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
@@ -159,7 +159,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ripple_send_my_plan"
+                android:id="@+id/send_my_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -185,7 +185,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ripple_share_my_plan"
+                android:id="@+id/share_my_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"

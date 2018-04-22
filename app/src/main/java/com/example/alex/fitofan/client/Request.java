@@ -1,12 +1,23 @@
 package com.example.alex.fitofan.client;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.AuthenotificationKey;
 import com.example.alex.fitofan.models.RegisterModel;
+import com.example.alex.fitofan.models.RegisterModelTest;
 import com.example.alex.fitofan.models.SingInModel;
+import com.example.alex.fitofan.models.TestModel;
 import com.example.alex.fitofan.models.TokenAtRegistration;
+import com.example.alex.fitofan.models.TrainingModel;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,16 +40,22 @@ public class Request {
         return request;
     }
 
-    public void singUp(RegisterModel model, final ILoadingStatus loader) {
+    public void singUp(HashMap<String, String> params, final ILoadingStatus loader) {
         Call<TokenAtRegistration> call;
-        call = RetrofitClient.getAPI().registration(model);
+        call = RetrofitClient.getAPI().registration(params);
 
         call.enqueue(new Callback<TokenAtRegistration>() {
             @Override
             public void onResponse(Call<TokenAtRegistration> call, Response<TokenAtRegistration> response) {
 
+                Log.e("onKKK ", new Gson().toJson(response.body(), TokenAtRegistration.class));
+
                 if (response.isSuccessful()) {
+
                     loader.onSuccess(response.message());
+                    Log.e("onResponseOk: ", response.headers().toString());
+                    Log.e("onResponseOk: ", response.message());
+                    Log.e("onResponseOk: ", String.valueOf(response.code()));
 
                 } else {
                     //if responce is failed we send message with error body to alertDialog
@@ -58,22 +75,66 @@ public class Request {
 
             @Override
             public void onFailure(Call<TokenAtRegistration> call, Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
         });
 
     }
 
-    public void singIn(SingInModel model, final ILoadingStatus loader) {
-        Call<AuthenotificationKey> call;
-        call = RetrofitClient.getAPI().loginUser(model);
+    public void singIn(HashMap<String, String> params, final ILoadingStatus loader) {
+        Call<TokenAtRegistration> call;
+        call = RetrofitClient.getAPI().loginUser(params);
 
-        call.enqueue(new Callback<AuthenotificationKey>() {
+        call.enqueue(new Callback<TokenAtRegistration>() {
             @Override
-            public void onResponse(Call<AuthenotificationKey> call, Response<AuthenotificationKey> response) {
+            public void onResponse(Call<TokenAtRegistration> call, Response<TokenAtRegistration> response) {
+                Log.e("onLLL1", new Gson().toJson(response.body(), TestModel.class));
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), TestModel.class));
+                        if (jsonObject.getInt("status") == 1){
+                            loader.onSuccess("Success");
+                            Log.e("onLLL2", new Gson().toJson(response.body(), TestModel.class));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenAtRegistration> call, Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+                Log.e("onFailure: ", t.toString());
+            }
+        });
+
+    }
+
+    public void sendPlan(HashMap<String, TrainingModel> model, final ILoadingStatus loader) {
+        Call<TokenAtRegistration> call;
+        call = RetrofitClient.getAPI().loginUser2(model);
+
+        call.enqueue(new Callback<TokenAtRegistration>() {
+            @Override
+            public void onResponse(Call<TokenAtRegistration> call, Response<TokenAtRegistration> response) {
+
+                Log.e("onRRR ", new Gson().toJson(response.body(), TokenAtRegistration.class));
 
                 if (response.isSuccessful()) {
+
                     loader.onSuccess(response.message());
+                    Log.e("onResponseOk: ", response.headers().toString());
+                    Log.e("onResponseOk: ", response.message());
+                    Log.e("onResponseOk: ", String.valueOf(response.code()));
 
                 } else {
                     //if responce is failed we send message with error body to alertDialog
@@ -92,7 +153,8 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<AuthenotificationKey> call, Throwable t) {
+            public void onFailure(Call<TokenAtRegistration> call, Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
         });
@@ -100,7 +162,7 @@ public class Request {
     }
 
 //    public void uploadAvatar(String pathAvatar, UploadUserAvatar<String> uploadUserAvatar) {
-//        String token = MSharedPreferences.getInstance().getKey();
+//        String token = MSharedPreferences.getInstance().getStatus();
 //
 //        Log.e("0x008800", "uploadAvatar: string pathAvatar" + pathAvatar);
 //        File file = new File(pathAvatar);

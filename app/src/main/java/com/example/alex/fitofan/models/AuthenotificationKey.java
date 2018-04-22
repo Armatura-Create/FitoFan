@@ -5,21 +5,17 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by alex on 10/24/17.
- */
-
 public class AuthenotificationKey implements Serializable {
 
-    @SerializedName("key")
+    @SerializedName("status")
     @Expose
-    private String key;
+    private int status;
 
-    public String getKey() {
-        return key;
+    public int getStatus() {
+        return status;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

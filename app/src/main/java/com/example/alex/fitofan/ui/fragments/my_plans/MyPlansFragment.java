@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
@@ -28,7 +29,7 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String> {
 
     FragmentMyPlansBinding mBinding;
     private View view;
@@ -138,5 +139,15 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         adapter.setTrainings(mModels);
         mBinding.refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onSuccess(String info) {
+        Toast.makeText(getContext(), "Ok", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
     }
 }

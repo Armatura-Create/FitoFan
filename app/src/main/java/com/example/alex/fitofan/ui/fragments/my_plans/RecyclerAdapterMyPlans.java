@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapterMyPlans.ViewHolder> {
 
@@ -63,6 +65,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         TextView description = linear.findViewById(R.id.tv_description);
         TextView time = linear.findViewById(R.id.tv_total_time);
         ImageView imageTraining = linear.findViewById(R.id.image_training);
+        LinearLayout sharePlan = linear.findViewById(R.id.send_my_plan);
 
         name.setText(mTrainings.get(position).getName());
         description.setText(mTrainings.get(position).getDescription());
@@ -73,6 +76,12 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                     .load(Uri.parse(mTrainings.get(position).getImage()))
                     .into(imageTraining);
         }
+
+        sharePlan.setOnClickListener(view -> {
+            HashMap<String, TrainingModel> model = new HashMap<>();
+            model.put("training", mTrainings.get(position));
+            Request.getInstance().sendPlan(model, mMyPlansFragment);
+        });
     }
 
     @Override

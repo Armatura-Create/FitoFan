@@ -3,7 +3,9 @@ package com.example.alex.fitofan.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TokenAtRegistration {
+import java.util.List;
+
+public class TestModel {
     @SerializedName("status")
     @Expose
     private int status;
@@ -22,7 +24,7 @@ public class TokenAtRegistration {
 
     @SerializedName("user")
     @Expose
-    private User user;
+    private List<User> user;
 
     public int getStatus() {
         return status;
@@ -40,19 +42,19 @@ public class TokenAtRegistration {
         this.error = error;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getPost() {
         return post;
     }
 
     public void setPost(String post) {
         this.post = post;
+    }
+
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
     }
 }

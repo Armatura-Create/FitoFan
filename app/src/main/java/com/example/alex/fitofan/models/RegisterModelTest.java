@@ -19,7 +19,7 @@ import org.json.JSONObject;
  *     "age":20
  * }
  */
-public class RegisterModel {
+public class RegisterModelTest {
 
     @SerializedName("email")
     @Expose
@@ -32,10 +32,6 @@ public class RegisterModel {
     @SerializedName("surname")
     @Expose
     private String surname;
-
-    @SerializedName("password")
-    @Expose
-    private String password;
 
     public String getEmail() {
         return email;
@@ -53,14 +49,6 @@ public class RegisterModel {
         this.surname = phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getName() {
         return name;
     }
@@ -71,19 +59,8 @@ public class RegisterModel {
 
     public String toJSONString() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("name", name);
         json.put("email", email);
-        json.put("password", password);
-        json.put("surname", surname);
+        json.put("phone_number", surname);
         return json.toString().replaceAll("\\\\", "");
-    }
-
-    public JSONObject toJSONObject() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("name", name);
-        json.put("email", email);
-        json.put("password", password);
-        json.put("surname", surname);
-        return json;
     }
 }

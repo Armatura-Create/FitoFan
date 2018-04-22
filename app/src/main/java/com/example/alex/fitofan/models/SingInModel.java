@@ -3,10 +3,6 @@ package com.example.alex.fitofan.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by slava on 10/24/17.
- */
-
 public class SingInModel {
 
     @SerializedName("password")
@@ -28,7 +24,7 @@ public class SingInModel {
         return email;
     }
 
-    public void setEmail(String phoneNumber) {
-        this.email = phoneNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

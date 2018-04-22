@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivitySignUpBinding;
 import com.example.alex.fitofan.ui.activity.main.MainActivity;
+import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.utils.CheckerInputData;
 
 import java.util.Arrays;
@@ -78,6 +79,11 @@ public class SingUpActivity extends AppCompatActivity implements SingUpContract.
 
     @Override
     public void goToSingIn() {
+        onBackPressed();
+    }
+
+    @Override
+    public void goToMain() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

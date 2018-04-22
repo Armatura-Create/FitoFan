@@ -62,8 +62,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
                 Toast.makeText(this, "Пароль должен содержать не менее 8 символов", Toast.LENGTH_SHORT).show();
                 return;
             }
-            presenter.signIn(mBinding.login.getText().toString().trim(),
-                    mBinding.password.getText().toString().trim());
+            presenter.signIn(mBinding.password.getText().toString().trim(), mBinding.login.getText().toString().trim());
         });
         mBinding.forgotPass.setOnClickListener(v -> presenter.goToForgotPass());
         mBinding.registration.setOnClickListener(v -> presenter.goToRegistration());

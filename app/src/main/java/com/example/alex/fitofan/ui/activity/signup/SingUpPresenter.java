@@ -1,11 +1,23 @@
 package com.example.alex.fitofan.ui.activity.signup;
 
 
+import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.example.alex.fitofan.client.HttpRequest;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.models.RegisterModel;
+import com.example.alex.fitofan.models.RegisterModelTest;
+import com.example.alex.fitofan.models.TokenAtRegistration;
+import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.utils.Connection;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import static com.example.alex.fitofan.utils.StaticValues.CONNECTION_ERROR;
 
@@ -19,7 +31,7 @@ class SingUpPresenter implements SingUpContract.EventListener {
 
     @Override
     public void onSuccess(String info) {
-        Toast.makeText(view.getContext(), info + "Success", Toast.LENGTH_SHORT).show();
+        view.goToSingIn();
     }
 
     @Override
@@ -30,13 +42,52 @@ class SingUpPresenter implements SingUpContract.EventListener {
 
     @Override
     public void register(String email, String password, String firstName, String lastName) {
+
+//        class UserLogingAsynk extends AsyncTask<Void, Void, String> {
+//
+//            @Override
+//            protected String doInBackground(Void... voids) {
+//                HttpRequest request = new HttpRequest();
+//                HashMap<String, String> params = new HashMap<>();
+//                params.put("email", email);
+//                params.put("name", firstName);
+//                params.put("surname", firstName);
+//                params.put("password", password);
+//                return request.DoRequest("http://api.fitofan.com/v1/registration", params);
+//            }
+//
+//            @Override
+//            protected void onPostExecute(String s) {
+//                try {
+//                    JSONObject jsonObject = new JSONObject(s);
+//                    if (jsonObject.getInt("status") == 1) {
+//                        Log.e("onKKK: ", new Gson().toJson(s, TokenAtRegistration.class));
+//                    } else {
+//                        Log.e("onKKK: ", new Gson().toJson(s, TokenAtRegistration.class));
+//                    }
+//                } catch (Exception ex) {
+//
+//                    Log.e("onKKK: ", ex.toString());
+//                    Log.e("onKKK: ", s);
+//
+//                }
+//                super.onPostExecute(s);
+//            }
+//        }
+//        new UserLogingAsynk().execute();
+
         if (Connection.isNetworkAvailable(view.getContext())) {
-            RegisterModel model = new RegisterModel();
-            model.setName(firstName);
-            model.setEmail(email);
-            model.setSurname(firstName);
-            model.setPassword(password);
-            Request.getInstance().singUp(model, this);
+//            RegisterModel model = new RegisterModel();
+//            model.setName(firstName);
+//            model.setEmail(email);
+//            model.setSurname(firstName);
+//            model.setPassword(password);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("email", email);
+            params.put("name", firstName);
+            params.put("surname", firstName);
+            params.put("password", password);
+            Request.getInstance().singUp(params, this);
         } else onFailure(CONNECTION_ERROR);
     }
 

@@ -12,6 +12,8 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
+import java.util.HashMap;
+
 class SignInPresenter implements SignInContract.EventListener {
     private SignInContract.View view;
     private CallbackManager mCallbackManager;
@@ -25,11 +27,14 @@ class SignInPresenter implements SignInContract.EventListener {
 
     @Override
     public void signIn(String password, String email) {
-        SingInModel model = new SingInModel();
-        model.setEmail(email);
-        model.setPassword(password);
+//        SingInModel model = new SingInModel();
+//        model.setEmail(email);
+//        model.setPassword(password);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
 
-        Request.getInstance().singIn(model, this);
+        Request.getInstance().singIn(params, this);
     }
 
     public void loginWithFB() {
@@ -42,7 +47,7 @@ class SignInPresenter implements SignInContract.EventListener {
                 loginUserWithFB(loginResult.getAccessToken().getToken());
 
                 //Сохраняем токен при регистрации у себя на телефоне
-//                MSharedPreferences.getInstance().setKey(loginResult.getAccessToken().getToken());
+//                MSharedPreferences.getInstance().setStatus(loginResult.getAccessToken().getToken());
                 //TODO start home_activity if phone exist and enter_phone_activity if not
             }
 
@@ -82,7 +87,7 @@ class SignInPresenter implements SignInContract.EventListener {
 
     @Override
     public void onSuccess(String info) {
-        Toast.makeText(view.getContext(), info + "Success", Toast.LENGTH_SHORT).show();
+        view.goToMain();
     }
 
     @Override

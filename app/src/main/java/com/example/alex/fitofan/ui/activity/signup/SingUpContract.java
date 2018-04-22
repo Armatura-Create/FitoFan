@@ -12,6 +12,8 @@ public class SingUpContract {
 
         void goToSingIn();
 
+        void goToMain();
+
     }
 
     interface EventListener extends ILoadingStatus<String> {
