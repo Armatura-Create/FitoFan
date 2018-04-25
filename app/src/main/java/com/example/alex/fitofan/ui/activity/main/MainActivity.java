@@ -3,27 +3,25 @@ package com.example.alex.fitofan.ui.activity.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
 import com.example.alex.fitofan.eventbus.MyPlansEvent;
+import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
@@ -32,6 +30,8 @@ import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.rainting.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
 import com.example.alex.fitofan.utils.Connection;
+import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,12 +39,15 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+
 public class MainActivity extends AppCompatActivity
         implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding mBinding;
     private MainPresenter mPresenter;
-    private  View navHeader;
+    private View navHeader;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static final int SELECT_IMAGE = 200;
 
@@ -75,9 +78,10 @@ public class MainActivity extends AppCompatActivity
 
     private void initListeners() {
         navHeader.findViewById(R.id.nav_profileImage).setOnClickListener(view -> {
-            requestMultiplePermissions();
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                chooseAvatar();
+//            requestMultiplePermissions();
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+//                chooseAvatar();
+            startActivity(new Intent(this, UserProfileActivity.class));
         });
     }
 
@@ -117,10 +121,36 @@ public class MainActivity extends AppCompatActivity
 
     private void loadHeader() {
         CircleImageView imageProfile = navHeader.findViewById(R.id.nav_profileImage);
-        Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
-        Glide.with(getApplicationContext()) //передаем контекст приложения
-                .load(uri)
-                .into(imageProfile); //ссылка на ImageView
+        TextView firstName = navHeader.findViewById(R.id.first_name);
+        TextView lastName = navHeader.findViewById(R.id.last_name);
+
+        if (MSharedPreferences.getInstance().getUserInfo() != null &&
+                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class) != null
+                && new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser() != null) {
+
+            GetUserModel model = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
+
+            Uri uri = Uri.parse(model.getUser().getImage_url());
+            Glide.with(getApplicationContext()) //передаем контекст приложения
+                    .load(uri)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageProfile);
+
+            firstName.setText(model.getUser().getName());
+            lastName.setText(model.getUser().getSurname());
+
+        } else {
+            firstName.setText("Name");
+            lastName.setText("Surname");
+
+            Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
+            Glide.with(getApplicationContext()) //передаем контекст приложения
+                    .load(uri)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageProfile); //ссылка на ImageView
+        }
 
         //TODO Доделать подгрузку имени
     }
@@ -131,7 +161,6 @@ public class MainActivity extends AppCompatActivity
                 .load(data.getData())
                 .into(imageProfile); //ссылка на ImageView
     }
-
 
 
     private void initTabs() {
@@ -235,6 +264,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void goSingOut() {
+        MSharedPreferences.getInstance().setUserInfo(null);
+        MSharedPreferences.getInstance().setFbToken(null);
+        LoginManager.getInstance().logOut();
         startActivity(new Intent(this, SignInActivity.class));
         finish();
     }

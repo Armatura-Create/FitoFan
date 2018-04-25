@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 public class MSharedPreferences {
 
     private static final String SHARED_PACKAGE = "user_info";
-    private static final String TRAINING_PLANS = "training_plans";
+    private static final String USER_INFO = "json_user_info";
+    private static final String FB_ID = "fb_token";
+    private static final String FB_TOKEN = "fb_token";
 
     private static MSharedPreferences loader;
     private SharedPreferences sharedPref;
@@ -22,11 +24,27 @@ public class MSharedPreferences {
         return loader;
     }
 
-    public String getPlans() {
-        return sharedPref.getString(TRAINING_PLANS, null);
+    public void setUserInfo(String userInfo){
+        sharedPref.edit().putString(USER_INFO, userInfo).apply();
     }
 
-    public void setPlans(String plans) {
-        sharedPref.edit().putString(TRAINING_PLANS, plans).apply();
+    public String getUserInfo() {
+        return sharedPref.getString(USER_INFO, null);
+    }
+
+    public void setFbId(String id){
+        sharedPref.edit().putString(FB_ID, id).apply();
+    }
+
+    public String getFbId() {
+        return sharedPref.getString(FB_ID, null);
+    }
+
+    public void setFbToken(String token){
+        sharedPref.edit().putString(FB_TOKEN, token).apply();
+    }
+
+    public String getFbToken() {
+        return sharedPref.getString(FB_TOKEN, null);
     }
 }

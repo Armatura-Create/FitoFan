@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.alex.fitofan">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.alex.fitofan">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="ndroid.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="ndroid.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -21,16 +22,35 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            tools:replace="android:value"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".ui.activity.launch_screen.LaunchScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -39,61 +59,57 @@
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.activity.signin.SignInActivity"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.signup.SingUpActivity"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.contact.ContactActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.forgot_password.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.settings.SettingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.training.TrainingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.create_plan.CreatePlanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.activity.preview_plan.PreviewPlanActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.user_profile.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
     </application>
 
 </manifest>

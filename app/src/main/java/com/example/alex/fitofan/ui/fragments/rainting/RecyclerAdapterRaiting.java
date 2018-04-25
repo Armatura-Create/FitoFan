@@ -14,6 +14,10 @@ import com.example.alex.fitofan.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
+
 public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapterRaiting.ViewHolder> {
 
 
@@ -76,6 +80,8 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
             Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
             Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                     .load(uri)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView
         }
 

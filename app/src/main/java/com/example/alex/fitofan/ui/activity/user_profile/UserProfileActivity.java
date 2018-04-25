@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityProfileUserBinding;
 import com.example.alex.fitofan.ui.activity.main.MainActivity;
+import com.example.alex.fitofan.utils.Connection;
 
 public class UserProfileActivity extends AppCompatActivity implements UserProfileContract.View {
 
@@ -27,6 +29,13 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         presenter = new UserProfilePresenter(this);
         initListeners();
         initRecycler();
+        initInfo();
+    }
+
+    private void initInfo() {
+        if(Connection.isNetworkAvailable(this)){
+//            Request.getInstance().getUserData(this);
+        }
     }
 
     private void initRecycler() {

@@ -22,6 +22,7 @@ import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -124,6 +125,18 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
         mBinding.content.goToTraining.setOnClickListener(v -> {
             goTraining();
+        });
+
+        ItemClickSupport.addTo(mBinding.content.rv).setOnItemClickListener((recyclerView, position, v) -> {
+            if(!adapter.getModel().get(position).isRest()){
+                Dialog dialog = CustomDialog.card(getContext(),
+                        adapter.getModel().get(position).getName(),
+                        adapter.getModel().get(position).getDescription(),
+                       adapter.getModel().get(position).getImage());
+                dialog.findViewById(R.id.cancel_dialog).setOnClickListener(v1 -> {
+                    dialog.dismiss();
+                });
+            }
         });
     }
 

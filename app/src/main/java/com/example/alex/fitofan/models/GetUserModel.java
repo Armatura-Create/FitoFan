@@ -3,7 +3,7 @@ package com.example.alex.fitofan.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TokenAtRegistration {
+public class GetUserModel {
     @SerializedName("status")
     @Expose
     private int status;
@@ -55,4 +55,5 @@ public class TokenAtRegistration {
     public void setPost(String post) {
         this.post = post;
     }
+
 }

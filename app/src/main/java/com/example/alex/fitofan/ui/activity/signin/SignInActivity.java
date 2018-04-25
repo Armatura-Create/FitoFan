@@ -16,6 +16,8 @@ import com.example.alex.fitofan.ui.activity.forgot_password.ForgotPasswordActivi
 import com.example.alex.fitofan.ui.activity.main.MainActivity;
 import com.example.alex.fitofan.ui.activity.signup.SingUpActivity;
 import com.example.alex.fitofan.utils.CheckerInputData;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,19 +29,18 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
     private ActivitySignInBinding mBinding;
     private SignInPresenter presenter;
 
-    private static final String ENTERING_ERROR = "Entering error!";
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         presenter = new SignInPresenter(this, mBinding);
-//        presenter.loginWithFB();
+        presenter.loginWithFB();
         initListeners();
     }
 
     private void initListeners() {
+        mBinding.facebookBt.setReadPermissions("email", "public_profile", "user_friends", "user_status", "user_location");
         mBinding.btLogin.setOnClickListener(v -> {
             boolean isEmpty = false;
             List<EditText> list = Arrays.asList(

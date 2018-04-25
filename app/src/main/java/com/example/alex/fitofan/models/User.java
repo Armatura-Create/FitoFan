@@ -40,6 +40,11 @@ public class User {
     @Expose
     private String background_url;
 
+
+    @SerializedName("location")
+    @Expose
+    private String location;
+
     public String getLink() {
         return link;
     }
@@ -110,5 +115,13 @@ public class User {
 
     public void setBackground_url(String background_url) {
         this.background_url = background_url;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

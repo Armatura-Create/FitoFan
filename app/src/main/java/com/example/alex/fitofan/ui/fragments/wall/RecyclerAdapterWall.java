@@ -22,6 +22,9 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+
 public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
 
 
@@ -70,13 +73,15 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         Uri uri1 = Uri.parse(mWallModels.get(position).getImageTraining());
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri1)
-                .apply(mRequestOptions)
+                .apply(centerCropTransform())
+                .transition(withCrossFade())
                 .into(imageTrainingPlan); //ссылка на ImageView
 
         Uri uri2 = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(uri2)
-                .apply(mRequestOptions)
+                .apply(centerCropTransform())
+                .transition(withCrossFade())
                 .into(imageUser); //ссылка на ImageView
 
         userLiner.setOnClickListener(v -> {

@@ -8,7 +8,8 @@
     <string name="host">http://api.fitofan.com</string>
 
     <!--facebook-->
-    <string name="facebook_app_id">00000</string>
+    <string name="facebook_app_id" translatable="false">188446971953265</string>
+    <string name="fb_login_protocol_scheme">fb188446971953265</string>
 
     <!--name tab-->
     <string name="tab_wall">Wall</string>

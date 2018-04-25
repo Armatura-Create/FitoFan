@@ -12,10 +12,16 @@ import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.TrainingSendModel;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapterMyPlans.ViewHolder> {
 
@@ -74,14 +80,22 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         if (mTrainings.get(position).getImage() != null) {
             Glide.with(mMyPlansFragment.getContext())
                     .load(Uri.parse(mTrainings.get(position).getImage()))
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
                     .into(imageTraining);
         }
 
         sharePlan.setOnClickListener(view -> {
-            HashMap<String, TrainingModel> model = new HashMap<>();
-            model.put("training", mTrainings.get(position));
+            HashMap<String, String> model = new HashMap<>();
+            String trainig = new Gson().toJson(prepareSend());
+            model.put("training", trainig);
             Request.getInstance().sendPlan(model, mMyPlansFragment);
         });
+    }
+
+    private TrainingSendModel prepareSend() {
+        TrainingSendModel model = new TrainingSendModel();
+        return null;
     }
 
     @Override
@@ -89,4 +103,6 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         assert mTrainings != null;
         return mTrainings.size();
     }
+
+
 }

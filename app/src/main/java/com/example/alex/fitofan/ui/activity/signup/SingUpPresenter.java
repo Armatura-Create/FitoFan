@@ -1,21 +1,10 @@
 package com.example.alex.fitofan.ui.activity.signup;
 
 
-import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.alex.fitofan.client.HttpRequest;
 import com.example.alex.fitofan.client.Request;
-import com.example.alex.fitofan.models.RegisterModel;
-import com.example.alex.fitofan.models.RegisterModelTest;
-import com.example.alex.fitofan.models.TokenAtRegistration;
-import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.utils.Connection;
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 

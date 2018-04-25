@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.activity.user_profile;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,18 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.google.gson.Gson;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAdapterUserProfile.ViewHolder> {
 
@@ -78,19 +88,53 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
         //header methods
         if (position == 0) {
 
-            linear.findViewById(R.id.show_all).setOnClickListener(view -> {
-                Toast.makeText(mUserProfileActivity.getContext(), "Show All", Toast.LENGTH_SHORT).show();
-            });
+            TextView firstName = linear.findViewById(R.id.first_name);
+            TextView lastName = linear.findViewById(R.id.last_name);
+            ImageView imageUser = linear.findViewById(R.id.user_photo);
+            TextView city = linear.findViewById(R.id.city);
 
-            final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
+            if (MSharedPreferences.getInstance().getUserInfo() != null) {
+                firstName.setText(
+                        new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
+                                .getUser().getName()
+                );
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mUserProfileActivity.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            final RecyclerAdapterInAdapter adapter = new RecyclerAdapterInAdapter(mUserProfileActivity);
-            recyclerView.setAdapter(adapter);
+                lastName.setText(
+                        new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
+                                .getUser().getSurname()
+                );
+
+                city.setText( new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
+                        .getUser().getLocation());
+
+                if (new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
+                        .getUser().getImage_url() != null) {
+                    Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
+                            .load(Uri.parse(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
+                                    .getUser().getImage_url()))
+                            .apply(centerCropTransform())
+                            .apply(placeholderOf(R.drawable.background_launch_screen))
+                            .transition(withCrossFade())
+                            .into(imageUser); //ссылка на ImageView
+
+                }
+
+                linear.findViewById(R.id.show_all).setOnClickListener(view -> {
+                    Toast.makeText(mUserProfileActivity.getContext(), "Show All", Toast.LENGTH_SHORT).show();
+                });
+
+                final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
+
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(mUserProfileActivity.getApplicationContext(),
+                                LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                final RecyclerAdapterInAdapter adapter = new RecyclerAdapterInAdapter(mUserProfileActivity);
+                recyclerView.setAdapter(adapter);
+            }
+            //body methods
+
         }
-        //body methods
-
     }
 
     @Override
@@ -98,3 +142,4 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
         return 7;
     }
 }
+

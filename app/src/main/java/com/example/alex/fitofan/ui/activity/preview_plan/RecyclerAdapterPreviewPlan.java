@@ -77,12 +77,12 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
         } else if (model.get(position).getImage() != null && model.get(position).getImage() == "rest") {
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(trainingActivity.getContext())
-                    .load(R.drawable.icon_fitofan)
+                    .load(R.mipmap.logo_fitofan)
                     .into(image);
         } else {
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(trainingActivity.getContext())
-                    .load(R.drawable.logo_fitofan)
+                    .load(R.mipmap.logo_fitofan_old)
                     .into(image);
         }
 

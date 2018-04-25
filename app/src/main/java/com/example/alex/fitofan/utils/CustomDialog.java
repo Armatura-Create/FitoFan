@@ -4,18 +4,29 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.google.gson.Gson;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public final class CustomDialog {
 
@@ -124,6 +135,38 @@ public final class CustomDialog {
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvBtAdd.setText(btAdd);
+
+        tvClose.setOnClickListener(v -> mDialog.dismiss());
+
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mDialog.show();
+
+        return mDialog;
+    }
+
+    public static Dialog card(Context context, String title, String description, String image) {
+        mDialog = new Dialog(context);
+        mDialog.setContentView(R.layout.dialog_card);
+        TextView tvTitle = mDialog.findViewById(R.id.title);
+        TextView tvDescription = mDialog.findViewById(R.id.dialog_description);
+        ImageView imageExercise = mDialog.findViewById(R.id.exercise_photo);
+        TextView tvClose = mDialog.findViewById(R.id.cancel_dialog);
+
+        tvTitle.setText(title);
+        tvDescription.setText(description);
+        if(image != null){
+            Glide.with(context) //передаем контекст приложения
+                    .load(Uri.parse(image))
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageExercise); //ссылка на ImageView
+        } else {
+            Glide.with(context) //передаем контекст приложения
+                    .load(R.drawable.background_timer)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageExercise); //ссылка на ImageView
+        }
 
         tvClose.setOnClickListener(v -> mDialog.dismiss());
 

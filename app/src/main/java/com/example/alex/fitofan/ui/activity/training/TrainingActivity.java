@@ -316,12 +316,12 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         } else if (adapter.getModel().get(mPosition).isRest()) {
             mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(getContext())
-                    .load(R.drawable.icon_fitofan)
+                    .load(R.mipmap.logo_fitofan)
                     .into(mBinding.content.imageExercise);
         } else {
             mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(getContext())
-                    .load(R.drawable.logo_fitofan)
+                    .load(R.mipmap.logo_fitofan_old)
                     .into(mBinding.content.imageExercise);
         }
 
