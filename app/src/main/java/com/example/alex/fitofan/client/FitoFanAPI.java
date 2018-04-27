@@ -1,7 +1,9 @@
 package com.example.alex.fitofan.client;
 
+import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -26,11 +28,15 @@ interface FitoFanAPI {
     @FormUrlEncoded
     Call<GetUserModel> loginUser(@FieldMap (encoded = true) HashMap<String, String> params);
 
-    @POST("/v1/registration")
+    @POST("/v1/addPlan")
     @FormUrlEncoded
-    Call<GetUserModel> loginUser2(@FieldMap (encoded = true) HashMap<String, String> model);
+    Call<GetPlanModel> sendPlan(@FieldMap (encoded = true) HashMap<String, String> params);
 
-    @GET("/v1/getuser")
+    @POST("/v1/getPlan")
+    @FormUrlEncoded
+    Call<GetPlanModel> getPlan(@FieldMap (encoded = true) HashMap<String, String> params);
+
+    @GET("/v1/getUser")
     @FormUrlEncoded
     Call<GetUserModel> getUserData(@FieldMap (encoded = true) HashMap<String,String> params);
 

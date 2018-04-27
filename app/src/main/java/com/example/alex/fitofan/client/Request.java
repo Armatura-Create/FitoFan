@@ -1,8 +1,10 @@
 package com.example.alex.fitofan.client;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.google.gson.Gson;
@@ -78,7 +80,7 @@ public class Request {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetUserModel.class));
-                        if (jsonObject.getInt("status") == 1){
+                        if (jsonObject.getInt("status") == 1) {
                             loader.onSuccess("Success");
                             MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(response.body(), GetUserModel.class));
                             Log.e("onLLL2", new Gson().toJson(response.body(), GetUserModel.class));
@@ -105,41 +107,69 @@ public class Request {
 
     }
 
-    public void sendPlan(HashMap<String, String> model, final ILoadingStatus loader) {
-        Call<GetUserModel> call;
-        call = RetrofitClient.getAPI().loginUser2(model);
+    public void sendPlan(HashMap<String, String> data, final ILoadingStatus loader) {
+        Call<GetPlanModel> call;
+        call = RetrofitClient.getAPI().sendPlan(data);
 
-        call.enqueue(new Callback<GetUserModel>() {
+        call.enqueue(new Callback<GetPlanModel>() {
             @Override
-            public void onResponse(Call<GetUserModel> call, Response<GetUserModel> response) {
+            public void onResponse(Call<GetPlanModel> call, Response<GetPlanModel> response) {
 
-                Log.e("onRRR ", new Gson().toJson(response.body(), GetUserModel.class));
+                Log.e("onGGG ", new Gson().toJson(response.body(), GetPlanModel.class));
 
                 if (response.isSuccessful()) {
 
                     loader.onSuccess(response.message());
-                    Log.e("onResponseOk: ", response.headers().toString());
-                    Log.e("onResponseOk: ", response.message());
-                    Log.e("onResponseOk: ", String.valueOf(response.code()));
+                    Log.e("onResponseOk1: ", response.headers().toString());
+                    Log.e("onResponseOk2: ", response.message());
+                    Log.e("onResponseOk3: ", String.valueOf(response.code()));
 
                 } else {
-                    //if responce is failed we send message with error body to alertDialog
-//                    String errMessage = "";
-//                    try {
-//                        errMessage = response.errorBody().string();
-//                        loader.onFailure(errMessage);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                     loader.onFailure(response.message());
-                    Log.e("onResponse: ", response.headers().toString());
-                    Log.e("onResponse: ", response.message());
-                    Log.e("onResponse: ", String.valueOf(response.code()));
+                    Log.e("onResponse1: ", response.headers().toString());
+                    Log.e("onResponse2: ", response.message());
+                    Log.e("onResponse3: ", String.valueOf(response.code()));
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUserModel> call, Throwable t) {
+            public void onFailure(Call<GetPlanModel> call, Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void getPlan(HashMap<String, String> data, final ILoadingStatus loader) {
+        Call<GetPlanModel> call;
+        call = RetrofitClient.getAPI().getPlan(data);
+
+        call.enqueue(new Callback<GetPlanModel>() {
+            @Override
+            public void onResponse(@NonNull Call<GetPlanModel> call, @NonNull Response<GetPlanModel> response) {
+
+                Log.e("onGGG ", new Gson().toJson(response.body(), GetPlanModel.class));
+                assert response.body() != null;
+                Log.e("onGGG ",response.body().toString());
+
+                if (response.isSuccessful()) {
+
+                    loader.onSuccess(response.message());
+                    Log.e("onResponseOk1: ", response.headers().toString());
+                    Log.e("onResponseOk2: ", response.message());
+                    Log.e("onResponseOk3: ", String.valueOf(response.code()));
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse1: ", response.headers().toString());
+                    Log.e("onResponse2: ", response.message());
+                    Log.e("onResponse3: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetPlanModel> call, Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -158,7 +188,7 @@ public class Request {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetUserModel.class));
-                        if (jsonObject.getInt("status") == 1){
+                        if (jsonObject.getInt("status") == 1) {
                             loader.onSuccess("Success");
                             Log.e("onLLL2", new Gson().toJson(response.body(), GetUserModel.class));
                             MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(response.body(), GetUserModel.class));
@@ -195,7 +225,7 @@ public class Request {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetUserModel.class));
-                        if (jsonObject.getInt("status") == 1){
+                        if (jsonObject.getInt("status") == 1) {
                             loader.onSuccess("Success");
                             Log.e("onLLL2", new Gson().toJson(response.body(), GetUserModel.class));
                             MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(response.body(), GetUserModel.class));

@@ -1,7 +1,11 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,17 +15,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
+import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.models.TrainingSendModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.util.Base64.encodeToString;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapterMyPlans.ViewHolder> {
 
@@ -86,16 +98,32 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         }
 
         sharePlan.setOnClickListener(view -> {
-            HashMap<String, String> model = new HashMap<>();
-            String trainig = new Gson().toJson(prepareSend());
-            model.put("training", trainig);
-            Request.getInstance().sendPlan(model, mMyPlansFragment);
-        });
-    }
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
+                        Uri.parse(mTrainings.get(position).getImage()));
+                imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-    private TrainingSendModel prepareSend() {
-        TrainingSendModel model = new TrainingSendModel();
-        return null;
+            HashMap<String, String> training = new HashMap<>();
+            training.put("plan_time", String.valueOf(mTrainings.get(position).getTime()));
+            training.put("name", String.valueOf(mTrainings.get(position).getName()));
+            training.put("description", String.valueOf(mTrainings.get(position).getDescription()));
+            training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            assert imageBitmap != null;
+//            try {
+////                training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+            training.put("image_path", " ");
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+            training.put("exercises", new Gson().toJson(mTrainings.get(position).getExercises()));
+            training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+
+            Request.getInstance().sendPlan(training, mMyPlansFragment);
+        });
     }
 
     @Override
@@ -103,6 +131,4 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         assert mTrainings != null;
         return mTrainings.size();
     }
-
-
 }

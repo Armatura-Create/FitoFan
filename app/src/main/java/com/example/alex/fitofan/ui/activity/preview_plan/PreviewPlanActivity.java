@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -25,6 +27,7 @@ import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
+import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -66,7 +69,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(getIntent().getIntExtra("trainingModel", -1) != -1) {
+        if (getIntent().getIntExtra("trainingModel", -1) != -1) {
             if (id == R.id.action_edit) {
                 Intent intent = new Intent(getContext(), CreatePlanActivity.class);
                 intent.putExtra("trainingModel", getIntent().getIntExtra("trainingModel", -1));
@@ -128,13 +131,37 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         });
 
         ItemClickSupport.addTo(mBinding.content.rv).setOnItemClickListener((recyclerView, position, v) -> {
-            if(!adapter.getModel().get(position).isRest()){
+            int[] pos = {adapter.getModel().get(position).getPosition()};
+            if (!adapter.getModel().get(position).isRest()) {
                 Dialog dialog = CustomDialog.card(getContext(),
-                        adapter.getModel().get(position).getName(),
-                        adapter.getModel().get(position).getDescription(),
-                       adapter.getModel().get(position).getImage());
-                dialog.findViewById(R.id.cancel_dialog).setOnClickListener(v1 -> {
-                    dialog.dismiss();
+                        mModel.getExercises().get(pos[0]).getName(),
+                        mModel.getExercises().get(pos[0]).getDescription(),
+                        mModel.getExercises().get(pos[0]).getImage());
+                dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
+                    if (mModel.getExercises().size() - 1 > pos[0]) {
+                        pos[0]++;
+                        if (mModel.getExercises().size() > pos[0]) {
+                            CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                    mModel.getExercises().get(pos[0]).getDescription(),
+                                    mModel.getExercises().get(pos[0]).getImage());
+
+                        }
+                    } else {
+                        Toast.makeText(this, "Это последнее упражнение", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
+                    if (pos[0] > 0) {
+                        pos[0]--;
+                        if (pos[0] + 1 > 0) {
+                            CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                    mModel.getExercises().get(pos[0]).getDescription(),
+                                    mModel.getExercises().get(pos[0]).getImage());
+                        }
+                    } else {
+                        Toast.makeText(this, "Это первое упражнение", Toast.LENGTH_LONG).show();
+                    }
                 });
             }
         });
@@ -142,6 +169,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     private void initRecyclerView() {
 
+        Log.e("initRecyclerView: ", new Gson().toJson(UnpackingTraining.buildExercises(mModel)));
         mBinding.content.rv.setHasFixedSize(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.content.rv.setLayoutManager(linearLayoutManager);

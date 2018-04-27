@@ -12,13 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.WallModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String> {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -86,5 +92,20 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         mBinding.refresh.setRefreshing(false);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("plan_id", "65");
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        Request.getInstance().getPlan(map, this);
+    }
+
+    @Override
+    public void onSuccess(String info) {
+
+    }
+
+    @Override
+    public void onFailure(String message) {
+
     }
 }

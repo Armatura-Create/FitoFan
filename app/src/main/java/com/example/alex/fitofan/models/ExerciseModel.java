@@ -142,7 +142,13 @@ public class ExerciseModel implements Serializable, Parcelable {
 
     public String toJSONString() throws JSONException {
         JSONObject json = new JSONObject();
-//        json.put("email", email);
+        json.put("time", time);
+        json.put("name", name);
+        json.put("description", description);
+        json.put("count_repetitions", countRepetitions);
+        json.put("image_path", image);
+        json.put("time_between", timeBetween);
+        json.put("recovery_time", recoveryTime);
         return json.toString().replaceAll("\\\\", "");
     }
 
@@ -160,4 +166,5 @@ public class ExerciseModel implements Serializable, Parcelable {
         dest.writeLong(timeBetween);
         dest.writeLong(recoveryTime);
     }
+
 }

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
 import com.example.alex.fitofan.models.LocationModel;
+import com.example.alex.fitofan.models.SingInModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
@@ -50,6 +51,10 @@ class SignInPresenter implements SignInContract.EventListener {
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
+
+        SingInModel model = new SingInModel();
+        model.setPassword(password);
+        model.setEmail(email);
 
         Request.getInstance().singIn(params, this);
     }

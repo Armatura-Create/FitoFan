@@ -1,9 +1,13 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.TrainingModel;
@@ -26,8 +31,14 @@ import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String> {
 

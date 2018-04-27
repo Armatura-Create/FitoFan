@@ -61,6 +61,10 @@ dependencies {
     //Json
     implementation "com.googlecode.json-simple:json-simple:1.1"
 
+    //ProgressBars
+    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
     //Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'

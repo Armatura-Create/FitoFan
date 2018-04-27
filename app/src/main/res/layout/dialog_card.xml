@@ -1,92 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:layout_gravity="center"
-    android:layout_marginEnd="20dp"
-    android:layout_marginStart="20dp"
+    android:layout_margin="20dp"
     app:cardCornerRadius="10dp">
-
-    <ImageView
-        android:id="@+id/iv_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/shape_special" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
+            android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/image_exercise"
                 android:layout_width="match_parent"
-                android:layout_height="27dp"
-                android:layout_gravity="center"
-                android:layout_weight="4"
-                android:src="@drawable/icon_dialog" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1.5"
-                android:gravity="start"
-                android:singleLine="false"
-                android:text="Title"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/cancel_dialog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="4.5"
-                android:gravity="end|top"
-                android:paddingRight="15dp"
-                android:text="X"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            app:cardBackgroundColor="@color/background_fragment"
-            app:cardCornerRadius="10dp">
-
-            <ImageView
-                android:id="@+id/exercise_photo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/background_launch_screen" />
 
+            <ImageView
+                android:id="@+id/iv_background"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="140dp"
+                android:src="@drawable/shape_card" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF1f275e"
+            android:orientation="vertical">
+
             <TextView
-                android:id="@+id/dialog_description"
+                android:id="@+id/name_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="44sp"
+                android:textStyle="bold"
+                tools:text="Cross" />
+
+            <TextView
+                android:id="@+id/description_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:isScrollContainer="true"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:textColor="@android:color/white"
+                tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_margin="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="@string/class_description"
-                android:textColor="@android:color/white"
-                android:textSize="13sp" />
-        </android.support.v7.widget.CardView>
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/back_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/plus" />
+
+                <ImageView
+                    android:id="@+id/close_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/plus" />
+
+                <ImageView
+                    android:id="@+id/next_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/plus" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

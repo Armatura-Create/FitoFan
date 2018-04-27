@@ -122,9 +122,13 @@ public class TrainingModel implements Serializable, Parcelable {
         this.image = image;
     }
 
-    public String toJSONString() throws JSONException {
+    public String toJSONStringExercise() throws JSONException {
         JSONObject json = new JSONObject();
-//        json.put("email", email);
+//        json.put("time", time);
+//        json.put("name", name);
+//        json.put("description", description);
+//        json.put("user_id", id);
+        json.put("exercises", exercises);
         return json.toString().replaceAll("\\\\", "");
     }
 
