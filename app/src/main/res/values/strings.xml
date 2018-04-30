@@ -35,7 +35,7 @@
     <string name="search">Search</string>
     <string name="send_plan">Send plan</string>
     <string name="create_plan">Create a training plan</string>
-    <string name="training_class">Training class</string>
+    <string name="training_class">Training name</string>
     <string name="class_description">Добавте класс тренировки к примеру: \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
     <string name="add_image_file">Add image class</string>
     <string name="description_description_plan">Добавьте  описание класса тренировки. \nОписывается поставка цели и задачи при выполнении данного типа тренировки.</string>

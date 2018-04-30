@@ -8,10 +8,13 @@ import java.io.ByteArrayOutputStream;
 
 public class CompressImage {
     public static String getBase64FromBitmap(Bitmap source) {
-        ByteArrayOutputStream byteArrayOutputStreamObject = new ByteArrayOutputStream();
-        source.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStreamObject);
-        byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-        return Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        if (source != null) {
+            ByteArrayOutputStream byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            source.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            return Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        }
+        return "";
     }
 
     public static Bitmap compressImageFromBitmap(Bitmap source) {
@@ -19,12 +22,13 @@ public class CompressImage {
         int actualHeight = source.getHeight();
         float maxHeight = 816.0f;
         float maxWidth = 816.0f;
-        if(maxWidth>actualHeight){
-            return source; }
+        if (maxWidth > actualHeight) {
+            return source;
+        }
         float scaleVal = 1;
-        scaleVal = maxWidth/actualWidth;
+        scaleVal = maxWidth / actualWidth;
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleVal,scaleVal);
+        matrix.postScale(scaleVal, scaleVal);
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 source, 0, 0, actualWidth, actualHeight, matrix, false);
         source.recycle();

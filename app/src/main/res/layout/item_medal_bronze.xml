@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_photo"
+        android:id="@+id/user_photo_bronze"
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:layout_marginEnd="8dp"

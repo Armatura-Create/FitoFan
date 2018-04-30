@@ -22,8 +22,8 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            tools:replace="android:value"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -97,9 +97,9 @@
 
         <activity
             android:name=".ui.activity.create_plan.CreatePlanActivity"
+            android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
             android:name=".ui.activity.preview_plan.PreviewPlanActivity"

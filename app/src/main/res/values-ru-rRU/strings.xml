@@ -18,7 +18,7 @@
     <string name="search">Поиск</string>
     <string name="training_description">Описание</string>
     <string name="add_image_file">Добавить картинку</string>
-    <string name="training_class">Класс тренировки</string>
+    <string name="training_class">Название тренировки</string>
     <string name="tab_wall">Стена</string>
     <string name="tab_participants">Рейтинг</string>
     <string name="tab_my_plan">Мои планы</string>

@@ -13,13 +13,17 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.daimajia.numberprogressbar.OnProgressBarListener;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
 import com.example.alex.fitofan.models.TrainingModel;
@@ -40,7 +44,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TrainingActivity extends AppCompatActivity implements TrainingContact.View, SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener {
+        MediaPlayer.OnCompletionListener, OnProgressBarListener {
 
     private ActivityTrainingBinding mBinding;
     private TrainingPresenter mPresenter;
@@ -48,7 +52,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private Dao<TrainingModel, Integer> mTrainings;
     private MediaPlayer mMediaPlayer;
 
-    private static final long DEFAULT_REFRESH_INTERVAL = 1000L;
+    private static final long DEFAULT_REFRESH_INTERVAL = 10L;
 
     private ScheduledExecutorService mTimerThread = null;
     private SoundPool sp;
@@ -60,6 +64,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private float volume = (float) 0.6;
     private boolean isPause;
     private boolean isPreparationTime;
+    private boolean isVisibility = false;
 
     private long[] tempTime = {0};
     private long temp_pause = 0;
@@ -167,16 +172,53 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mBinding.content.rv.setAdapter(adapter);
     }
 
-    private void initListeners() {
-        mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
-
-        try {
-            mBinding.content.timer.setTypeface(CustomFontsLoader.getTypeface(this, 0));
-        } catch (Exception e) {
-            Log.e("initListeners: ", String.valueOf(e));
+    @Override
+    public void onBackPressed() {
+        if (!isStop) {
+            Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
+            return;
         }
+        super.onBackPressed();
+    }
 
-        mBinding.content.btStart.setOnClickListener(v -> {
+    private void initListeners() {
+        mBinding.toolbar.setNavigationOnClickListener(view -> {
+            if (isStop) {
+                onBackPressed();
+            } else {
+                Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mBinding.content.numberProgressBar.setOnProgressBarListener(this);
+
+        mBinding.content.changeBt.setOnClickListener(view ->
+
+        {
+            if (!isVisibility) {
+                isVisibility = true;
+                mBinding.content.descriptionExercise.setVisibility(View.VISIBLE);
+                mBinding.content.type.setVisibility(View.GONE);
+                mBinding.content.timer.setVisibility(View.GONE);
+                mBinding.content.timerProgress.setVisibility(View.GONE);
+            } else {
+                isVisibility = false;
+                mBinding.content.descriptionExercise.setVisibility(View.GONE);
+                mBinding.content.type.setVisibility(View.VISIBLE);
+                mBinding.content.timer.setVisibility(View.VISIBLE);
+                mBinding.content.timerProgress.setVisibility(View.VISIBLE);
+            }
+        });
+
+//        try {
+//            mBinding.content.timer.setTypeface(CustomFontsLoader.getTypeface(this, 0));
+//        } catch (Exception e) {
+//            Log.e("initListeners: ", String.valueOf(e));
+//        }
+
+        mBinding.content.btStart.setOnClickListener(v ->
+
+        {
             if (!isPreparationTime) {
                 if (isPause) {
                     mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
@@ -186,6 +228,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 } else if (!isRunning() && isStop) {
                     mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
                     preparationTimer();
+                    isStop = false;
                 } else if (!isStop && !isRunning()) {
                     if (mPosition < adapter.getItemCount() - 1) {
                         mPosition++;
@@ -205,28 +248,32 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             }
         });
 
-        ItemClickSupport.addTo(mBinding.content.rv).setOnItemClickListener((recyclerView, position, v) -> {
-            if (!isRunning() && isPause) {
-                Dialog dialog = CustomDialog.dialogSimple(getContext(),
-                        null,
-                        "To reset progress?",
-                        "Yes",
-                        "No");
-                dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                    mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
-                    mPosition = position;
-                    isPause = false;
-                    isStop = true;
-                    setData();
-                    dialog.dismiss();
+        ItemClickSupport.addTo(mBinding.content.rv).
+
+                setOnItemClickListener((recyclerView, position, v) ->
+
+                {
+                    if (!isRunning() && isPause) {
+                        Dialog dialog = CustomDialog.dialogSimple(getContext(),
+                                null,
+                                "To reset progress?",
+                                "Yes",
+                                "No");
+                        dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
+                            mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                            mPosition = position;
+                            isPause = false;
+                            isStop = true;
+                            setData();
+                            dialog.dismiss();
+                        });
+                    } else if (isStop) {
+                        mPosition = position;
+                        setData();
+                    } else {
+                        Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
+                    }
                 });
-            } else if (isStop) {
-                mPosition = position;
-                setData();
-            } else {
-                Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void ifMethod() {
@@ -269,13 +316,13 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 ifMethod();
             } else {
                 preparationTime[0] -= DEFAULT_REFRESH_INTERVAL;
+                mBinding.content.timerProgress.setProgress(preparationTime[0] * 100 / 5000);
                 mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     private void startTimer(long timerStart) {
-
         tempTime = new long[]{timerStart};
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
@@ -291,12 +338,18 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                     stopTimer();
                     releaseMP();
                     Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
+                    mBinding.content.numberProgressBar.setProgress(100);
                     mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                     isStop = true;
                 }
                 sp.play(soundIdPoint, 1, 1, 0, 0, 1);
             } else {
                 tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
+
+                mBinding.content.timerProgress.setProgress(100 - (tempTime[0] * 100 /
+                        (!adapter.getModel().get(mPosition).isRest() ?
+                                adapter.getModel().get(mPosition).getTime() / 10 :
+                                adapter.getModel().get(mPosition).getTime())));
                 mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
@@ -304,8 +357,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     }
 
     private void setData() {
+        mBinding.content.timerProgress.setProgress(0);
 
         mBinding.content.rv.smoothScrollToPosition(mPosition);
+        mBinding.content.numberProgressBar.setProgress(mPosition * 100 / adapter.getItemCount());
 
         if (!adapter.getModel().get(mPosition).isRest() &&
                 adapter.getModel().get(mPosition).getImage() != null) {
@@ -326,6 +381,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         }
 
         mBinding.content.tvNameExercise.setText(adapter.getModel().get(mPosition).getName());
+        mBinding.content.descriptionExercise.setMovementMethod(new ScrollingMovementMethod());
 
         if (!adapter.getModel().get(mPosition).isRest())
             mBinding.content.descriptionExercise.setText(adapter.getModel().get(mPosition).getDescription());
@@ -448,5 +504,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     public int getPosition() {
         return mPosition;
+    }
+
+    @Override
+    public void onProgressChange(int current, int max) {
+
     }
 }

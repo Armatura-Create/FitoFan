@@ -105,7 +105,10 @@
                         android:scrollbars="vertical"
                         android:singleLine="false"
                         android:textColor="@color/button_blue"
-                        android:textSize="18sp" />
+                        android:focusable="true"
+                        android:textSize="18sp">
+                        <requestFocus />
+                    </EditText>
 
                     <View
                         android:layout_width="match_parent"

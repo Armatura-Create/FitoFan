@@ -10,13 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.models.WallModel;
+import com.example.alex.fitofan.models.GetTrainingModel;
+import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
 import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
+import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
 
@@ -31,9 +31,17 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private final RequestOptions mRequestOptions;
     private WallFragment mWallFragment;
-    private ArrayList<WallModel> mWallModels;
+    private ArrayList<GetTrainingModel> mWallModels;
 
-    public RecyclerAdapterWall(ArrayList<WallModel> mWallModels, WallFragment mWallFragment) {
+    public ArrayList<GetTrainingModel> getmWallModels() {
+        return mWallModels;
+    }
+
+    public void setmWallModels(ArrayList<GetTrainingModel> mWallModels) {
+        this.mWallModels = mWallModels;
+    }
+
+    public RecyclerAdapterWall(ArrayList<GetTrainingModel> mWallModels, WallFragment mWallFragment) {
         this.mWallModels = mWallModels;
         this.mWallFragment = mWallFragment;
         mRequestOptions = new RequestOptions();
@@ -66,26 +74,35 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         ImageView imageTrainingPlan = linear.findViewById(R.id.image_training_plan_wall);
         TextView tvFirstName = linear.findViewById(R.id.first_name_wall);
         TextView tvLastName = linear.findViewById(R.id.last_name_wall);
+        TextView tvNameTrainig = linear.findViewById(R.id.tv_training_name);
+        TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
+        TextView tvTimeCreate = linear.findViewById(R.id.data_publication);
+        TextView tvDescription = linear.findViewById(R.id.tv_description);
 
         LinearLayout userLiner = linear.findViewById(R.id.user_liner);
         LinearLayout planLiner = linear.findViewById(R.id.plan_liner);
 
-        Uri uri1 = Uri.parse(mWallModels.get(position).getImageTraining());
+        tvNameTrainig.setText(mWallModels.get(position).getName());
+        tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position).getPlan_time())));
+        tvTimeCreate.setText(mWallModels.get(position).getCreationDate());
+        tvDescription.setText(mWallModels.get(position).getDescription());
+        tvFirstName.setText(mWallModels.get(position).getUser().getName());
+        tvLastName.setText(mWallModels.get(position).getUser().getSurname());
+
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
-                .load(uri1)
+                .load(Uri.parse(mWallModels.get(position).getImage()))
                 .apply(centerCropTransform())
                 .transition(withCrossFade())
-                .into(imageTrainingPlan); //ссылка на ImageView
+                .into(imageTrainingPlan);
 
-        Uri uri2 = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
-        Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
-                .load(uri2)
+        Glide.with(mWallFragment.getActivity().getApplicationContext())
+                .load(Uri.parse(mWallModels.get(position).getUser().getImage_url()))
                 .apply(centerCropTransform())
                 .transition(withCrossFade())
                 .into(imageUser); //ссылка на ImageView
 
         userLiner.setOnClickListener(v -> {
-            v.getContext().startActivity(new Intent(v.getContext(), UserProfileActivity.class));
+            mWallFragment.goUserProfile(mWallModels.get(position).getUser().getUid());
         });
 
         planLiner.setOnClickListener(v -> {

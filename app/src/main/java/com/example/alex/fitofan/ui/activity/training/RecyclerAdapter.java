@@ -15,7 +15,6 @@ import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
@@ -57,7 +56,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         final LinearLayout linear = holder.mLinearLayout;
 
         TextView name = linear.findViewById(R.id.tv_name_exercise);
-        TextView time = linear.findViewById(R.id.tv_time);
+        TextView time = linear.findViewById(R.id.tv_count_plans);
         TextView description = linear.findViewById(R.id.tv_description_exercise);
         ImageView image = linear.findViewById(R.id.image_exercise);
         LinearLayout radioButton = linear.findViewById(R.id.liner_exercise);

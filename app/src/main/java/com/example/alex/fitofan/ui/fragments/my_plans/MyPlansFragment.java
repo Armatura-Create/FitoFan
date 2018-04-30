@@ -1,13 +1,9 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,35 +14,28 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
-import com.example.alex.fitofan.utils.Connection;
-import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String> {
 
     FragmentMyPlansBinding mBinding;
+    private ProgressDialog mProgressDialog;
     private View view;
     private RecyclerAdapterMyPlans adapter;
     private ArrayList<TrainingModel> mModels = new ArrayList<>();
     private Dao<TrainingModel, Integer> mTrainings;
+
     private final int IS_FROM_TRAINING = 2;
 
     @Nullable
@@ -61,6 +50,8 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onStart() {
+        mProgressDialog = new ProgressDialog(view.getContext());
+        mProgressDialog.setCancelable(false);
         initDB();
         initListeners();
         super.onStart();
@@ -111,11 +102,12 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         startActivity(intent);
     }
 
+
     private void initRecyclerView(ArrayList<TrainingModel> models) {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterMyPlans(models, this);
+        adapter = new RecyclerAdapterMyPlans(models, mProgressDialog, this);
         mBinding.rvMyPlans.setAdapter(adapter);
         mBinding.rvMyPlans.setNestedScrollingEnabled(true);
 
@@ -154,6 +146,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onSuccess(String info) {
+        mProgressDialog.cancel();
         Toast.makeText(getContext(), "Ok", Toast.LENGTH_SHORT).show();
     }
 

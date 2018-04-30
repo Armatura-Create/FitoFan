@@ -1,15 +1,15 @@
 package com.example.alex.fitofan.client;
 
 import com.example.alex.fitofan.models.GetPlanModel;
+import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.models.GetWallModel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 interface FitoFanAPI {
@@ -36,7 +36,15 @@ interface FitoFanAPI {
     @FormUrlEncoded
     Call<GetPlanModel> getPlan(@FieldMap (encoded = true) HashMap<String, String> params);
 
-    @GET("/v1/getUser")
+    @POST("/v1/getLatestPlans")
+    @FormUrlEncoded
+    Call<GetWallModel> getWall(@FieldMap (encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getRating")
+    @FormUrlEncoded
+    Call<GetRatingModel> getRating(@FieldMap (encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getUser")
     @FormUrlEncoded
     Call<GetUserModel> getUserData(@FieldMap (encoded = true) HashMap<String,String> params);
 

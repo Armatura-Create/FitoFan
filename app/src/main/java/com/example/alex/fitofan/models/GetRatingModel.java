@@ -4,9 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class GetPlanModel {
+public class GetRatingModel {
     @SerializedName("status")
     @Expose
     private int status;
@@ -15,21 +14,17 @@ public class GetPlanModel {
     @Expose
     private int error;
 
-    @SerializedName("get")
-    @Expose
-    private String get;
-
     @SerializedName("post")
     @Expose
     private String post;
 
-    @SerializedName("training_plan")
+    @SerializedName("get")
     @Expose
-    private GetTrainingModel training;
+    private String get;
 
-    @SerializedName("exercises")
+    @SerializedName("users")
     @Expose
-    private ArrayList<GetExerciseModel> exercises;
+    private ArrayList<User> users;
 
     public int getStatus() {
         return status;
@@ -47,12 +42,11 @@ public class GetPlanModel {
         this.error = error;
     }
 
-    public GetTrainingModel getTraining() {
-        return training;
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
-    public void setTraining(GetTrainingModel user) {
-        this.training = training;
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
     }
-
 }

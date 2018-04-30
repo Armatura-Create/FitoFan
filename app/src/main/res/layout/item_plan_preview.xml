@@ -72,7 +72,7 @@
 
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_count_plans"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

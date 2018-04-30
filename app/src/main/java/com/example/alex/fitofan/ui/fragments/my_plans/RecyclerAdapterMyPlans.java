@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -41,10 +42,12 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
 
     private MyPlansFragment mMyPlansFragment;
     private ArrayList<TrainingModel> mTrainings;
+    private ProgressDialog mProgressDialog;
 
-    public RecyclerAdapterMyPlans(ArrayList<TrainingModel> trainings, MyPlansFragment mMyPlansFragment) {
+    public RecyclerAdapterMyPlans(ArrayList<TrainingModel> trainings, ProgressDialog mProgressDialog, MyPlansFragment mMyPlansFragment) {
         mTrainings = trainings;
         this.mMyPlansFragment = mMyPlansFragment;
+        this.mProgressDialog = mProgressDialog;
     }
 
     public ArrayList<TrainingModel> getTrainings() {
@@ -98,13 +101,16 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         }
 
         sharePlan.setOnClickListener(view -> {
+            mProgressDialog.show();
             Bitmap imageBitmap = null;
-            try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
-                        Uri.parse(mTrainings.get(position).getImage()));
-                imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (mTrainings.get(position).getImage() != null) {
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
+                            Uri.parse(mTrainings.get(position).getImage()));
+                    imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             HashMap<String, String> training = new HashMap<>();
@@ -113,12 +119,11 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
             training.put("description", String.valueOf(mTrainings.get(position).getDescription()));
             training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             assert imageBitmap != null;
-//            try {
-////                training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
-            training.put("image_path", " ");
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             training.put("exercises", new Gson().toJson(mTrainings.get(position).getExercises()));
             training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
 

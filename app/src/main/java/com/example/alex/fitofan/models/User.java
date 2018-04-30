@@ -18,7 +18,19 @@ public class User {
 
     @SerializedName("training_plans")
     @Expose
-    private String training_plans;
+    private String trainingPlans;
+
+    @SerializedName("saved_training_plans")
+    @Expose
+    private String savedTrainingPlans;
+
+    @SerializedName("plan_rating")
+    @Expose
+    private String rating;
+
+    @SerializedName("plan_likes")
+    @Expose
+    private String likes;
 
     @SerializedName("name")
     @Expose
@@ -69,12 +81,12 @@ public class User {
         this.signature = signature;
     }
 
-    public String getTraining_plans() {
-        return training_plans;
+    public String getTrainingPlans() {
+        return trainingPlans;
     }
 
-    public void setTraining_plans(String training_plans) {
-        this.training_plans = training_plans;
+    public void setTrainingPlans(String trainingPlans) {
+        this.trainingPlans = trainingPlans;
     }
 
     public String getName() {
@@ -123,5 +135,29 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
+    public String getSavedTrainingPlans() {
+        return savedTrainingPlans;
+    }
+
+    public void setSavedTrainingPlans(String savedTrainingPlans) {
+        this.savedTrainingPlans = savedTrainingPlans;
     }
 }

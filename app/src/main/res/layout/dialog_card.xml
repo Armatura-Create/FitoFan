@@ -28,8 +28,7 @@
             <ImageView
                 android:id="@+id/iv_background"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="140dp"
+                android:layout_height="200dp"
                 android:src="@drawable/shape_card" />
         </RelativeLayout>
 
@@ -37,32 +36,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FF1f275e"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="6">
 
-            <TextView
-                android:id="@+id/name_exercise"
+            <LinearLayout
+                android:layout_weight="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="44sp"
-                android:textStyle="bold"
-                tools:text="Cross" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/description_exercise"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:isScrollContainer="true"
-                android:maxLines="10"
-                android:scrollbars="vertical"
-                android:textColor="@android:color/white"
-                tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
+                <TextView
+                    android:id="@+id/name_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@android:color/white"
+                    android:textSize="44sp"
+                    android:textStyle="bold"
+                    tools:text="Cross" />
+
+                <TextView
+                    android:id="@+id/description_exercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="150dp"
+                    android:layout_margin="20dp"
+                    android:isScrollContainer="true"
+                    android:scrollbars="vertical"
+                    android:textColor="@android:color/white"
+                    tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,11 +82,13 @@
                     android:id="@+id/back_exercise"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@drawable/plus" />
+                    android:rotation="180"
+                    android:src="@drawable/next_icon" />
 
                 <ImageView
                     android:id="@+id/close_dialog"
@@ -97,11 +105,12 @@
                     android:id="@+id/next_exercise"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@drawable/plus" />
+                    android:src="@drawable/next_icon" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

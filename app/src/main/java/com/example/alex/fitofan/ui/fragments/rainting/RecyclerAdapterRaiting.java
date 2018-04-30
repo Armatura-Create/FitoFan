@@ -8,15 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.User;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapterRaiting.ViewHolder> {
 
@@ -24,10 +24,18 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
     //Предоставляет ссылку на представления, используемые в RecyclerView
 
     private ParticipantFragment mParticipantFragment;
-    private int count;
+    private ArrayList<User> mModel;
 
-    public RecyclerAdapterRaiting(int count, ParticipantFragment mParticipantFragment) {
-        this.count = count;
+    public ArrayList<User> getmModel() {
+        return mModel;
+    }
+
+    public void setmModel(ArrayList<User> mModel) {
+        this.mModel = mModel;
+    }
+
+    public RecyclerAdapterRaiting(ArrayList<User> mModel, ParticipantFragment mParticipantFragment) {
+        this.mModel = mModel;
         this.mParticipantFragment = mParticipantFragment;
     }
 
@@ -73,26 +81,72 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
         final LinearLayout linear = holder.mLinearLayout;
 
         CircleImageView imageUser = linear.findViewById(R.id.image_user_raiting);
+        CircleImageView topPhotoGold = linear.findViewById(R.id.user_photo_gold);
+        CircleImageView topPhotoSilver = linear.findViewById(R.id.user_photo_silver);
+        CircleImageView topPhotoBronze = linear.findViewById(R.id.user_photo_bronze);
+
         TextView number = linear.findViewById(R.id.number_participant);
+        TextView like = linear.findViewById(R.id.like_rating);
+        TextView like_gold = linear.findViewById(R.id.like_one);
+        TextView like_silver = linear.findViewById(R.id.like_two);
+        TextView like_bronze = linear.findViewById(R.id.like_three);
+        TextView name = linear.findViewById(R.id.name_user_participant);
+        TextView name_gold = linear.findViewById(R.id.name_one);
+        TextView name_silver = linear.findViewById(R.id.name_two);
+        TextView name_bronze = linear.findViewById(R.id.name_three);
 
-        if (position > 0) {
+        if (position == 0) {
 
-            Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
-            Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
-                    .load(uri)
-                    .apply(centerCropTransform())
-                    .transition(withCrossFade())
-                    .into(imageUser); //ссылка на ImageView
+            if (mModel.size() > 0) {
+                Glide.with(mParticipantFragment.getActivity().getApplicationContext())
+                        .load(Uri.parse(mModel.get(0).getImage_url()))
+                        .apply(centerCropTransform())
+                        .transition(withCrossFade())
+                        .into(topPhotoGold);
+
+                name_gold.setText(mModel.get(0).getName() + " " + mModel.get(0).getSurname());
+                like_gold.setText(mModel.get(0).getLikes());
+            }
+
+            if (mModel.size() > 1) {
+                Glide.with(mParticipantFragment.getActivity().getApplicationContext())
+                        .load(Uri.parse(mModel.get(1).getImage_url()))
+                        .apply(centerCropTransform())
+                        .transition(withCrossFade())
+                        .into(topPhotoSilver);
+
+                name_silver.setText(mModel.get(1).getName() + " " + mModel.get(1).getSurname());
+                like_silver.setText(mModel.get(1).getLikes());
+            }
+            if (mModel.size() > 2) {
+                Glide.with(mParticipantFragment.getActivity().getApplicationContext())
+                        .load(Uri.parse(mModel.get(2).getImage_url()))
+                        .apply(centerCropTransform())
+                        .transition(withCrossFade())
+                        .into(topPhotoBronze);
+
+                name_bronze.setText(mModel.get(2).getName() + " " + mModel.get(2).getSurname());
+                like_bronze.setText(mModel.get(2).getLikes());
+            }
         }
 
         if (position > 0) {
-            number.setText(position + 3 + ".");
+
+            Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
+                    .load(Uri.parse(mModel.get(position + 3).getImage_url()))
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageUser); //ссылка на ImageView
+
+            number.setText(position + 3 + "");
+            name.setText(mModel.get(position + 3).getName() + " " + mModel.get(position + 3).getSurname());
+            like.setText(mModel.get(position + 3).getLikes());
         }
     }
 
     @Override
     public int getItemCount() {
-        return count;
+        return mModel == null ? 0 : (mModel.size() > 3 ? mModel.size() - 3 : 1);
     }
 
 }

@@ -64,15 +64,22 @@
                     android:background="@color/background_delimiter" />
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_raiting"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_linear"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/top_linear"
-                tools:listitem="@layout/item_rating" />
+                app:layout_constraintTop_toBottomOf="@+id/top_linear">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_raiting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_rating" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/bottom_linear"
@@ -83,7 +90,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <include layout="@layout/item_rating_your" />
+                <include
+                    android:id="@+id/your_place"
+                    layout="@layout/item_rating_your" />
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

@@ -5,17 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.google.gson.Gson;
 
@@ -28,9 +27,20 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private UserProfileActivity mUserProfileActivity;
 
+    public User getmUserModel() {
+        return mUserModel;
+    }
 
-    RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity) {
+    public void setmUserModel(User mUserModel) {
+        this.mUserModel = mUserModel;
+    }
+
+    private User mUserModel;
+
+
+    RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity, User mUserModel) {
         this.mUserProfileActivity = mUserProfileActivity;
+        this.mUserModel= mUserModel;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,26 +102,20 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             TextView lastName = linear.findViewById(R.id.last_name);
             ImageView imageUser = linear.findViewById(R.id.user_photo);
             TextView city = linear.findViewById(R.id.city);
+            TextView place = linear.findViewById(R.id.tv_place);
+            TextView countPlans = linear.findViewById(R.id.tv_count_plans);
+            TextView subscriberse = linear.findViewById(R.id.tv_subscriberse);
 
-            if (MSharedPreferences.getInstance().getUserInfo() != null) {
-                firstName.setText(
-                        new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
-                                .getUser().getName()
-                );
+            if (mUserModel != null) {
+                firstName.setText(mUserModel.getName());
+                lastName.setText(mUserModel.getSurname());
+                city.setText(mUserModel.getLocation());
+                countPlans.setText(mUserModel.getTrainingPlans());
+                place.setText(mUserModel.getRating());
 
-                lastName.setText(
-                        new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
-                                .getUser().getSurname()
-                );
-
-                city.setText( new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
-                        .getUser().getLocation());
-
-                if (new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
-                        .getUser().getImage_url() != null) {
+                if (mUserModel.getImage_url() != null) {
                     Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
-                            .load(Uri.parse(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class)
-                                    .getUser().getImage_url()))
+                            .load(Uri.parse(mUserModel.getImage_url()))
                             .apply(centerCropTransform())
                             .apply(placeholderOf(R.drawable.background_launch_screen))
                             .transition(withCrossFade())
@@ -122,6 +126,8 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 linear.findViewById(R.id.show_all).setOnClickListener(view -> {
                     Toast.makeText(mUserProfileActivity.getContext(), "Show All", Toast.LENGTH_SHORT).show();
                 });
+
+
 
                 final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
 
