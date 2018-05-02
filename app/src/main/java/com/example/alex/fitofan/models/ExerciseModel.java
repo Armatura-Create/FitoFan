@@ -36,16 +36,16 @@ public class ExerciseModel implements Serializable, Parcelable {
     @Expose
     private int countRepetitions = 1;
 
+    @DatabaseField(columnName = "time_between")
+    @SerializedName("time_between")
+    @Expose
+    private long timeBetween;
+
     @DatabaseField(columnName = "audio")
     private String audio;
 
     @DatabaseField(columnName = "image")
     private String image;
-
-    @DatabaseField(columnName = "time_between")
-    @SerializedName("time_between")
-    @Expose
-    private long timeBetween;
 
     @DatabaseField(columnName = "recovery_time")
     @SerializedName("recovery_time")

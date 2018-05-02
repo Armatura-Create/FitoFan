@@ -81,7 +81,9 @@ public class MainActivity extends AppCompatActivity
 //            requestMultiplePermissions();
 //            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 //                chooseAvatar();
-            startActivity(new Intent(this, UserProfileActivity.class));
+            Intent intent = new Intent(getContext(), UserProfileActivity.class);
+            intent.putExtra("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            startActivity(intent);
         });
     }
 

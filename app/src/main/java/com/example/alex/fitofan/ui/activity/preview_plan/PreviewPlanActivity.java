@@ -4,26 +4,26 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.models.ExerciseModel;
+import com.example.alex.fitofan.models.GetPlanModel;
+import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
-import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.CustomDialog;
-import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
@@ -32,14 +32,15 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View {
+public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel> {
 
     private ActivityPlanPreviewBinding mBinding;
     private PreviewPlanPresenter mPresenter;
     private RecyclerAdapterPreviewPlan adapter;
     private TrainingModel mModel;
-    private int isGoTo;
     private Dao<TrainingModel, Integer> mTrainings;
 
     @Override
@@ -49,8 +50,18 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_plan_preview);
         mPresenter = new PreviewPlanPresenter(this);
         setSupportActionBar(mBinding.toolbar);
-        isGoTo = getIntent().getIntExtra("isGoTo", 0);
-        getPlanFromBD(getIntent().getIntExtra("trainingModel", -1));
+        if (getIntent().getBooleanExtra("isWall", false)) {
+            ArrayList<ExerciseModel> models = new ArrayList<>();
+            mModel = new TrainingModel();
+            mModel.setExercises(models);
+            initRecyclerView();
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("plan_id", getIntent().getStringExtra("planId"));
+            Request.getInstance().getPlan(map, this);
+        } else
+            getPlanFromBD(getIntent().getIntExtra("trainingModel", -1));
         initListeners();
     }
 
@@ -169,7 +180,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     private void initRecyclerView() {
 
-        Log.e("initRecyclerView: ", new Gson().toJson(UnpackingTraining.buildExercises(mModel)));
         mBinding.content.rv.setHasFixedSize(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.content.rv.setLayoutManager(linearLayoutManager);
@@ -187,5 +197,40 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void onSuccess(GetPlanModel info) {
+        if (info.getTraining() != null) {
+            adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private TrainingModel setTraining(GetPlanModel training) {
+        ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
+        ExerciseModel exerciseModel = new ExerciseModel();
+        mModel = new TrainingModel();
+        for (int i = 0; i < training.getExercises().size(); i++) {
+            exerciseModel.setCountRepetitions(Integer.valueOf(training.getExercises().get(i).getCountRepetitions()));
+            exerciseModel.setImage(training.getExercises().get(i).getImage());
+            exerciseModel.setDescription(training.getExercises().get(i).getDescription());
+            exerciseModel.setName(training.getExercises().get(i).getName());
+            exerciseModel.setRecoveryTime(Long.valueOf(training.getExercises().get(i).getRecoveryTime()));
+            exerciseModel.setTime(Long.valueOf(training.getExercises().get(i).getTime()));
+            exerciseModel.setTimeBetween(Long.valueOf(training.getExercises().get(i).getTimeBetween()));
+            exerciseModels.add(exerciseModel);
+        }
+        mModel.setExercises(exerciseModels);
+        mModel.setTime(Long.valueOf(training.getTraining().getPlan_time()));
+        mModel.setName(training.getTraining().getName());
+        mModel.setDescription(training.getTraining().getDescription());
+        mModel.setImage(training.getTraining().getImage());
+        return mModel;
+    }
+
+    @Override
+    public void onFailure(String message) {
+
     }
 }

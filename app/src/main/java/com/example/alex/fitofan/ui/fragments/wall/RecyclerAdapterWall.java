@@ -1,6 +1,5 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,26 +11,33 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
+import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
-import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
-import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
+import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 
-public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
+public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> implements LikeStatus {
 
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private final RequestOptions mRequestOptions;
     private WallFragment mWallFragment;
     private ArrayList<GetTrainingModel> mWallModels;
+
+    int numberOfClicks = 0;
+    boolean threadStarted = false;
+    final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 250;
 
     public ArrayList<GetTrainingModel> getmWallModels() {
         return mWallModels;
@@ -106,8 +112,39 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         });
 
         planLiner.setOnClickListener(v -> {
-            v.getContext().startActivity(new Intent(v.getContext(), PreviewPlanActivity.class));
+            ++numberOfClicks;
+            if (!threadStarted) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        threadStarted = true;
+                        try {
+                            Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
+                            if (numberOfClicks == 1) {
+                                mWallFragment.goPreviewPlan(mWallModels.get(position).getId());
+                            } else if (numberOfClicks == 2) {
+                                if (mWallModels.get(position).getLiked() != 1) {
+                                    mWallFragment.likePlan(mWallModels.get(position).getId());
+                                }
+                            }
+                            numberOfClicks = 0;
+                            threadStarted = false;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
         });
+    }
+
+    @Override
+    public void onSuccess(Boolean info) {
+
+    }
+
+    @Override
+    public void onFailure(String message) {
 
     }
 
@@ -115,5 +152,4 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
     public int getItemCount() {
         return mWallModels.size();
     }
-
 }

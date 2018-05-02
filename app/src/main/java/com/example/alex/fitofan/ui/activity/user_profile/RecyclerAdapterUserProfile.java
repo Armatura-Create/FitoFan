@@ -8,15 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
@@ -27,6 +34,15 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private UserProfileActivity mUserProfileActivity;
 
+    private User mUserModel;
+    private ArrayList<GetTrainingModel> mWallModels;
+
+    RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity, User mUserModel, ArrayList<GetTrainingModel> mWallModels) {
+        this.mWallModels = mWallModels;
+        this.mUserProfileActivity = mUserProfileActivity;
+        this.mUserModel = mUserModel;
+    }
+
     public User getmUserModel() {
         return mUserModel;
     }
@@ -35,12 +51,12 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
         this.mUserModel = mUserModel;
     }
 
-    private User mUserModel;
+    public ArrayList<GetTrainingModel> getmWallModels() {
+        return mWallModels;
+    }
 
-
-    RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity, User mUserModel) {
-        this.mUserProfileActivity = mUserProfileActivity;
-        this.mUserModel= mUserModel;
+    public void setmWallModels(ArrayList<GetTrainingModel> mWallModels) {
+        this.mWallModels = mWallModels;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -128,7 +144,6 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 });
 
 
-
                 final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
 
                 LinearLayoutManager linearLayoutManager =
@@ -138,14 +153,32 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 final RecyclerAdapterInAdapter adapter = new RecyclerAdapterInAdapter(mUserProfileActivity);
                 recyclerView.setAdapter(adapter);
             }
-            //body methods
+        }
+        //body methods
+        if (position > 1) {
+            ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
+            TextView tvNameTrainig = linear.findViewById(R.id.tv_training_name);
+            TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
+            TextView tvDescription = linear.findViewById(R.id.tv_description);
 
+            if (mWallModels != null) {
+
+                tvNameTrainig.setText(mWallModels.get(position - 1).getName());
+                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 1).getPlan_time())));
+                tvDescription.setText(mWallModels.get(position - 1).getDescription());
+
+                Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
+                        .load(Uri.parse(mWallModels.get(position - 1).getImage()))
+                        .apply(centerCropTransform())
+                        .transition(withCrossFade())
+                        .into(imageTrainingPlan);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return 7;
+        return mWallModels == null ? 2 : mWallModels.size() + 2;
     }
 }
 

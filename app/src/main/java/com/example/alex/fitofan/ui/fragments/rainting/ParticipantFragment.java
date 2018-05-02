@@ -1,6 +1,7 @@
 package com.example.alex.fitofan.ui.fragments.rainting;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,12 +20,15 @@ import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentRaintingBinding;
+import com.example.alex.fitofan.interfaces.GetMyData;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.utils.Connection;
+import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -34,7 +38,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
-public class ParticipantFragment extends Fragment implements ILoadingStatus<GetRatingModel>, SwipeRefreshLayout.OnRefreshListener {
+public class ParticipantFragment extends Fragment implements ILoadingStatus<GetRatingModel>, SwipeRefreshLayout.OnRefreshListener, GetMyData {
 
     private RecyclerAdapterRaiting adapter;
     private View view;
@@ -132,6 +136,13 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
         mBinding.friendRating.setOnClickListener(view1 -> {
             Toast.makeText(getContext(), "friend rating", Toast.LENGTH_SHORT).show();
         });
+
+    }
+
+    protected void goUserProfile(String uid) {
+        Intent intent = new Intent(getContext(), UserProfileActivity.class);
+        intent.putExtra("uid", uid);
+        startActivity(intent);
     }
 
     private void initRecyclerView() {
@@ -184,6 +195,11 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     }
 
     @Override
+    public void onSuccess(String info) {
+        mBinding.yourPlace.likeRating.setText(info);
+    }
+
+    @Override
     public void onFailure(String message) {
         mBinding.refresh.setRefreshing(false);
     }
@@ -199,5 +215,6 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
         map.put("page", "1");
         scrolling = 1;
         Request.getInstance().getRating(map, this);
+        Request.getInstance().getMyData(this);
     }
 }

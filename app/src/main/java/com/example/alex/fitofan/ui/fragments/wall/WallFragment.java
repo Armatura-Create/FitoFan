@@ -19,6 +19,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
@@ -34,7 +35,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel> {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>,LikeStatus {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -83,19 +84,27 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding.fabAddTraining.setOnClickListener(view1 -> {
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
         });
-
-        mBinding.scrollTop.setOnClickListener(view1 -> {
-            mBinding.rvWall.scrollToPosition(0);
-            mBinding.refresh.setRefreshing(true);
-            mBinding.scrollTop.hide();
-            onRefresh();
-        });
     }
 
     protected void goUserProfile(String uid) {
         Intent intent = new Intent(getContext(), UserProfileActivity.class);
         intent.putExtra("uid", uid);
         startActivity(intent);
+    }
+
+    protected void goPreviewPlan(String planId) {
+        Intent intent = new Intent(getContext(), PreviewPlanActivity.class);
+        intent.putExtra("planId", planId);
+        intent.putExtra("isWall", true);
+        startActivity(intent);
+    }
+
+    protected void likePlan(String id){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", id);
+        Request.getInstance().like(map, this);
     }
 
     private void initRecyclerView() {
@@ -105,8 +114,6 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter = new RecyclerAdapterWall(models, this);
         mBinding.rvWall.setAdapter(adapter);
         mBinding.rvWall.setNestedScrollingEnabled(true);
-
-        mBinding.scrollTop.hide();
 
         RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
             @Override
@@ -125,11 +132,6 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 if (dy > 0 || dy < 0 && mBinding.fabAddTraining.isShown())
                     mBinding.fabAddTraining.hide();
-
-                if (dy > 0 && !mBinding.scrollTop.isShown())
-                    mBinding.scrollTop.show();
-                else if (dy < 0 && mBinding.scrollTop.isShown())
-                    mBinding.scrollTop.hide();
             }
 
             @Override
@@ -186,6 +188,11 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             isLoading = false;
         }
         mBinding.refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onSuccess(Boolean info) {
+        Toast.makeText(getContext(), info + "", Toast.LENGTH_SHORT).show();
     }
 
     @Override

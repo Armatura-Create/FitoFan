@@ -4,6 +4,7 @@ import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
+import com.example.alex.fitofan.models.LikeModel;
 
 import java.util.HashMap;
 
@@ -47,5 +48,9 @@ interface FitoFanAPI {
     @POST("/v1/getUser")
     @FormUrlEncoded
     Call<GetUserModel> getUserData(@FieldMap (encoded = true) HashMap<String,String> params);
+
+    @POST("/v1/likePlan")
+    @FormUrlEncoded
+    Call<LikeModel> likePlan(@FieldMap (encoded = true) HashMap<String,String> params);
 
 }

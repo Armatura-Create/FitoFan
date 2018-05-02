@@ -50,7 +50,7 @@
                         android:textSize="12sp"/>
 
                     <TextView
-                        android:id="@+id/tv_training_name_my_plan"
+                        android:id="@+id/tv_training_name"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="bottom"
@@ -105,7 +105,7 @@
 
 
                 <ImageView
-                    android:id="@+id/image_training_plan_wall"
+                    android:id="@+id/image_training"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -115,7 +115,7 @@
             </android.support.v7.widget.CardView>
 
             <TextView
-                android:id="@+id/tv_description_wall"
+                android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="start|bottom"

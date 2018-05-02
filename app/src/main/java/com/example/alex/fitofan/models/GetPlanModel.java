@@ -55,4 +55,11 @@ public class GetPlanModel {
         this.training = training;
     }
 
+    public ArrayList<GetExerciseModel> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(ArrayList<GetExerciseModel> exercises) {
+        this.exercises = exercises;
+    }
 }

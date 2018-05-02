@@ -85,6 +85,11 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
         CircleImageView topPhotoSilver = linear.findViewById(R.id.user_photo_silver);
         CircleImageView topPhotoBronze = linear.findViewById(R.id.user_photo_bronze);
 
+        LinearLayout gold = linear.findViewById(R.id.linear_gold);
+        LinearLayout silver = linear.findViewById(R.id.linear_silver);
+        LinearLayout bronze = linear.findViewById(R.id.linear_bronze);
+        LinearLayout rating = linear.findViewById(R.id.linear_rating);
+
         TextView number = linear.findViewById(R.id.number_participant);
         TextView like = linear.findViewById(R.id.like_rating);
         TextView like_gold = linear.findViewById(R.id.like_one);
@@ -106,6 +111,9 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
 
                 name_gold.setText(mModel.get(0).getName() + " " + mModel.get(0).getSurname());
                 like_gold.setText(mModel.get(0).getLikes());
+                gold.setOnClickListener(view -> {
+                    mParticipantFragment.goUserProfile(mModel.get(0).getUid());
+                });
             }
 
             if (mModel.size() > 1) {
@@ -117,6 +125,9 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
 
                 name_silver.setText(mModel.get(1).getName() + " " + mModel.get(1).getSurname());
                 like_silver.setText(mModel.get(1).getLikes());
+                silver.setOnClickListener(view -> {
+                    mParticipantFragment.goUserProfile(mModel.get(1).getUid());
+                });
             }
             if (mModel.size() > 2) {
                 Glide.with(mParticipantFragment.getActivity().getApplicationContext())
@@ -127,26 +138,33 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
 
                 name_bronze.setText(mModel.get(2).getName() + " " + mModel.get(2).getSurname());
                 like_bronze.setText(mModel.get(2).getLikes());
+                bronze.setOnClickListener(view -> {
+                    mParticipantFragment.goUserProfile(mModel.get(2).getUid());
+                });
             }
         }
 
         if (position > 0) {
 
             Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
-                    .load(Uri.parse(mModel.get(position + 3).getImage_url()))
+                    .load(Uri.parse(mModel.get(position + 2).getImage_url()))
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView
 
-            number.setText(position + 3 + "");
-            name.setText(mModel.get(position + 3).getName() + " " + mModel.get(position + 3).getSurname());
-            like.setText(mModel.get(position + 3).getLikes());
+            number.setText(position + 2 + "");
+            name.setText(mModel.get(position + 2).getName() + " " + mModel.get(position + 2).getSurname());
+            like.setText(mModel.get(position + 2).getLikes());
+
+            rating.setOnClickListener(view -> {
+                mParticipantFragment.goUserProfile(mModel.get(position + 2).getUid());
+            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return mModel == null ? 0 : (mModel.size() > 3 ? mModel.size() - 3 : 1);
+        return mModel == null ? 0 : (mModel.size() > 3 ? mModel.size() - 2 : 1);
     }
 
 }

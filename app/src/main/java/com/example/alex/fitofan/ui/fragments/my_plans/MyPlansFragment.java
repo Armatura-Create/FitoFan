@@ -152,6 +152,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onFailure(String message) {
+        mProgressDialog.cancel();
         Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
     }
 }

@@ -16,6 +16,7 @@
         android:weightSum="3">
 
         <LinearLayout
+            android:id="@+id/linear_silver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -39,7 +40,6 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
-                    android:text="Ivan Ivanov"
                     android:textColor="@color/button_blue"
                     android:textStyle="bold" />
 
@@ -58,7 +58,7 @@
                         android:id="@+id/like_two"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23"
+                        android:text="0"
                         android:textColor="@color/background_like"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -66,6 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_gold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -86,7 +87,6 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
-                    android:text="Ivan Ivanov"
                     android:textColor="@color/button_blue"
                     android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                         android:id="@+id/like_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23"
+                        android:text="0"
                         android:textColor="@color/background_like"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -114,6 +114,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_bronze"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -138,7 +139,6 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
-                    android:text="Ivan Ivanov"
                     android:textColor="@color/button_blue"
                     android:textStyle="bold" />
 
@@ -157,7 +157,7 @@
                         android:id="@+id/like_three"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23"
+                        android:text="0"
                         android:textColor="@color/background_like"
                         android:textStyle="bold" />
                 </LinearLayout>

@@ -26,6 +26,18 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
 
     private ArrayList<ExerciseModelFromTraining> model;
 
+    public PreviewPlanActivity getTrainingActivity() {
+        return trainingActivity;
+    }
+
+    public void setTrainingActivity(PreviewPlanActivity trainingActivity) {
+        this.trainingActivity = trainingActivity;
+    }
+
+    public void setModel(ArrayList<ExerciseModelFromTraining> model) {
+        this.model = model;
+    }
+
     public RecyclerAdapterPreviewPlan(PreviewPlanActivity trainingActivity, ArrayList<ExerciseModelFromTraining> model) {
         this.trainingActivity = trainingActivity;
         this.model = model;
@@ -66,7 +78,7 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
         name.setText(model.get(position).getName());
         description.setText(model.get(position).getDescription());
 
-        if (model.get(position).isRest())
+        if (!model.get(position).isRest())
             time.setText(FormatTime.formatCountWithDimension(model.get(position).getTime()));
         else
             time.setText(FormatTime.formatTime(model.get(position).getTime()));

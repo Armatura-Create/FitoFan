@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
+import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.models.SendExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.CompressImage;
@@ -113,20 +115,47 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                 }
             }
 
+            ArrayList<SendExerciseModel> exercise = new ArrayList<>();
             HashMap<String, String> training = new HashMap<>();
+            training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             training.put("plan_time", String.valueOf(mTrainings.get(position).getTime()));
             training.put("name", String.valueOf(mTrainings.get(position).getName()));
             training.put("description", String.valueOf(mTrainings.get(position).getDescription()));
-            training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             assert imageBitmap != null;
             try {
                 training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+                for (int i = 0; i < mTrainings.get(position).getExercises().size(); i++) {
+                    SendExerciseModel model = new SendExerciseModel();
+                    model.setCountRepetitions(mTrainings.get(position).getExercises().get(i).getCountRepetitions());
+                    model.setDescription(mTrainings.get(position).getExercises().get(i).getDescription());
+                    model.setName(mTrainings.get(position).getExercises().get(i).getName());
+                    model.setRecoveryTime(mTrainings.get(position).getExercises().get(i).getRecoveryTime());
+                    model.setTime(mTrainings.get(position).getExercises().get(i).getTime());
+                    model.setTimeBetween(mTrainings.get(position).getExercises().get(i).getTimeBetween());
+                    Bitmap exercisesBitmap = null;
+                    if (mTrainings.get(position).getImage() != null) {
+                        try {
+                            exercisesBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
+                                    Uri.parse(mTrainings.get(position).getExercises().get(i).getImage()));
+                            imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    assert exercisesBitmap != null;
+                    model.setImagePath(CompressImage.getBase64FromBitmap(exercisesBitmap));
+                    exercise.add(model);
+                }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            training.put("exercises", new Gson().toJson(mTrainings.get(position).getExercises()));
-            training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-
+            try {
+                training.put("exercises", URLEncoder.encode(new Gson().toJson(exercise), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Log.e("onBindViewHolder: ",new Gson().toJson(exercise));
             Request.getInstance().sendPlan(training, mMyPlansFragment);
         });
     }

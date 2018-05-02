@@ -4,11 +4,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
-public class GetExerciseModel {
+public class SendExerciseModel {
 
-    @SerializedName("exercise_time")
+    @SerializedName("time")
     @Expose
-    private String time;
+    private long time;
 
     @SerializedName("name")
     @Expose
@@ -20,24 +20,25 @@ public class GetExerciseModel {
 
     @SerializedName("count_repetitions")
     @Expose
-    private String countRepetitions;
-
-    @SerializedName("image_path")
-    private String image;
+    private int countRepetitions;
 
     @SerializedName("time_between")
     @Expose
-    private String timeBetween;
+    private long timeBetween;
+
+    @SerializedName("image")
+    @Expose
+    private String imagePath;
 
     @SerializedName("recovery_time")
     @Expose
-    private String recoveryTime;
+    private long recoveryTime;
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -57,35 +58,35 @@ public class GetExerciseModel {
         this.description = description;
     }
 
-    public String getCountRepetitions() {
+    public int getCountRepetitions() {
         return countRepetitions;
     }
 
-    public void setCountRepetitions(String countRepetitions) {
+    public void setCountRepetitions(int countRepetitions) {
         this.countRepetitions = countRepetitions;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getTimeBetween() {
+    public long getTimeBetween() {
         return timeBetween;
     }
 
-    public void setTimeBetween(String timeBetween) {
+    public void setTimeBetween(long timeBetween) {
         this.timeBetween = timeBetween;
     }
 
-    public String getRecoveryTime() {
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public long getRecoveryTime() {
         return recoveryTime;
     }
 
-    public void setRecoveryTime(String recoveryTime) {
+    public void setRecoveryTime(long recoveryTime) {
         this.recoveryTime = recoveryTime;
     }
 }
