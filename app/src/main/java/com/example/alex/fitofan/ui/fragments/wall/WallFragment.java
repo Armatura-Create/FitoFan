@@ -173,15 +173,15 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onSuccess(GetWallModel info) {
         if (isRefresh) {
             models.clear();
-            models.addAll(info.getTraining());
+            models.addAll(info.getTrainings());
             adapter.setmWallModels(models);
             adapter.notifyDataSetChanged();
             scrolling++;
             isLoading = false;
             isRefresh = false;
             scrolling++;
-        } else if (info.getTraining() != null) {
-            models.addAll(info.getTraining());
+        } else if (info.getTrainings() != null) {
+            models.addAll(info.getTrainings());
             adapter.setmWallModels(models);
             adapter.notifyDataSetChanged();
             scrolling++;

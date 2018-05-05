@@ -88,7 +88,9 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         TextView description = linear.findViewById(R.id.tv_description);
         TextView time = linear.findViewById(R.id.tv_total_time);
         ImageView imageTraining = linear.findViewById(R.id.image_training);
+
         LinearLayout sharePlan = linear.findViewById(R.id.send_my_plan);
+        LinearLayout planLinear = linear.findViewById(R.id.plan_liner);
 
         name.setText(mTrainings.get(position).getName());
         description.setText(mTrainings.get(position).getDescription());
@@ -101,6 +103,10 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                     .transition(withCrossFade())
                     .into(imageTraining);
         }
+
+        planLinear.setOnClickListener(view -> {
+            mMyPlansFragment.goToPreview(mTrainings.get(position).getId());
+        });
 
         sharePlan.setOnClickListener(view -> {
             mProgressDialog.show();
@@ -147,15 +153,11 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                     model.setImagePath(CompressImage.getBase64FromBitmap(exercisesBitmap));
                     exercise.add(model);
                 }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
                 training.put("exercises", URLEncoder.encode(new Gson().toJson(exercise), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            Log.e("onBindViewHolder: ",new Gson().toJson(exercise));
+            Log.e("onBindViewHolder: ", new Gson().toJson(exercise));
             Request.getInstance().sendPlan(training, mMyPlansFragment);
         });
     }

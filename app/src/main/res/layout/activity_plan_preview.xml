@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/background"/>
+            android:src="@drawable/shape_special"/>
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"

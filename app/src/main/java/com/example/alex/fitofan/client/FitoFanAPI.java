@@ -1,6 +1,7 @@
 package com.example.alex.fitofan.client;
 
 import com.example.alex.fitofan.models.GetPlanModel;
+import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
@@ -20,37 +21,57 @@ interface FitoFanAPI {
 
     @POST("/v1/registration")
     @FormUrlEncoded
-    Call<GetUserModel> registration(@FieldMap (encoded = true) HashMap<String,String> params);
+    Call<GetUserModel> registration(@FieldMap(encoded = true) HashMap<String, String> params);
 
 //    @PATCH("/authorization/my_user")
 //    Call<UserInfoModel> updatePhone(@Header("Authorization") String token, @Body PhoneModel info);
 
     @POST("/v1/login")
     @FormUrlEncoded
-    Call<GetUserModel> loginUser(@FieldMap (encoded = true) HashMap<String, String> params);
+    Call<GetUserModel> loginUser(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/addPlan")
     @FormUrlEncoded
-    Call<GetPlanModel> sendPlan(@FieldMap (encoded = true) HashMap<String, String> params);
+    Call<GetPlanModel> sendPlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getPlan")
     @FormUrlEncoded
-    Call<GetPlanModel> getPlan(@FieldMap (encoded = true) HashMap<String, String> params);
+    Call<GetPlanModel> getPlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getLatestPlans")
     @FormUrlEncoded
-    Call<GetWallModel> getWall(@FieldMap (encoded = true) HashMap<String, String> params);
+    Call<GetWallModel> getWall(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getUserPlans")
+    @FormUrlEncoded
+    Call<GetPlansModel> getUserPlans(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getRating")
     @FormUrlEncoded
-    Call<GetRatingModel> getRating(@FieldMap (encoded = true) HashMap<String, String> params);
+    Call<GetRatingModel> getRating(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getUser")
     @FormUrlEncoded
-    Call<GetUserModel> getUserData(@FieldMap (encoded = true) HashMap<String,String> params);
+    Call<GetUserModel> getUserData(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/likePlan")
     @FormUrlEncoded
-    Call<LikeModel> likePlan(@FieldMap (encoded = true) HashMap<String,String> params);
+    Call<LikeModel> likePlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/dislikePlan")
+    @FormUrlEncoded
+    Call<LikeModel> dislikePlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getSavedPlans")
+    @FormUrlEncoded
+    Call<GetPlansModel> getSavedPlans(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/savePlan")
+    @FormUrlEncoded
+    Call<LikeModel> savePlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/unsavePlan")
+    @FormUrlEncoded
+    Call<LikeModel> unsavePlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
 }

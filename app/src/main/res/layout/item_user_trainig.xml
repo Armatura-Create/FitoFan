@@ -45,7 +45,7 @@
                         android:id="@+id/text_training_plan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Тренировочный план"
+                        android:text="@string/training_plan"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="12sp"/>
 

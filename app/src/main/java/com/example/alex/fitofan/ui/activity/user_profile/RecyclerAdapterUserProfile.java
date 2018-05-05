@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.encodeQualityOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAdapterUserProfile.ViewHolder> {
@@ -36,6 +37,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
     private User mUserModel;
     private ArrayList<GetTrainingModel> mWallModels;
+
+    int numberOfClicks = 0;
+    boolean threadStarted = false;
+    final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 250;
 
     RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity, User mUserModel, ArrayList<GetTrainingModel> mWallModels) {
         this.mWallModels = mWallModels;
@@ -133,8 +138,9 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                     Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
                             .load(Uri.parse(mUserModel.getImage_url()))
                             .apply(centerCropTransform())
-                            .apply(placeholderOf(R.drawable.background_launch_screen))
                             .transition(withCrossFade())
+                            .apply(placeholderOf(R.drawable.background))
+                            .apply(encodeQualityOf(10))
                             .into(imageUser); //ссылка на ImageView
 
                 }
@@ -142,7 +148,6 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 linear.findViewById(R.id.show_all).setOnClickListener(view -> {
                     Toast.makeText(mUserProfileActivity.getContext(), "Show All", Toast.LENGTH_SHORT).show();
                 });
-
 
                 final RecyclerView recyclerView = linear.findViewById(R.id.rv_group);
 
@@ -155,24 +160,52 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             }
         }
         //body methods
-        if (position > 1) {
+        if (position >= 2) {
             ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
-            TextView tvNameTrainig = linear.findViewById(R.id.tv_training_name);
+            TextView tvNameTranig = linear.findViewById(R.id.tv_training_name);
             TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
             TextView tvDescription = linear.findViewById(R.id.tv_description);
 
+            LinearLayout planLeaner = linear.findViewById(R.id.plan_liner);
+
             if (mWallModels != null) {
 
-                tvNameTrainig.setText(mWallModels.get(position - 1).getName());
-                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 1).getPlan_time())));
-                tvDescription.setText(mWallModels.get(position - 1).getDescription());
+                tvNameTranig.setText(mWallModels.get(position - 2).getName());
+                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 2).getPlan_time())));
+                tvDescription.setText(mWallModels.get(position - 2).getDescription());
 
                 Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
-                        .load(Uri.parse(mWallModels.get(position - 1).getImage()))
+                        .load(Uri.parse(mWallModels.get(position - 2).getImage()))
                         .apply(centerCropTransform())
                         .transition(withCrossFade())
                         .into(imageTrainingPlan);
             }
+
+            planLeaner.setOnClickListener(v -> {
+                ++numberOfClicks;
+                if (!threadStarted) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            threadStarted = true;
+                            try {
+                                Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
+                                if (numberOfClicks == 1) {
+                                    mUserProfileActivity.goPreviewPlan(mWallModels.get(position - 2).getId());
+                                } else if (numberOfClicks == 2) {
+                                    if (mWallModels.get(position - 2).getLiked() != 1) {
+                                        mUserProfileActivity.likePlan(mWallModels.get(position - 2).getId());
+                                    }
+                                }
+                                numberOfClicks = 0;
+                                threadStarted = false;
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
+            });
         }
     }
 

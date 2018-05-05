@@ -27,32 +27,79 @@
                     android:minHeight="60dp"
                     app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
 
-                    <android.support.v7.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="47dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="5dp"
-                        app:cardBackgroundColor="@android:color/white"
-                        app:cardCornerRadius="6dp">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/search_my_plans"
+                        <LinearLayout
+                            android:id="@+id/top_linear"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:background="@color/transparent"
-                            android:hint="@string/search"
-                            android:imeOptions="actionSearch"
-                            android:singleLine="true"
-                            android:textColor="@android:color/black"
-                            android:textColorHint="@android:color/darker_gray"
-                            android:textSize="16sp" />
-                    </android.support.v7.widget.CardView>
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_gravity="bottom"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:id="@+id/seved_plans"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:paddingBottom="5dp"
+                                    android:paddingTop="5dp"
+                                    android:text="Saved plans"
+                                    android:textColor="@color/button_blue"
+                                    android:weightSum="1" />
+
+                                <TextView
+                                    android:id="@+id/created_plans"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:paddingBottom="5dp"
+                                    android:paddingTop="5dp"
+                                    android:text="Created plans"
+                                    android:textColor="@color/button_blue"
+                                    android:weightSum="1" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="47dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="5dp"
+                            app:cardBackgroundColor="@android:color/white"
+                            app:cardCornerRadius="6dp">
+
+                            <EditText
+                                android:id="@+id/search_my_plans"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@color/transparent"
+                                android:hint="@string/search"
+                                android:imeOptions="actionSearch"
+                                android:singleLine="true"
+                                android:textColor="@android:color/black"
+                                android:textColorHint="@android:color/darker_gray"
+                                android:textSize="16sp" />
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
 
                 </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -78,11 +125,12 @@
                 android:id="@+id/fab_add_training"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right|end"
                 android:layout_margin="16dp"
-                app:backgroundTint="@android:color/holo_red_light"
                 android:src="@drawable/plus"
-                app:borderWidth="0dp" />
+                app:backgroundTint="@android:color/holo_red_light"
+                app:borderWidth="0dp"
+                app:layout_anchor="@id/rv_my_plans"
+                app:layout_anchorGravity="bottom|right|end" />
 
         </android.support.design.widget.CoordinatorLayout>
     </android.support.v7.widget.CardView>

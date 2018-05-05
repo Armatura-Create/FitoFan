@@ -5,6 +5,6 @@
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:title="Refresh"
-        android:icon="@drawable/refresh_white"
+        android:icon="@drawable/ic_refresh"
         app:showAsAction="ifRoom"/>
 </menu>

@@ -61,6 +61,8 @@ public class ExerciseModel implements Serializable, Parcelable {
         description = in.readString();
         countRepetitions = in.readInt();
         timeBetween = in.readLong();
+        audio = in.readString();
+        image = in.readString();
         recoveryTime = in.readLong();
     }
 
@@ -158,13 +160,14 @@ public class ExerciseModel implements Serializable, Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(time);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeInt(countRepetitions);
-        dest.writeLong(timeBetween);
-        dest.writeLong(recoveryTime);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(time);
+        parcel.writeString(name);
+        parcel.writeString(description);
+        parcel.writeInt(countRepetitions);
+        parcel.writeLong(timeBetween);
+        parcel.writeString(audio);
+        parcel.writeString(image);
+        parcel.writeLong(recoveryTime);
     }
-
 }

@@ -10,12 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.interfaces.LikeStatus;
+import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
@@ -23,6 +26,7 @@ import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
+import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.UnpackingTraining;
@@ -35,13 +39,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel> {
+public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus {
 
     private ActivityPlanPreviewBinding mBinding;
     private PreviewPlanPresenter mPresenter;
     private RecyclerAdapterPreviewPlan adapter;
     private TrainingModel mModel;
     private Dao<TrainingModel, Integer> mTrainings;
+
+    private Menu menu;
+    private boolean like;
+    private boolean isSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +76,12 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.preview_plan, menu);
+        if (getIntent().getBooleanExtra("isWall", false)) {
+            getMenuInflater().inflate(R.menu.preview_plan_wall, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.preview_plan, menu);
+        }
+        this.menu = menu;
         return true;
     }
 
@@ -104,6 +117,34 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                 dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
                     dialog.dismiss();
                 });
+                return true;
+            }
+        }
+        if (getIntent().getBooleanExtra("isWall", false)) {
+            if (id == R.id.action_like) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("plan_id", String.valueOf(mModel.getId()));
+                if (Connection.isNetworkAvailable(this)) {
+                    if (!like)
+                        Request.getInstance().like(map, this);
+                    if (like)
+                        Request.getInstance().dislikePlan(map, this);
+                }
+                return true;
+            }
+            if (id == R.id.action_save) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("plan_id", String.valueOf(mModel.getId()));
+                if (Connection.isNetworkAvailable(this)) {
+                    if (!isSave)
+                        Request.getInstance().savePlan(map, this);
+                    if (isSave)
+                        Request.getInstance().unSavePlan(map, this);
+                }
                 return true;
             }
         }
@@ -189,9 +230,19 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     }
 
     void goTraining() {
-        Intent intent = new Intent(getContext(), TrainingActivity.class);
-        intent.putExtra("trainingModel", mModel.getId());
-        startActivity(intent);
+        if (getIntent().getIntExtra("trainingModel", -1) > -1) {
+            Intent intent = new Intent(getContext(), TrainingActivity.class);
+            intent.putExtra("trainingModel", mModel.getId());
+            startActivity(intent);
+        }
+
+        if (getIntent().getBooleanExtra("isWall", false)) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("traningModel", mModel);
+            Intent intent = new Intent(getContext(), TrainingActivity.class);
+            intent.putExtra("traningModel", bundle);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -204,14 +255,22 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         if (info.getTraining() != null) {
             adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
             adapter.notifyDataSetChanged();
+            if (info.getTraining().getLiked() == 1) {
+                menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                like = true;
+            }
+            if (info.getTraining().getIsSaved() == 1) {
+                menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+                isSave = true;
+            }
         }
     }
 
     private TrainingModel setTraining(GetPlanModel training) {
         ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
-        ExerciseModel exerciseModel = new ExerciseModel();
         mModel = new TrainingModel();
         for (int i = 0; i < training.getExercises().size(); i++) {
+            ExerciseModel exerciseModel = new ExerciseModel();
             exerciseModel.setCountRepetitions(Integer.valueOf(training.getExercises().get(i).getCountRepetitions()));
             exerciseModel.setImage(training.getExercises().get(i).getImage());
             exerciseModel.setDescription(training.getExercises().get(i).getDescription());
@@ -226,7 +285,32 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         mModel.setName(training.getTraining().getName());
         mModel.setDescription(training.getTraining().getDescription());
         mModel.setImage(training.getTraining().getImage());
+        mModel.setId(Integer.valueOf(training.getTraining().getId()));
         return mModel;
+    }
+
+    @Override
+    public void onSuccess(Boolean info) {
+        if (info) {
+            menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+            like = info;
+            return;
+        }
+        menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
+        like = info;
+    }
+
+    @Override
+    public void onSuccess(int status) {
+        if (status == 1) {
+            menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+            isSave = true;
+            return;
+        }
+
+        menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save));
+        isSave = false;
+
     }
 
     @Override

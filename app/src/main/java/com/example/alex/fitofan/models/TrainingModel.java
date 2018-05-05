@@ -52,6 +52,8 @@ public class TrainingModel implements Serializable, Parcelable {
         time = in.readLong();
         name = in.readString();
         description = in.readString();
+        image = in.readString();
+        exercises = in.createTypedArrayList(ExerciseModel.CREATOR);
     }
 
     public static final Creator<TrainingModel> CREATOR = new Creator<TrainingModel>() {
@@ -138,11 +140,12 @@ public class TrainingModel implements Serializable, Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeLong(time);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeList(exercises);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeLong(time);
+        parcel.writeString(name);
+        parcel.writeString(description);
+        parcel.writeString(image);
+        parcel.writeTypedList(exercises);
     }
 }

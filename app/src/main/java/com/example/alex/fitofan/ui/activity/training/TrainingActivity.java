@@ -81,8 +81,21 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         setSupportActionBar(mBinding.toolbar);
 
         initListeners();
-        initTraining(getIntent().getIntExtra("trainingModel", -1));
+        if (getIntent().getIntExtra("trainingModel", -1) != -1)
+            initTraining(getIntent().getIntExtra("trainingModel", -1));
+        else
+            initTraining(getIntent().getBundleExtra("traningModel").getParcelable("traningModel"));
         initSoundPoint();
+    }
+
+    private void initTraining(TrainingModel traningModel) {
+        if (traningModel != null) {
+            mTrainingModel = traningModel;
+        } else {
+            mTrainingModel = new TrainingModel();
+        }
+        initRecycler();
+        setData();
     }
 
     @Override

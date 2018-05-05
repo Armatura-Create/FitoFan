@@ -4,9 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class GetWallModel {
+public class GetPlansModel {
     @SerializedName("status")
     @Expose
     private int status;
@@ -15,21 +14,17 @@ public class GetWallModel {
     @Expose
     private int error;
 
+    @SerializedName("get")
+    @Expose
+    private String get;
+
+    @SerializedName("post")
+    @Expose
+    private String post;
+
     @SerializedName("training_plans")
     @Expose
-    private ArrayList<GetTrainingModel> trainings;
-
-    @SerializedName("users")
-    @Expose
-    private ArrayList<User> users;
-
-    public ArrayList<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
+    private  ArrayList<GetTrainingModel> trainings;
 
     public int getStatus() {
         return status;
@@ -45,6 +40,14 @@ public class GetWallModel {
 
     public void setError(int error) {
         this.error = error;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public ArrayList<GetTrainingModel> getTrainings() {

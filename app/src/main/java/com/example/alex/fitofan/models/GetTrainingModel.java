@@ -19,6 +19,10 @@ public class GetTrainingModel {
     @Expose
     private String saved;
 
+    @SerializedName("is_saved")
+    @Expose
+    private int isSaved;
+
     @SerializedName("liked")
     @Expose
     private int liked;
@@ -137,5 +141,13 @@ public class GetTrainingModel {
 
     public void setLiked(int liked) {
         this.liked = liked;
+    }
+
+    public int getIsSaved() {
+        return isSaved;
+    }
+
+    public void setIsSaved(int isSaved) {
+        this.isSaved = isSaved;
     }
 }
