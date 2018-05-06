@@ -105,7 +105,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         }
 
         planLinear.setOnClickListener(view -> {
-            mMyPlansFragment.goToPreview(mTrainings.get(position).getId());
+            mMyPlansFragment.goToPreview(mTrainings.get(position).getId(), mTrainings.get(position).getUserId());
         });
 
         sharePlan.setOnClickListener(view -> {

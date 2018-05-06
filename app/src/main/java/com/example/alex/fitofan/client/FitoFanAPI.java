@@ -6,6 +6,7 @@ import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
+import com.example.alex.fitofan.models.SubModel;
 
 import java.util.HashMap;
 
@@ -33,6 +34,10 @@ interface FitoFanAPI {
     @POST("/v1/addPlan")
     @FormUrlEncoded
     Call<GetPlanModel> sendPlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/deletePlan")
+    @FormUrlEncoded
+    Call<GetPlanModel> deletePlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getPlan")
     @FormUrlEncoded
@@ -73,5 +78,13 @@ interface FitoFanAPI {
     @POST("/v1/unsavePlan")
     @FormUrlEncoded
     Call<LikeModel> unsavePlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/subscribeUser")
+    @FormUrlEncoded
+    Call<SubModel> subscribeUser(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/unsubscribeUser")
+    @FormUrlEncoded
+    Call<SubModel> unSubscribeUser(@FieldMap(encoded = true) HashMap<String, String> params);
 
 }

@@ -6,27 +6,30 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.FormatTime;
+import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.encodeQualityOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
@@ -78,11 +81,8 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     public int getItemViewType(int position) {
         if (position == 0)
             return 0;
-        if (position == 1)
-            return 1;
         else
-            return 2;
-
+            return 1;
     }
 
     @Override
@@ -95,10 +95,6 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                         .inflate(R.layout.item_user_data, parent, false);
                 break;
             case 1:
-                linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_user_sub, parent, false);
-                break;
-            case 2:
                 linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_user_trainig, parent, false);
                 break;
@@ -133,6 +129,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 city.setText(mUserModel.getLocation());
                 countPlans.setText(mUserModel.getTrainingPlans());
                 place.setText(mUserModel.getRating());
+                subscriberse.setText(mUserModel.getSubscribers());
 
                 if (mUserModel.getImage_url() != null) {
                     Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
@@ -140,7 +137,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                             .apply(centerCropTransform())
                             .transition(withCrossFade())
                             .apply(placeholderOf(R.drawable.background))
-                            .apply(encodeQualityOf(10))
+                            .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                             .into(imageUser); //ссылка на ImageView
 
                 }
@@ -157,10 +154,15 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 recyclerView.setLayoutManager(linearLayoutManager);
                 final RecyclerAdapterInAdapter adapter = new RecyclerAdapterInAdapter(mUserProfileActivity);
                 recyclerView.setAdapter(adapter);
+
+                ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView1, position1, v) -> {
+                    Toast.makeText(mUserProfileActivity.getContext(), position1 + "", Toast.LENGTH_SHORT).show();
+                });
             }
         }
+        //sub
         //body methods
-        if (position >= 2) {
+        if (position >= 1) {
             ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
             TextView tvNameTranig = linear.findViewById(R.id.tv_training_name);
             TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
@@ -170,13 +172,14 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
             if (mWallModels != null) {
 
-                tvNameTranig.setText(mWallModels.get(position - 2).getName());
-                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 2).getPlan_time())));
-                tvDescription.setText(mWallModels.get(position - 2).getDescription());
+                tvNameTranig.setText(mWallModels.get(position - 1).getName());
+                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 1).getPlan_time())));
+                tvDescription.setText(mWallModels.get(position - 1).getDescription());
 
                 Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
-                        .load(Uri.parse(mWallModels.get(position - 2).getImage()))
+                        .load(Uri.parse(mWallModels.get(position - 1).getImage()))
                         .apply(centerCropTransform())
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                         .transition(withCrossFade())
                         .into(imageTrainingPlan);
             }
@@ -191,10 +194,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                             try {
                                 Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                                 if (numberOfClicks == 1) {
-                                    mUserProfileActivity.goPreviewPlan(mWallModels.get(position - 2).getId());
+                                    mUserProfileActivity.goPreviewPlan(mWallModels.get(position - 1).getId(), mWallModels.get(position - 1).getUserId());
                                 } else if (numberOfClicks == 2) {
-                                    if (mWallModels.get(position - 2).getLiked() != 1) {
-                                        mUserProfileActivity.likePlan(mWallModels.get(position - 2).getId());
+                                    if (mWallModels.get(position - 1).getLiked() != 1) {
+                                        mUserProfileActivity.likePlan(mWallModels.get(position - 1).getId());
                                     }
                                 }
                                 numberOfClicks = 0;
@@ -211,7 +214,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
     @Override
     public int getItemCount() {
-        return mWallModels == null ? 2 : mWallModels.size() + 2;
+        return mWallModels == null ? 1 : mWallModels.size() + 1;
     }
 }
 

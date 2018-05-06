@@ -48,6 +48,14 @@ public class User {
     @Expose
     private String image_url;
 
+    @SerializedName("subscribed")
+    @Expose
+    private int subscribed;
+
+    @SerializedName("subscribers")
+    @Expose
+    private String subscribers;
+
     @SerializedName("background_url")
     @Expose
     private String background_url;
@@ -159,5 +167,21 @@ public class User {
 
     public void setSavedTrainingPlans(String savedTrainingPlans) {
         this.savedTrainingPlans = savedTrainingPlans;
+    }
+
+    public int getSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(int subscribed) {
+        this.subscribed = subscribed;
+    }
+
+    public String getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(String subscribers) {
+        this.subscribers = subscribers;
     }
 }

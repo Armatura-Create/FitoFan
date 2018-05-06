@@ -92,10 +92,11 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         startActivity(intent);
     }
 
-    protected void goPreviewPlan(String planId) {
+    protected void goPreviewPlan(String planId, String userId) {
         Intent intent = new Intent(getContext(), PreviewPlanActivity.class);
         intent.putExtra("planId", planId);
         intent.putExtra("isWall", true);
+        intent.putExtra("userId", userId);
         startActivity(intent);
     }
 

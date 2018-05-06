@@ -23,7 +23,7 @@
                 app:navigationIcon="?attr/homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="@string/user_profile"
-                app:titleTextColor="@android:color/white" />
+                app:titleTextColor="@android:color/white"/>
 
         </android.support.design.widget.AppBarLayout>
 

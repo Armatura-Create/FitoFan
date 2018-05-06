@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
@@ -26,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> implements LikeStatus {
 
@@ -98,12 +100,14 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(Uri.parse(mWallModels.get(position).getImage()))
                 .apply(centerCropTransform())
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                 .transition(withCrossFade())
                 .into(imageTrainingPlan);
 
         Glide.with(mWallFragment.getActivity().getApplicationContext())
                 .load(Uri.parse(mWallModels.get(position).getUser().getImage_url()))
                 .apply(centerCropTransform())
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                 .transition(withCrossFade())
                 .into(imageUser); //ссылка на ImageView
 
@@ -121,7 +125,8 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                         try {
                             Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                             if (numberOfClicks == 1) {
-                                mWallFragment.goPreviewPlan(mWallModels.get(position).getId());
+                                mWallFragment.goPreviewPlan(mWallModels.get(position).getId(),
+                                        mWallModels.get(position).getUserId());
                             } else if (numberOfClicks == 2) {
                                 if (mWallModels.get(position).getLiked() != 1) {
                                     mWallFragment.likePlan(mWallModels.get(position).getId());

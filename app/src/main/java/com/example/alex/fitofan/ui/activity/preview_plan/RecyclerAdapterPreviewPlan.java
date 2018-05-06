@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.utils.FormatTime;
@@ -17,6 +18,7 @@ import com.example.alex.fitofan.utils.FormatTime;
 import java.util.ArrayList;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAdapterPreviewPlan.ViewHolder> {
@@ -88,6 +90,7 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             Glide.with(trainingActivity.getContext())
                     .load(Uri.parse(model.get(position).getImage()))
                     .apply(placeholderOf(R.drawable.logo_fitofan))
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                     .transition(withCrossFade())
                     .into(image);
         } else if (model.get(position).isRest()) {

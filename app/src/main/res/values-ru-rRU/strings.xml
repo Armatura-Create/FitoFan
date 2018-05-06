@@ -55,8 +55,13 @@
     <string name="password_again">Повторить пароль</string>
     <string name="del_exercise">Удалить упражнение</string>
     <string name="subscribe">Подписаться</string>
+    <string name="unsubscribe">Отписаться</string>
     <string name="rest">Отдых</string>
     <string name="show_all">Показать все</string>
     <string name="prepare_time">Время на подготовку</string>
+    <string name="incorrect_email_or_pass">Невеный логин или пароль</string>
+    <string name="distance">Дистанция</string>
+    <string name="weight">Вес</string>
+    <string name="number_of_times">Количество раз</string>
 
 </resources>

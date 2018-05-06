@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="start"
-                android:maxEms="1"
+                android:ellipsize="end"
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|start"
-                android:maxEms="1"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/transparent_text_white"
                 android:textSize="13sp"/>

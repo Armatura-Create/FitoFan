@@ -50,7 +50,6 @@
     <string name="relax_time">Relax Time</string>
     <string name="add_exercise">Add an exercise</string>
     <string name="save_all_plan">Save workout</string>
-    <string name="all_time_plan">Total time</string>
     <string name="training_plan">Training plan</string>
     <string name="close">Close</string>
     <string name="hide">Hide</string>
@@ -78,10 +77,16 @@
     <string name="password_again">Password again</string>
     <string name="del_exercise">Delete exercise</string>
     <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
     <string name="rest">Rest</string>
     <string name="user_profile">User profile</string>
     <string name="show_all">Show All</string>
     <string name="prepare_time">Preparation time</string>
     <string name="my_place">My place</string>
+    <string name="incorrect_email_or_pass">Wrong e-mail or password</string>
+    <string name="all_time_plan">Total time</string>
+    <string name="distance">Distance</string>
+    <string name="weight">Weight</string>
+    <string name="number_of_times">Number of times</string>
 
 </resources>

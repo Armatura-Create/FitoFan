@@ -125,13 +125,14 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mBinding.refresh.setOnRefreshListener(this);
     }
 
-    protected void goToPreview(int id) {
+    protected void goToPreview(int id, String userId) {
         Intent intent = new Intent(getContext(), PreviewPlanActivity.class);
         if (!isSaved)
             intent.putExtra("trainingModel", id);
         if (isSaved) {
             intent.putExtra("isWall", true);
             intent.putExtra("planId", String.valueOf(id));
+            intent.putExtra("userId", userId);
         }
         startActivity(intent);
     }
@@ -194,6 +195,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 temp.setDescription(training.getTrainings().get(i).getDescription());
                 temp.setImage(training.getTrainings().get(i).getImage());
                 temp.setId(Integer.valueOf(training.getTrainings().get(i).getId()));
+                temp.setUserId(training.getTrainings().get(i).getUserId());
                 mModelsSaves.add(temp);
             }
 

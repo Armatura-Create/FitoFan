@@ -13,4 +13,14 @@
         android:icon="@drawable/ic_favorite"
         android:title="Like"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_edit_server"
+        android:orderInCategory="100"
+        android:title="@string/edit"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_remove_server"
+        android:orderInCategory="100"
+        android:title="@string/remove"
+        app:showAsAction="never"/>
 </menu>

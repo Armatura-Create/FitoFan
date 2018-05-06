@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
@@ -30,6 +31,7 @@ import java.util.Objects;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public final class CustomDialog {
@@ -164,11 +166,12 @@ public final class CustomDialog {
             Glide.with(context) //передаем контекст приложения
                     .load(Uri.parse(image))
                     .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                     .transition(withCrossFade())
                     .into(imageExercise); //ссылка на ImageView
         } else {
             Glide.with(context)
-                    .load(R.drawable.background_timer)
+                    .load(R.drawable.background_launch_screen)
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
                     .into(imageExercise);
@@ -194,11 +197,12 @@ public final class CustomDialog {
             Glide.with(dialog.getContext()) //передаем контекст приложения
                     .load(Uri.parse(image))
                     .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                     .transition(withCrossFade())
                     .into(imageExercise); //ссылка на ImageView
         } else {
             Glide.with(dialog.getContext())
-                    .load(R.drawable.background_timer)
+                    .load(R.drawable.background_launch_screen)
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
                     .into(imageExercise);

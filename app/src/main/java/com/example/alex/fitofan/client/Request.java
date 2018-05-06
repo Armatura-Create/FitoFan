@@ -3,18 +3,21 @@ package com.example.alex.fitofan.client;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.alex.fitofan.interfaces.DelStatus;
 import com.example.alex.fitofan.interfaces.GetMyData;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatusMyPlans;
 import com.example.alex.fitofan.interfaces.ILoadingStatusUserPlans;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
+import com.example.alex.fitofan.interfaces.SubStatus;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
+import com.example.alex.fitofan.models.SubModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.google.gson.Gson;
@@ -51,7 +54,7 @@ public class Request {
 
         call.enqueue(new Callback<GetUserModel>() {
             @Override
-            public void onResponse(Call<GetUserModel> call, Response<GetUserModel> response) {
+            public void onResponse(@NonNull Call<GetUserModel> call, Response<GetUserModel> response) {
 
                 Log.e("onKKK ", new Gson().toJson(response.body(), GetUserModel.class));
 
@@ -71,7 +74,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetUserModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetUserModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -85,7 +88,7 @@ public class Request {
 
         call.enqueue(new Callback<GetUserModel>() {
             @Override
-            public void onResponse(Call<GetUserModel> call, Response<GetUserModel> response) {
+            public void onResponse(@NonNull Call<GetUserModel> call, @NonNull Response<GetUserModel> response) {
                 Log.e("onLLL1", new Gson().toJson(response.body(), GetUserModel.class));
                 if (response.isSuccessful()) {
                     try {
@@ -94,6 +97,9 @@ public class Request {
                             loader.onSuccess("Success");
                             MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(response.body(), GetUserModel.class));
                             Log.e("onLLL2", new Gson().toJson(response.body(), GetUserModel.class));
+                        }
+                        if (jsonObject.getInt("status") == 0){
+                            loader.onFailure("incorrect");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -109,7 +115,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetUserModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetUserModel> call, @NonNull Throwable t) {
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
                 Log.e("onFailure: ", t.toString());
             }
@@ -123,7 +129,7 @@ public class Request {
 
         call.enqueue(new Callback<GetPlanModel>() {
             @Override
-            public void onResponse(Call<GetPlanModel> call, Response<GetPlanModel> response) {
+            public void onResponse(@NonNull Call<GetPlanModel> call, @NonNull Response<GetPlanModel> response) {
 
                 Log.e("onGGG ", new Gson().toJson(response.body(), GetPlanModel.class));
 
@@ -143,7 +149,41 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetPlanModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetPlanModel> call, @NonNull Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void delPlan(HashMap<String, String> data, final DelStatus loader) {
+        Call<GetPlanModel> call;
+        call = RetrofitClient.getAPI().deletePlan(data);
+
+        call.enqueue(new Callback<GetPlanModel>() {
+            @Override
+            public void onResponse(@NonNull Call<GetPlanModel> call, @NonNull Response<GetPlanModel> response) {
+
+                Log.e("onGGG ", new Gson().toJson(response.body(), GetPlanModel.class));
+
+                if (response.isSuccessful()) {
+
+                    loader.onSuccess(response.message());
+                    Log.e("onResponseOk1: ", response.headers().toString());
+                    Log.e("onResponseOk2: ", response.message());
+                    Log.e("onResponseOk3: ", String.valueOf(response.code()));
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse1: ", response.headers().toString());
+                    Log.e("onResponse2: ", response.message());
+                    Log.e("onResponse3: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetPlanModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -177,7 +217,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetPlanModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetPlanModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -220,7 +260,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetWallModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetWallModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -263,7 +303,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetPlansModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetPlansModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -305,7 +345,91 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<LikeModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<LikeModel> call, @NonNull Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void subscribeUser(HashMap<String, String> data, final SubStatus loader) {
+        Call<SubModel> call;
+        call = RetrofitClient.getAPI().subscribeUser(data);
+
+        call.enqueue(new Callback<SubModel>() {
+            @Override
+            public void onResponse(@NonNull Call<SubModel> call, @NonNull Response<SubModel> response) {
+
+                if (response.isSuccessful()) {
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(new Gson().toJson(response.body(), SubModel.class));
+
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("true");
+                            Log.e("onResponseOk1: ", response.headers().toString());
+                            Log.e("onResponseOk2: ", response.message());
+                            Log.e("onResponseOk3: ", String.valueOf(response.code()));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse1: ", response.headers().toString());
+                    Log.e("onResponse2: ", response.message());
+                    Log.e("onResponse3: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SubModel> call, @NonNull Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void unSubscribeUser(HashMap<String, String> data, final SubStatus loader) {
+        Call<SubModel> call;
+        call = RetrofitClient.getAPI().unSubscribeUser(data);
+
+        call.enqueue(new Callback<SubModel>() {
+            @Override
+            public void onResponse(@NonNull Call<SubModel> call, @NonNull Response<SubModel> response) {
+
+                if (response.isSuccessful()) {
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(new Gson().toJson(response.body(), SubModel.class));
+
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("false");
+                            Log.e("onResponseOk1: ", response.headers().toString());
+                            Log.e("onResponseOk2: ", response.message());
+                            Log.e("onResponseOk3: ", String.valueOf(response.code()));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse1: ", response.headers().toString());
+                    Log.e("onResponse2: ", response.message());
+                    Log.e("onResponse3: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SubModel> call, Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -347,7 +471,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<LikeModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<LikeModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -389,7 +513,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<LikeModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<LikeModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -431,7 +555,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<LikeModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<LikeModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -473,7 +597,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetRatingModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetRatingModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -487,7 +611,7 @@ public class Request {
 
         call.enqueue(new Callback<GetUserModel>() {
             @Override
-            public void onResponse(Call<GetUserModel> call, Response<GetUserModel> response) {
+            public void onResponse(@NonNull Call<GetUserModel> call, @NonNull Response<GetUserModel> response) {
                 Log.e("onLLL1", new Gson().toJson(response.body(), GetUserModel.class));
                 if (response.isSuccessful()) {
                     try {
@@ -511,7 +635,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetUserModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetUserModel> call, @NonNull Throwable t) {
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
                 Log.e("onFailureFB: ", t.toString());
             }

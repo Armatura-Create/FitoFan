@@ -4,18 +4,23 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
+import com.example.alex.fitofan.interfaces.DelStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
@@ -23,6 +28,7 @@ import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
@@ -39,17 +45,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus {
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
+
+public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus, DelStatus {
 
     private ActivityPlanPreviewBinding mBinding;
     private PreviewPlanPresenter mPresenter;
     private RecyclerAdapterPreviewPlan adapter;
     private TrainingModel mModel;
+    private GetPlanModel mModelfromServer;
     private Dao<TrainingModel, Integer> mTrainings;
 
     private Menu menu;
     private boolean like;
     private boolean isSave;
+    private int positionLike = 1;
+    private int positionSave = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +88,20 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         if (getIntent().getBooleanExtra("isWall", false)) {
+            if (getIntent().getStringExtra("userId").equals(
+                    new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
+            )) {
+                getMenuInflater().inflate(R.menu.preview_plan_wall_with_del, menu);
+                return true;
+            }
             getMenuInflater().inflate(R.menu.preview_plan_wall, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.preview_plan, menu);
+            return true;
         }
-        this.menu = menu;
+        getMenuInflater().inflate(R.menu.preview_plan, menu);
+
         return true;
     }
 
@@ -120,7 +140,10 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                 return true;
             }
         }
-        if (getIntent().getBooleanExtra("isWall", false)) {
+        assert mModelfromServer != null;
+        if (getIntent().getBooleanExtra("isWall", false) || getIntent().getStringExtra("userId").equals(
+                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
+        )) {
             if (id == R.id.action_like) {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -146,6 +169,23 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                         Request.getInstance().unSavePlan(map, this);
                 }
                 return true;
+            }
+        }
+
+        assert mModelfromServer != null;
+        if (getIntent().getStringExtra("userId").equals(
+                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
+        )) {
+            if (id == R.id.action_edit_server) {
+
+            }
+
+            if (id == R.id.action_remove_server) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("plan_id", String.valueOf(mModel.getId()));
+                Request.getInstance().delPlan(map, this);
             }
         }
 
@@ -245,6 +285,19 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         }
     }
 
+    private void setData(){
+        mBinding.content.tvTrainingName.setText(mModelfromServer.getTraining().getName());
+        mBinding.content.tvTrainingDescription.setText(mModelfromServer.getTraining().getDescription());
+        mBinding.content.tvTrainingDescription.setMovementMethod(new ScrollingMovementMethod());
+
+        Glide.with(getContext())
+                .load(Uri.parse(mModelfromServer.getTraining().getImage()))
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                .transition(withCrossFade())
+                .into(mBinding.content.traningImage);
+
+    }
+
     @Override
     public Context getContext() {
         return this;
@@ -256,17 +309,18 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
             adapter.notifyDataSetChanged();
             if (info.getTraining().getLiked() == 1) {
-                menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
                 like = true;
             }
             if (info.getTraining().getIsSaved() == 1) {
-                menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+                menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
                 isSave = true;
             }
         }
     }
 
     private TrainingModel setTraining(GetPlanModel training) {
+        mModelfromServer = training;
         ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
         mModel = new TrainingModel();
         for (int i = 0; i < training.getExercises().size(); i++) {
@@ -286,31 +340,37 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         mModel.setDescription(training.getTraining().getDescription());
         mModel.setImage(training.getTraining().getImage());
         mModel.setId(Integer.valueOf(training.getTraining().getId()));
+        setData();
         return mModel;
     }
 
     @Override
     public void onSuccess(Boolean info) {
         if (info) {
-            menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+            menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
             like = info;
             return;
         }
-        menu.getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
+        menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
         like = info;
     }
 
     @Override
     public void onSuccess(int status) {
         if (status == 1) {
-            menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+            menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
             isSave = true;
             return;
         }
 
-        menu.getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_save));
+        menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save));
         isSave = false;
 
+    }
+
+    @Override
+    public void onSuccess(String info) {
+        onBackPressed();
     }
 
     @Override

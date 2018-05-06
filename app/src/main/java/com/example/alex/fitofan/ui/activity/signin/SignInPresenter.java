@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
 import com.example.alex.fitofan.models.LocationModel;
@@ -169,6 +170,8 @@ class SignInPresenter implements SignInContract.EventListener {
 
     @Override
     public void onFailure(String message) {
-        Toast.makeText(view.getContext(), "Error", Toast.LENGTH_SHORT).show();
+        if(message.equals("incorrect")) {
+            Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.incorrect_email_or_pass), Toast.LENGTH_SHORT).show();
+        }
     }
 }

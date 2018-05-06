@@ -44,6 +44,8 @@ public class TrainingModel implements Serializable, Parcelable {
     @Expose
     private ArrayList<ExerciseModel> exercises;
 
+    private String userId;
+
     public TrainingModel() {
     }
 
@@ -147,5 +149,13 @@ public class TrainingModel implements Serializable, Parcelable {
         parcel.writeString(description);
         parcel.writeString(image);
         parcel.writeTypedList(exercises);
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
