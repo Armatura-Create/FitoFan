@@ -88,5 +88,9 @@
     <string name="distance">Distance</string>
     <string name="weight">Weight</string>
     <string name="number_of_times">Number of times</string>
+    <string name="tab_subscribers">Subscribers</string>
+    <string name="tab_subscriptions">Subscriptions</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add \ncomment…</string>
 
 </resources>

@@ -12,16 +12,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
-import com.example.alex.fitofan.models.GetUserModel;
-import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.FormatTime;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -86,10 +81,16 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
         TextView tvTimeCreate = linear.findViewById(R.id.data_publication);
         TextView tvDescription = linear.findViewById(R.id.tv_description);
+        TextView countLike = linear.findViewById(R.id.count_like);
 
         LinearLayout userLiner = linear.findViewById(R.id.user_liner);
         LinearLayout planLiner = linear.findViewById(R.id.plan_liner);
 
+        ImageView like = linear.findViewById(R.id.icon_like);
+        ImageView save = linear.findViewById(R.id.icon_save);
+        ImageView comments = linear.findViewById(R.id.icon_comments);
+
+        countLike.setText(mWallFragment.getResources().getString(R.string.like) + ": " + mWallModels.get(position).getLikes());
         tvNameTrainig.setText(mWallModels.get(position).getName());
         tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position).getPlan_time())));
         tvTimeCreate.setText(mWallModels.get(position).getCreationDate());
@@ -97,17 +98,27 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         tvFirstName.setText(mWallModels.get(position).getUser().getName());
         tvLastName.setText(mWallModels.get(position).getUser().getSurname());
 
+        like.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_favorite_black));
+        save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_black));
+
+        if (mWallModels.get(position).getLiked() == 1) {
+            like.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_favorite_full_red));
+        }
+        if (mWallModels.get(position).getIsSaved() == 1) {
+            save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_full_black));
+        }
+
         Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                 .load(Uri.parse(mWallModels.get(position).getImage()))
                 .apply(centerCropTransform())
-                .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())
                 .into(imageTrainingPlan);
 
         Glide.with(mWallFragment.getActivity().getApplicationContext())
                 .load(Uri.parse(mWallModels.get(position).getUser().getImage_url()))
                 .apply(centerCropTransform())
-                .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())
                 .into(imageUser); //ссылка на ImageView
 
@@ -128,9 +139,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                                 mWallFragment.goPreviewPlan(mWallModels.get(position).getId(),
                                         mWallModels.get(position).getUserId());
                             } else if (numberOfClicks == 2) {
-                                if (mWallModels.get(position).getLiked() != 1) {
-                                    mWallFragment.likePlan(mWallModels.get(position).getId());
-                                }
+                                mWallFragment.likePlan(mWallModels.get(position).getId(), like, countLike, false, position);
                             }
                             numberOfClicks = 0;
                             threadStarted = false;
@@ -140,6 +149,18 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                     }
                 }).start();
             }
+        });
+
+        like.setOnClickListener(view -> {
+            mWallFragment.likePlan(mWallModels.get(position).getId(), like, countLike, true, position);
+        });
+
+        save.setOnClickListener(view -> {
+            mWallFragment.savePlan(mWallModels.get(position).getId(), save, position);
+        });
+
+        comments.setOnClickListener(view -> {
+            mWallFragment.goComments(mWallModels.get(position).getId());
         });
     }
 

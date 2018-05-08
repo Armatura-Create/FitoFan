@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.User;
 
@@ -17,6 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapterRaiting.ViewHolder> {
 
@@ -106,6 +108,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 Glide.with(mParticipantFragment.getActivity().getApplicationContext())
                         .load(Uri.parse(mModel.get(0).getImage_url()))
                         .apply(centerCropTransform())
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                         .transition(withCrossFade())
                         .into(topPhotoGold);
 
@@ -120,6 +123,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 Glide.with(mParticipantFragment.getActivity().getApplicationContext())
                         .load(Uri.parse(mModel.get(1).getImage_url()))
                         .apply(centerCropTransform())
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                         .transition(withCrossFade())
                         .into(topPhotoSilver);
 
@@ -133,6 +137,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 Glide.with(mParticipantFragment.getActivity().getApplicationContext())
                         .load(Uri.parse(mModel.get(2).getImage_url()))
                         .apply(centerCropTransform())
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                         .transition(withCrossFade())
                         .into(topPhotoBronze);
 
@@ -149,6 +154,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
             Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
                     .load(Uri.parse(mModel.get(position + 2).getImage_url()))
                     .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView
 

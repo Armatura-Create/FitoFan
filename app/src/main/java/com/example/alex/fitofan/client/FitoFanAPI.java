@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.client;
 
+import com.example.alex.fitofan.models.GetCommentsModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
@@ -86,5 +87,26 @@ interface FitoFanAPI {
     @POST("/v1/unsubscribeUser")
     @FormUrlEncoded
     Call<SubModel> unSubscribeUser(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getSubscribers")
+    @FormUrlEncoded
+    Call<GetRatingModel> getSubscribers(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getSubscriptions")
+    @FormUrlEncoded
+    Call<GetRatingModel> getSubscriptions(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/addTrainingPlanComment")
+    @FormUrlEncoded
+    Call<SubModel> addTrainingPlanComment(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/deleteTrainingPlanComment")
+    @FormUrlEncoded
+    Call<SubModel> deleteTrainingPlanComment(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getPlanComments")
+    @FormUrlEncoded
+    Call<GetCommentsModel> getPlanComments(@FieldMap(encoded = true) HashMap<String, String> params);
+
 
 }

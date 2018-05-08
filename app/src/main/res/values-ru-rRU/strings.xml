@@ -63,5 +63,7 @@
     <string name="distance">Дистанция</string>
     <string name="weight">Вес</string>
     <string name="number_of_times">Количество раз</string>
+    <string name="comments">Комментарии</string>
+    <string name="add_comment">Добавьте \nкоментарий…</string>
 
 </resources>

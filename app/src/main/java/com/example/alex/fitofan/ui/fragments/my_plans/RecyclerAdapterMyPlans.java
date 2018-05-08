@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.models.ExerciseModel;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import static android.util.Base64.encodeToString;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapterMyPlans.ViewHolder> {
 
@@ -100,6 +102,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
             Glide.with(mMyPlansFragment.getContext())
                     .load(Uri.parse(mTrainings.get(position).getImage()))
                     .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .transition(withCrossFade())
                     .into(imageTraining);
         }

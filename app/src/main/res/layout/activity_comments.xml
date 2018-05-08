@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:keepScreenOn="true">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_special"
-        tools:context="com.example.alex.fitofan.ui.activity.signup.SingUpActivity">
+        tools:context="com.example.alex.fitofan.ui.activity.training.TrainingActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_special"
             android:shadowColor="@android:color/transparent"
+            android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="?attr/homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/user_profile"
-                app:titleTextColor="@android:color/white" />
+                app:title="@string/comments">
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
         <include
             android:id="@+id/content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            layout="@layout/content_user_profile" />
+            layout="@layout/content_comments" />
     </android.support.design.widget.CoordinatorLayout>
-
 </layout>

@@ -20,9 +20,7 @@ import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatusMyPlans;
-import com.example.alex.fitofan.interfaces.ILoadingStatusUserPlans;
 import com.example.alex.fitofan.models.ExerciseModel;
-import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
@@ -30,7 +28,6 @@ import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
 import com.example.alex.fitofan.utils.Connection;
-import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -42,7 +39,7 @@ import java.util.HashMap;
 
 public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String>, ILoadingStatusMyPlans {
 
-    FragmentMyPlansBinding mBinding;
+    private FragmentMyPlansBinding mBinding;
     private ProgressDialog mProgressDialog;
     private View view;
     private RecyclerAdapterMyPlans adapter;
@@ -56,8 +53,10 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_my_plans, container, false);
-
         mBinding = DataBindingUtil.bind(view);
+        initRequest();
+        initListeners();
+        initRecyclerView(mModelsCreated);
         return view;
     }
 
@@ -65,9 +64,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onStart() {
         mProgressDialog = new ProgressDialog(view.getContext());
         mProgressDialog.setCancelable(false);
-        initRequest();
-        initListeners();
-        initRecyclerView(mModelsCreated);
         super.onStart();
     }
 
@@ -201,7 +197,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             Log.e("setTraining:", new Gson().toJson(mModelsSaves));
 
-            adapter.setTrainings(mModelsSaves);
+            adapter.setTrainings(sort(mModelsSaves));
             adapter.notifyDataSetChanged();
         }
     }

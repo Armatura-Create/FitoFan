@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -8,24 +9,24 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
+import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
-import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.models.WallModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.ui.activity.comments.CommentsActivity;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
 import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
@@ -35,7 +36,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>,LikeStatus {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SaveStatus {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -45,6 +46,10 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private boolean isLoading;
     private boolean isRefresh;
+    private ImageView like;
+    private int position;
+    private ImageView save;
+    private TextView countLike;
 
     @Nullable
     @Override
@@ -53,17 +58,21 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         view = inflater.inflate(R.layout.fragment_wall, container, false);
 
         mBinding = DataBindingUtil.bind(view);
-
+        models = new ArrayList<>();
+        initListeners();
+        initRecyclerView();
+        startRequest();
         return view;
     }
 
     @Override
     public void onStart() {
-        models = new ArrayList<>();
-        initListeners();
-        initRecyclerView();
-        startRequest();
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void startRequest() {
@@ -100,12 +109,46 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         startActivity(intent);
     }
 
-    protected void likePlan(String id){
+    protected void likePlan(String id, ImageView like, TextView countLike, boolean b, int position) {
+        this.countLike = countLike;
+        this.like = like;
+        this.position = position;
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
         map.put("plan_id", id);
-        Request.getInstance().like(map, this);
+        if (Connection.isNetworkAvailable(getContext())) {
+            if (!b) {
+                Request.getInstance().like(map, this);
+            }
+            if (b) {
+                if (models.get(position).getLiked() == 1)
+                    Request.getInstance().dislikePlan(map, this);
+                if (models.get(position).getLiked() != 1)
+                    Request.getInstance().like(map, this);
+            }
+        }
+    }
+
+    protected void savePlan(String id, ImageView save, int position) {
+        this.save = save;
+        this.position = position;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", id);
+        if (Connection.isNetworkAvailable(getContext())) {
+            if (models.get(position).getIsSaved() == 1)
+                Request.getInstance().unSavePlan(map, this);
+            if (models.get(position).getIsSaved() != 1)
+                Request.getInstance().savePlan(map, this);
+        }
+    }
+
+    public void goComments(String id) {
+        Intent intent = new Intent(getContext(), CommentsActivity.class);
+        intent.putExtra("planId", id);
+        startActivity(intent);
     }
 
     private void initRecyclerView() {
@@ -191,9 +234,44 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding.refresh.setRefreshing(false);
     }
 
+    @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     public void onSuccess(Boolean info) {
-        Toast.makeText(getContext(), info + "", Toast.LENGTH_SHORT).show();
+        if (info) {
+            if (models.get(position).getLiked() != 1) {
+                like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_full_red));
+                countLike.setText(getResources().getString(R.string.like) + ": " +
+                        String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1)
+                );
+                adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1));
+                models.get(position).setLiked(1);
+            }
+        }
+        if (!info) {
+            if (models.get(position).getLiked() == 1) {
+                like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_black));
+                countLike.setText(getResources().getString(R.string.like) + ": " +
+                        String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1)
+                );
+                adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1));
+                models.get(position).setLiked(0);
+            }
+        }
+        like.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public void onSuccess(int status) {
+        if (status == 1) {
+            save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_full_black));
+            models.get(position).setIsSaved(1);
+        }
+        if (status != 1) {
+            save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
+            models.get(position).setIsSaved(0);
+        }
+        save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.activity.user_profile;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -21,6 +22,7 @@ import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.ui.activity.sub.SubActivity;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.google.gson.Gson;
@@ -123,6 +125,8 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             TextView countPlans = linear.findViewById(R.id.tv_count_plans);
             TextView subscriberse = linear.findViewById(R.id.tv_subscriberse);
 
+            LinearLayout sub = linear.findViewById(R.id.linear_sub);
+
             if (mUserModel != null) {
                 firstName.setText(mUserModel.getName());
                 lastName.setText(mUserModel.getSurname());
@@ -137,7 +141,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                             .apply(centerCropTransform())
                             .transition(withCrossFade())
                             .apply(placeholderOf(R.drawable.background))
-                            .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                            .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                             .into(imageUser); //ссылка на ImageView
 
                 }
@@ -157,6 +161,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
                 ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView1, position1, v) -> {
                     Toast.makeText(mUserProfileActivity.getContext(), position1 + "", Toast.LENGTH_SHORT).show();
+                });
+
+                sub.setOnClickListener(view -> {
+                    mUserProfileActivity.goSub();
                 });
             }
         }

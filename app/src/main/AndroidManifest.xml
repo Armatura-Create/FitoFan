@@ -110,6 +110,18 @@
             android:name=".ui.activity.user_profile.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
+
+        <activity
+            android:name=".ui.activity.sub.SubActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar" />
+
+        <activity
+            android:name=".ui.activity.comments.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:focusableInTouchMode="false"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

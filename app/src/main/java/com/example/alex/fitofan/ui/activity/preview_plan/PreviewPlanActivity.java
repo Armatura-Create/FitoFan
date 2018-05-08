@@ -145,16 +145,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                 new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
         )) {
             if (id == R.id.action_like) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                map.put("plan_id", String.valueOf(mModel.getId()));
-                if (Connection.isNetworkAvailable(this)) {
-                    if (!like)
-                        Request.getInstance().like(map, this);
-                    if (like)
-                        Request.getInstance().dislikePlan(map, this);
-                }
+                like();
                 return true;
             }
             if (id == R.id.action_save) {
@@ -190,6 +181,19 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void like(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", String.valueOf(mModel.getId()));
+        if (Connection.isNetworkAvailable(this)) {
+            if (!like)
+                Request.getInstance().like(map, this);
+            if (like)
+                Request.getInstance().dislikePlan(map, this);
+        }
     }
 
     private void deletePlan(int position) {
@@ -308,13 +312,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         if (info.getTraining() != null) {
             adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
             adapter.notifyDataSetChanged();
-            if (info.getTraining().getLiked() == 1) {
-                menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                like = true;
-            }
             if (info.getTraining().getIsSaved() == 1) {
                 menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
                 isSave = true;
+            }
+
+            if (info.getTraining().getLiked() == 1) {
+                menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                like = true;
             }
         }
     }

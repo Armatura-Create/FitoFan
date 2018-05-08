@@ -21,12 +21,13 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="?attr/homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="35dp"
+                    android:layout_marginRight="65dp"
                     android:padding="15dp"
                     android:src="@drawable/logo" />
             </android.support.v7.widget.Toolbar>
@@ -44,9 +45,8 @@
         </android.support.design.widget.AppBarLayout>
 
         <include
-            android:id="@+id/content_main"
-            layout="@layout/content_main"/>
+            android:id="@+id/content"
+            layout="@layout/content_sub" />
 
     </android.support.design.widget.CoordinatorLayout>
-
 </layout>

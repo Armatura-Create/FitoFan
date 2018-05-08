@@ -10,11 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
@@ -73,6 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(trainingActivity.getContext())
                     .load(Uri.parse(model.get(position).getImage()))
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .into(image);
         } else if (model.get(position).getImage() != null && model.get(position).getImage() == "rest") {
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);

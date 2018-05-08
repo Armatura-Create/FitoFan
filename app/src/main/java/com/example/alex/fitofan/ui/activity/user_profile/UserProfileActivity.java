@@ -28,6 +28,7 @@ import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
+import com.example.alex.fitofan.ui.activity.sub.SubActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
 
@@ -139,6 +140,12 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         startActivity(intent);
     }
 
+    protected void goSub() {
+        Intent intent = new Intent(this, SubActivity.class);
+        intent.putExtra("user_id", getIntent().getStringExtra("uid"));
+        startActivity(intent);
+    }
+
     protected void likePlan(String id) {
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -154,12 +161,16 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
 
     @Override
     public void onSuccess(User info) {
-        if (info.getSubscribed() == 1) {
-            isSub = true;
-            menu.getItem(0).setTitle(getResources().getString(R.string.unsubscribe));
+        if (!new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
+                .equals(getIntent().getStringExtra("uid"))
+                ) {
+            if (info.getSubscribed() == 1) {
+                isSub = true;
+                menu.getItem(0).setTitle(getResources().getString(R.string.unsubscribe));
+            }
         }
         mUser = info;
-        adapter.setmUserModel(mUser);
+        adapter.setmUserModel(info);
         adapter.notifyDataSetChanged();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(info.getName() + " " + info.getSurname());

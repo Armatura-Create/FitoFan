@@ -69,6 +69,7 @@
             android:id="@+id/timer_progress"
             android:layout_width="270dp"
             android:layout_height="270dp"
+            android:rotation="-90"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
             app:donut_finished_color="@android:color/holo_red_light"
