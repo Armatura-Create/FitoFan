@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
+import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                 .into(imageUser); //ссылка на ImageView
 
         userLiner.setOnClickListener(v -> {
-            mWallFragment.goUserProfile(mWallModels.get(position).getUser().getUid());
+            ActionPlanCard.goUserProfile(mWallFragment.getContext(), mWallModels.get(position).getUser().getUid());
         });
 
         planLiner.setOnClickListener(v -> {
@@ -136,7 +137,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                         try {
                             Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                             if (numberOfClicks == 1) {
-                                mWallFragment.goPreviewPlan(mWallModels.get(position).getId(),
+                                ActionPlanCard.goPreviewPlan(mWallFragment.getContext(), mWallModels.get(position).getId(),
                                         mWallModels.get(position).getUserId());
                             } else if (numberOfClicks == 2) {
                                 mWallFragment.likePlan(mWallModels.get(position).getId(), like, countLike, false, position);
@@ -160,7 +161,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         });
 
         comments.setOnClickListener(view -> {
-            mWallFragment.goComments(mWallModels.get(position).getId());
+            ActionPlanCard.goComments(mWallFragment.getContext(), mWallModels.get(position).getId(), mWallModels.get(position).getUserId());
         });
     }
 

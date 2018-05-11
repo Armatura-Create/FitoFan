@@ -111,15 +111,8 @@ public class SubscriptionsFragment extends Fragment implements ILoadingStatus<Ge
         }
     }
 
-    protected void goUserProfile(String uid) {
-        Intent intent = new Intent(getContext(), UserProfileActivity.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
-    }
-
     private void initRecyclerView() {
         models = new ArrayList<>();
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mBinding.rvSub.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterSub(models, this);

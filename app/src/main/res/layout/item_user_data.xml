@@ -41,7 +41,7 @@
         android:shadowRadius="4"
         android:singleLine="true"
         android:textColor="@android:color/white"
-        android:textSize="40sp"
+        android:textSize="46sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/last_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,7 @@
         android:shadowRadius="4"
         android:singleLine="true"
         android:textColor="@android:color/white"
-        android:textSize="40sp"
+        android:textSize="46sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/city"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,6 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:text="New York"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/liner_information_user"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="5dp"
-                android:text="23456"
+                android:text="0"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />
 
@@ -139,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="5dp"
-                android:text="86"
+                android:text="0"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />
 
@@ -165,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="5dp"
-                android:text="12"
+                android:text="0"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />
 
@@ -194,7 +193,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:orientation="vertical"

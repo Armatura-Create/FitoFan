@@ -92,5 +92,6 @@
     <string name="tab_subscriptions">Subscriptions</string>
     <string name="comments">Comments</string>
     <string name="add_comment">Add \ncomment…</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

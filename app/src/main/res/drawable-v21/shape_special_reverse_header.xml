@@ -5,7 +5,7 @@
         <!--android:angle="0"-->
         <!--android:endColor="#FF941174"-->
         <!--android:startColor="#FF512C77"-->
-        <!--android:type="linear"/>-->
+        <!--android:type="setLiner"/>-->
 <!--</shape>-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
         <gradient

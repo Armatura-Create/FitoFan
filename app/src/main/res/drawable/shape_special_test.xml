@@ -4,7 +4,7 @@
     <item>
         <shape>
             <gradient
-                android:centerColor="#DF004b7b"
+                android:centerColor="#CA004b7b"
                 android:centerX="0"
                 android:centerY="1"
                 android:endColor="#005E17FD"
@@ -16,7 +16,7 @@
     <item>
         <shape>
             <gradient
-                android:centerColor="#DFc20073"
+                android:centerColor="#CAc20073"
                 android:centerX="1"
                 android:centerY="1"
                 android:endColor="#00c20073"

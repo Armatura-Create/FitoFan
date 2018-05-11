@@ -21,4 +21,5 @@
     <color name="background_bt_training_left">#ae4b84</color>
     <color name="background_bt_training_right">#566991</color>
     <color name="background_like">#6e86ac</color>
+    <color name="icon_color">#FF444444</color>
 </resources>

@@ -1,72 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background_fragment"
-    android:orientation="horizontal"
-    android:weightSum="5">
+    android:layout_height="330dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/traning_image"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:src="@drawable/images"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/shape_preview_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linear_body"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/text_training_plan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Тренировочный план"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/tv_training_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:text="Развитие скорости"
-            android:textColor="@color/button_blue"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/background" />
 
     <LinearLayout
+        android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:weightSum="10">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="7"
-            android:src="@drawable/icon_timer_gray"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_total_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="4"
-            android:gravity="end"
-            android:text="23мин"
-            android:textColor="@color/button_blue"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_training_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:text="@string/start_training"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_training_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start"
+                    android:isScrollContainer="true"
+                    android:maxLines="4"
+                    android:scrollbars="vertical"
+                    android:text="@string/start_training"
+                    android:textColor="@color/transparent_text_white"
+                    android:textSize="16sp" />
+
+                <include
+                    android:id="@+id/info_user"
+                    layout="@layout/part_user_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp" />
+
+                <include
+                    android:id="@+id/info_plan"
+                    layout="@layout/part_info_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
     </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

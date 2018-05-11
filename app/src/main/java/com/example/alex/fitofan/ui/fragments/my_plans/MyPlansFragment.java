@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
@@ -20,8 +22,12 @@ import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentMyPlansBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatusMyPlans;
+import com.example.alex.fitofan.interfaces.LikeStatus;
+import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.models.ExerciseModel;
+import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
+import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
@@ -37,7 +43,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String>, ILoadingStatusMyPlans {
+public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String>, ILoadingStatusMyPlans, SaveStatus, LikeStatus {
 
     private FragmentMyPlansBinding mBinding;
     private ProgressDialog mProgressDialog;
@@ -46,24 +52,30 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ArrayList<TrainingModel> mModelsCreated = new ArrayList<>();
     private Dao<TrainingModel, Integer> mTrainings;
     private ArrayList<TrainingModel> mModelsSaves = new ArrayList<>();
+    private ArrayList<GetTrainingModel> mServerModel = new ArrayList<>();
     private boolean isSaved = true;
+    private TextView countLike;
+    private ImageView like;
+    private int position;
+    private ImageView save;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_my_plans, container, false);
+
         mBinding = DataBindingUtil.bind(view);
+
+        initRecyclerView(mModelsCreated);
         initRequest();
         initListeners();
-        initRecyclerView(mModelsCreated);
         return view;
     }
 
     @Override
     public void onStart() {
-        mProgressDialog = new ProgressDialog(view.getContext());
-        mProgressDialog.setCancelable(false);
+
         super.onStart();
     }
 
@@ -77,7 +89,8 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        initRecyclerView(mModelsCreated);
+        adapter.setTrainings(mModelsCreated);
+        adapter.notifyDataSetChanged();
     }
 
     private void initRequest() {
@@ -99,6 +112,16 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return massive;
     }
 
+    public ArrayList<GetTrainingModel> sort(ArrayList<GetTrainingModel> massive, boolean b) {
+        for (int i = 0; i < massive.size() / 2; i++) {
+            GetTrainingModel tmp = massive.get(i);
+            massive.set(i, massive.get(massive.size() - i - 1));
+            massive.set(massive.size() - i - 1, tmp);
+        }
+        return massive;
+    }
+
+
     private void initListeners() {
 
         mBinding.searchMyPlans.setOnEditorActionListener((v, actionId, event) -> {
@@ -107,11 +130,13 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
 
         mBinding.sevedPlans.setOnClickListener(view1 -> {
+            adapter.setMy(false);
             isSaved = true;
             initRequest();
         });
 
         mBinding.createdPlans.setOnClickListener(view1 -> {
+            adapter.setMy(true);
             isSaved = false;
             initDB();
         });
@@ -134,7 +159,8 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initRecyclerView(ArrayList<TrainingModel> models) {
-
+        mProgressDialog = new ProgressDialog(view.getContext());
+        mProgressDialog.setCancelable(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterMyPlans(models, mProgressDialog, this);
@@ -202,6 +228,42 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    protected void likePlan(String id, ImageView like, TextView countLike, boolean b, int position) {
+        this.countLike = countLike;
+        this.like = like;
+        this.position = position;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", id);
+        if (Connection.isNetworkAvailable(getContext())) {
+            if (!b) {
+                Request.getInstance().like(map, this);
+            }
+            if (b) {
+                if (mServerModel.get(position).getLiked() == 1)
+                    Request.getInstance().dislikePlan(map, this);
+                if (mServerModel.get(position).getLiked() != 1)
+                    Request.getInstance().like(map, this);
+            }
+        }
+    }
+
+    protected void savePlan(String id, ImageView save, int position) {
+        this.save = save;
+        this.position = position;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", id);
+        if (Connection.isNetworkAvailable(getContext())) {
+            if (mServerModel.get(position).getIsSaved() == 1)
+                Request.getInstance().unSavePlan(map, this);
+            if (mServerModel.get(position).getIsSaved() != 1)
+                Request.getInstance().savePlan(map, this);
+        }
+    }
+
     /**
      * Called when a swipe gesture triggers a refresh.
      */
@@ -233,9 +295,20 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onSuccess(GetPlansModel info) {
+        mServerModel.addAll(sort(info.getTrainings(), true));
         mBinding.refresh.setRefreshing(false);
         setTraining(info);
         Log.e("onSuccess: ", new Gson().toJson(info));
+    }
+
+    @Override
+    public void onSuccess(int status) {
+
+    }
+
+    @Override
+    public void onSuccess(Boolean info) {
+
     }
 
     @Override

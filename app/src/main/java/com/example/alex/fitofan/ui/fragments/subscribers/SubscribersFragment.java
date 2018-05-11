@@ -76,23 +76,6 @@ public class SubscribersFragment extends Fragment implements ILoadingStatus<GetR
     }
 
     private void initListeners() {
-//
-//        final int[] CookingTimeHour = new int[1];
-//        final int[] CookingTimeMin = new int[1];
-//        final int[] CookingTimeSec = new int[1];
-
-
-//        mBinding.leaderLiner.setOnClickListener(v -> {
-//            MyTimePickerDialog tpd = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
-//                @Override
-//                public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
-//                    CookingTimeHour[0] = hourOfDay;
-//                    CookingTimeMin[0] = minute;
-//                    CookingTimeSec[0] = minute;
-//                }
-//            }, CookingTimeHour[0], CookingTimeMin[0], CookingTimeSec[0], true);
-//            tpd.show();
-//        });
 
     }
 
@@ -109,12 +92,6 @@ public class SubscribersFragment extends Fragment implements ILoadingStatus<GetR
             if (adapter.getmModel().get(position).getSubscribed() == 1)
                 Request.getInstance().unSubscribeUser(map, this);
         }
-    }
-
-    protected void goUserProfile(String uid) {
-        Intent intent = new Intent(getContext(), UserProfileActivity.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
     }
 
     private void initRecyclerView() {

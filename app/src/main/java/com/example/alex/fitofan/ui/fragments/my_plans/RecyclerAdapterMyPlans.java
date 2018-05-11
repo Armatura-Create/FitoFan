@@ -3,15 +3,18 @@ package com.example.alex.fitofan.ui.fragments.my_plans;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -22,6 +25,7 @@ import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.SendExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
@@ -47,6 +51,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
     private MyPlansFragment mMyPlansFragment;
     private ArrayList<TrainingModel> mTrainings;
     private ProgressDialog mProgressDialog;
+    private boolean isMy;
 
     public RecyclerAdapterMyPlans(ArrayList<TrainingModel> trainings, ProgressDialog mProgressDialog, MyPlansFragment mMyPlansFragment) {
         mTrainings = trainings;
@@ -61,6 +66,14 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
     public void setTrainings(ArrayList<TrainingModel> trainings) {
         mTrainings = trainings;
         super.notifyDataSetChanged();
+    }
+
+    public boolean getMy() {
+        return isMy;
+    }
+
+    public void setMy(boolean my) {
+        isMy = my;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,14 +102,32 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         TextView name = linear.findViewById(R.id.tv_training_name);
         TextView description = linear.findViewById(R.id.tv_description);
         TextView time = linear.findViewById(R.id.tv_total_time);
+        TextView countLike = linear.findViewById(R.id.count_like);
         ImageView imageTraining = linear.findViewById(R.id.image_training);
 
-        LinearLayout sharePlan = linear.findViewById(R.id.send_my_plan);
+        imageTraining.setImageDrawable(null);
+
+        ImageView sharePlan = linear.findViewById(R.id.icon_send_plan);
+        ImageView save = linear.findViewById(R.id.icon_save);
+        ImageView like = linear.findViewById(R.id.icon_like);
+        ImageView comments = linear.findViewById(R.id.icon_comments);
         LinearLayout planLinear = linear.findViewById(R.id.plan_liner);
 
         name.setText(mTrainings.get(position).getName());
         description.setText(mTrainings.get(position).getDescription());
         time.setText(FormatTime.formatTime(mTrainings.get(position).getTime()));
+
+        if (!isMy) {
+            like.setVisibility(View.VISIBLE);
+            comments.setVisibility(View.VISIBLE);
+            save.setVisibility(View.VISIBLE);
+            sharePlan.setVisibility(View.GONE);
+        } else {
+            sharePlan.setVisibility(View.VISIBLE);
+            like.setVisibility(View.GONE);
+            comments.setVisibility(View.GONE);
+            save.setVisibility(View.GONE);
+        }
 
         if (mTrainings.get(position).getImage() != null) {
             Glide.with(mMyPlansFragment.getContext())
@@ -119,55 +150,66 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                     imageBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
                             Uri.parse(mTrainings.get(position).getImage()));
                     imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                    assert imageBitmap != null;
+                    try {
+                        ArrayList<SendExerciseModel> exercise = new ArrayList<>();
+                        HashMap<String, String> training = new HashMap<>();
+                        training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                        training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                        training.put("plan_time", String.valueOf(mTrainings.get(position).getTime()));
+                        training.put("name", String.valueOf(mTrainings.get(position).getName()));
+                        training.put("description", String.valueOf(mTrainings.get(position).getDescription()));
+                        training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+                        for (int i = 0; i < mTrainings.get(position).getExercises().size(); i++) {
+                            SendExerciseModel model = new SendExerciseModel();
+                            model.setCountRepetitions(mTrainings.get(position).getExercises().get(i).getCountRepetitions());
+                            model.setDescription(mTrainings.get(position).getExercises().get(i).getDescription());
+                            model.setName(mTrainings.get(position).getExercises().get(i).getName());
+                            model.setRecoveryTime(mTrainings.get(position).getExercises().get(i).getRecoveryTime());
+                            model.setTime(mTrainings.get(position).getExercises().get(i).getTime());
+                            model.setTimeBetween(mTrainings.get(position).getExercises().get(i).getTimeBetween());
+                            Bitmap exercisesBitmap = null;
+                            if (mTrainings.get(position).getImage() != null) {
+                                try {
+                                    exercisesBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
+                                            Uri.parse(mTrainings.get(position).getExercises().get(i).getImage()));
+                                    imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            assert exercisesBitmap != null;
+                            model.setImagePath(CompressImage.getBase64FromBitmap(exercisesBitmap));
+                            exercise.add(model);
+                        }
+                        training.put("exercises", URLEncoder.encode(new Gson().toJson(exercise), "UTF-8"));
+                        Request.getInstance().sendPlan(training, mMyPlansFragment);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mMyPlansFragment.getContext(), "Сбой при отрпавке", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        });
 
-            ArrayList<SendExerciseModel> exercise = new ArrayList<>();
-            HashMap<String, String> training = new HashMap<>();
-            training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            training.put("plan_time", String.valueOf(mTrainings.get(position).getTime()));
-            training.put("name", String.valueOf(mTrainings.get(position).getName()));
-            training.put("description", String.valueOf(mTrainings.get(position).getDescription()));
-            assert imageBitmap != null;
-            try {
-                training.put("image_path", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
-                for (int i = 0; i < mTrainings.get(position).getExercises().size(); i++) {
-                    SendExerciseModel model = new SendExerciseModel();
-                    model.setCountRepetitions(mTrainings.get(position).getExercises().get(i).getCountRepetitions());
-                    model.setDescription(mTrainings.get(position).getExercises().get(i).getDescription());
-                    model.setName(mTrainings.get(position).getExercises().get(i).getName());
-                    model.setRecoveryTime(mTrainings.get(position).getExercises().get(i).getRecoveryTime());
-                    model.setTime(mTrainings.get(position).getExercises().get(i).getTime());
-                    model.setTimeBetween(mTrainings.get(position).getExercises().get(i).getTimeBetween());
-                    Bitmap exercisesBitmap = null;
-                    if (mTrainings.get(position).getImage() != null) {
-                        try {
-                            exercisesBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
-                                    Uri.parse(mTrainings.get(position).getExercises().get(i).getImage()));
-                            imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    assert exercisesBitmap != null;
-                    model.setImagePath(CompressImage.getBase64FromBitmap(exercisesBitmap));
-                    exercise.add(model);
-                }
-                training.put("exercises", URLEncoder.encode(new Gson().toJson(exercise), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            Log.e("onBindViewHolder: ", new Gson().toJson(exercise));
-            Request.getInstance().sendPlan(training, mMyPlansFragment);
+        like.setOnClickListener(view -> {
+            mMyPlansFragment.likePlan(String.valueOf(mTrainings.get(position).getId()), like, countLike, true, position);
+        });
+
+        save.setOnClickListener(view -> {
+            mMyPlansFragment.savePlan(String.valueOf(mTrainings.get(position).getId()), save, position);
+        });
+
+        comments.setOnClickListener(view -> {
+            ActionPlanCard.goComments(mMyPlansFragment.getContext(),
+                    String.valueOf(mTrainings.get(position).getId()), mTrainings.get(position).getUserId());
         });
     }
 
     @Override
     public int getItemCount() {
-        assert mTrainings != null;
-        return mTrainings.size();
+        return mTrainings == null ? 0 : mTrainings.size();
     }
 }

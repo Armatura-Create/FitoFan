@@ -1,7 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.rainting;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +24,7 @@ import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
-import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.utils.Connection;
-import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -36,7 +32,6 @@ import java.util.HashMap;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class ParticipantFragment extends Fragment implements ILoadingStatus<GetRatingModel>, SwipeRefreshLayout.OnRefreshListener, GetMyData {
 
@@ -110,23 +105,6 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     }
 
     private void initListeners() {
-//
-//        final int[] CookingTimeHour = new int[1];
-//        final int[] CookingTimeMin = new int[1];
-//        final int[] CookingTimeSec = new int[1];
-
-
-//        mBinding.leaderLiner.setOnClickListener(v -> {
-//            MyTimePickerDialog tpd = new MyTimePickerDialog(getContext(), new MyTimePickerDialog.OnTimeSetListener() {
-//                @Override
-//                public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
-//                    CookingTimeHour[0] = hourOfDay;
-//                    CookingTimeMin[0] = minute;
-//                    CookingTimeSec[0] = minute;
-//                }
-//            }, CookingTimeHour[0], CookingTimeMin[0], CookingTimeSec[0], true);
-//            tpd.show();
-//        });
         mBinding.refresh.setOnRefreshListener(this);
 
         mBinding.allRating.setOnClickListener(view1 -> {
@@ -137,12 +115,6 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
             Toast.makeText(getContext(), "friend rating", Toast.LENGTH_SHORT).show();
         });
 
-    }
-
-    protected void goUserProfile(String uid) {
-        Intent intent = new Intent(getContext(), UserProfileActivity.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
     }
 
     private void initRecyclerView() {

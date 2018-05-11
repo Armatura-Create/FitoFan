@@ -3,6 +3,7 @@ package com.example.alex.fitofan.client;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.alex.fitofan.interfaces.DelComStatus;
 import com.example.alex.fitofan.interfaces.DelStatus;
 import com.example.alex.fitofan.interfaces.GetMyData;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
@@ -736,7 +737,7 @@ public class Request {
 
     }
 
-    public void delPlanComment(HashMap<String, String> data, final SubStatus loader) {
+    public void delPlanComment(HashMap<String, String> data, final DelComStatus loader) {
         Call<SubModel> call;
         call = RetrofitClient.getAPI().deleteTrainingPlanComment(data);
 
@@ -753,7 +754,7 @@ public class Request {
                         jsonObject = new JSONObject(new Gson().toJson(response.body(), SubModel.class));
 
                         if (jsonObject.getInt("status") == 1) {
-                            loader.onSuccess("false");
+                            loader.onSuccess(true);
                             Log.e("onResponseOk1: ", response.headers().toString());
                             Log.e("onResponseOk2: ", response.message());
                             Log.e("onResponseOk3: ", String.valueOf(response.code()));
@@ -941,12 +942,14 @@ public class Request {
     public void getMyData(final GetMyData loader) {
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("user_id", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         Call<GetUserModel> call;
         call = RetrofitClient.getAPI().getUserData(map);
 
         call.enqueue(new Callback<GetUserModel>() {
             @Override
-            public void onResponse(Call<GetUserModel> call, Response<GetUserModel> response) {
+            public void onResponse(@NonNull Call<GetUserModel> call, @NonNull Response<GetUserModel> response) {
                 Log.e("onLLL1", new Gson().toJson(response.body(), GetUserModel.class));
                 if (response.isSuccessful()) {
                     try {
@@ -957,7 +960,7 @@ public class Request {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("onSSS ", e.toString());
+                        Log.e("onSSS", e.toString());
                     }
 
                 } else {

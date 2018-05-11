@@ -15,6 +15,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -80,12 +81,12 @@ public class RecyclerAdapterSub extends RecyclerView.Adapter<RecyclerAdapterSub.
         sub.setVisibility(View.VISIBLE);
         sub.setText(mFragment.getResources().getString(R.string.subscribe));
 
-        if(mModel.get(position).getSubscribed() == 1){
+        if (mModel.get(position).getSubscribed() == 1) {
             sub.setText(mFragment.getResources().getString(R.string.unsubscribe));
         }
 
-        if(mModel.get(position).getUid()
-                .equals(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid())){
+        if (mModel.get(position).getUid()
+                .equals(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid())) {
             sub.setVisibility(View.INVISIBLE);
         }
 
@@ -106,7 +107,7 @@ public class RecyclerAdapterSub extends RecyclerView.Adapter<RecyclerAdapterSub.
         });
 
         linearSub.setOnClickListener(view -> {
-            mFragment.goUserProfile(mModel.get(position).getUid());
+            ActionPlanCard.goUserProfile(mFragment.getContext(), mModel.get(position).getUid());
         });
 
     }

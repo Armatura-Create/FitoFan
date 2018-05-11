@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/shape_special"/>
+            android:src="@drawable/shape_special" />
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -21,24 +21,24 @@
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:elevation="0dp"
+                android:background="@android:color/transparent"
                 android:shadowColor="@android:color/transparent"
-                android:background="@android:color/transparent">
+                app:elevation="0dp">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    app:navigationIcon="?attr/homeAsUpIndicator"
                     app:popupTheme="@style/AppTheme.PopupOverlay"
                     app:title="@string/training_plan"
-                    app:navigationIcon="?attr/homeAsUpIndicator"
-                    app:titleTextColor="@android:color/white"/>
+                    app:titleTextColor="@android:color/white" />
 
             </android.support.design.widget.AppBarLayout>
 
             <include
                 android:id="@+id/content"
-                layout="@layout/content_plan_preview"/>
+                layout="@layout/content_plan_preview" />
         </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>
 </layout>

@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.User;
+import com.example.alex.fitofan.utils.ActionPlanCard;
 
 import java.util.ArrayList;
 
@@ -115,7 +116,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 name_gold.setText(mModel.get(0).getName() + " " + mModel.get(0).getSurname());
                 like_gold.setText(mModel.get(0).getLikes());
                 gold.setOnClickListener(view -> {
-                    mParticipantFragment.goUserProfile(mModel.get(0).getUid());
+                    ActionPlanCard.goUserProfile(mParticipantFragment.getContext(), mModel.get(0).getUid());
                 });
             }
 
@@ -130,7 +131,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 name_silver.setText(mModel.get(1).getName() + " " + mModel.get(1).getSurname());
                 like_silver.setText(mModel.get(1).getLikes());
                 silver.setOnClickListener(view -> {
-                    mParticipantFragment.goUserProfile(mModel.get(1).getUid());
+                    ActionPlanCard.goUserProfile(mParticipantFragment.getContext(), mModel.get(1).getUid());
                 });
             }
             if (mModel.size() > 2) {
@@ -144,7 +145,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                 name_bronze.setText(mModel.get(2).getName() + " " + mModel.get(2).getSurname());
                 like_bronze.setText(mModel.get(2).getLikes());
                 bronze.setOnClickListener(view -> {
-                    mParticipantFragment.goUserProfile(mModel.get(2).getUid());
+                    ActionPlanCard.goUserProfile(mParticipantFragment.getContext(), mModel.get(2).getUid());
                 });
             }
         }
@@ -163,7 +164,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
             like.setText(mModel.get(position + 2).getLikes());
 
             rating.setOnClickListener(view -> {
-                mParticipantFragment.goUserProfile(mModel.get(position + 2).getUid());
+                ActionPlanCard.goUserProfile(mParticipantFragment.getContext(), mModel.get(position + 2).getUid());
             });
         }
     }

@@ -88,8 +88,7 @@
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:rotation="180"
-                    android:src="@drawable/next_icon" />
+                    android:src="@drawable/ic_left_white_24dp" />
 
                 <ImageView
                     android:id="@+id/close_dialog"
@@ -100,7 +99,7 @@
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@drawable/cancel_card" />
+                    android:src="@drawable/ic_clear_white_24dp" />
 
                 <ImageView
                     android:id="@+id/next_exercise"
@@ -111,7 +110,7 @@
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@drawable/next_icon" />
+                    android:src="@drawable/ic_right_white_24dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

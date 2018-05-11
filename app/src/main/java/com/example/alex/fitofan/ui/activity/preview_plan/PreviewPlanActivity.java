@@ -266,6 +266,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     private void initRecyclerView() {
 
         mBinding.content.rv.setHasFixedSize(false);
+        mBinding.content.rv.setNestedScrollingEnabled(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.content.rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterPreviewPlan(this, UnpackingTraining.buildExercises(mModel));

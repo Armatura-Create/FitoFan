@@ -95,21 +95,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
-    protected void goUserProfile(String uid) {
-        Intent intent = new Intent(getContext(), UserProfileActivity.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
-    }
-
-    protected void goPreviewPlan(String planId, String userId) {
-        Intent intent = new Intent(getContext(), PreviewPlanActivity.class);
-        intent.putExtra("planId", planId);
-        intent.putExtra("isWall", true);
-        intent.putExtra("userId", userId);
-        startActivity(intent);
-    }
-
-    protected void likePlan(String id, ImageView like, TextView countLike, boolean b, int position) {
+    protected void likePlan(String id, ImageView like, TextView countLike, boolean isButton, int position) {
         this.countLike = countLike;
         this.like = like;
         this.position = position;
@@ -118,10 +104,10 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
         map.put("plan_id", id);
         if (Connection.isNetworkAvailable(getContext())) {
-            if (!b) {
+            if (!isButton) {
                 Request.getInstance().like(map, this);
             }
-            if (b) {
+            if (isButton) {
                 if (models.get(position).getLiked() == 1)
                     Request.getInstance().dislikePlan(map, this);
                 if (models.get(position).getLiked() != 1)
@@ -143,12 +129,6 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if (models.get(position).getIsSaved() != 1)
                 Request.getInstance().savePlan(map, this);
         }
-    }
-
-    public void goComments(String id) {
-        Intent intent = new Intent(getContext(), CommentsActivity.class);
-        intent.putExtra("planId", id);
-        startActivity(intent);
     }
 
     private void initRecyclerView() {
