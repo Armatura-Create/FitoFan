@@ -174,12 +174,6 @@ public class CommentsActivity extends AppCompatActivity
 
     }
 
-    public void goUserProfile(String uid) {
-        Intent intent = new Intent(getContext(), UserProfileActivity.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
-    }
-
     public ArrayList<CommentModel> sort(ArrayList<CommentModel> massive) {
         for (int i = 0; i < massive.size() / 2; i++) {
             CommentModel tmp = massive.get(i);

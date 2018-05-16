@@ -138,7 +138,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                             Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                             if (numberOfClicks == 1) {
                                 ActionPlanCard.goPreviewPlan(mWallFragment.getContext(), mWallModels.get(position).getId(),
-                                        mWallModels.get(position).getUserId());
+                                        mWallModels.get(position).getUserId(), true);
                             } else if (numberOfClicks == 2) {
                                 mWallFragment.likePlan(mWallModels.get(position).getId(), like, countLike, false, position);
                             }

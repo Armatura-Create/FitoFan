@@ -78,43 +78,10 @@ public class MainActivity extends AppCompatActivity
 
     private void initListeners() {
         navHeader.findViewById(R.id.nav_profileImage).setOnClickListener(view -> {
-//            requestMultiplePermissions();
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-//                chooseAvatar();
             Intent intent = new Intent(getContext(), UserProfileActivity.class);
             intent.putExtra("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             startActivity(intent);
         });
-    }
-
-    void chooseAvatar() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_IMAGE);
-    }
-
-    public void requestMultiplePermissions() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                },
-                PERMISSION_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case SELECT_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    if (data != null)
-                        if (data.getData() != null) {
-                            loadHeader(data);
-                        }
-                }
-                break;
-        }
     }
 
     private void initCheckConnection() {
@@ -221,6 +188,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         EventBus.getDefault().unregister(this);
         EventBus.getDefault().register(this);
+        loadHeader();
         super.onResume();
     }
 

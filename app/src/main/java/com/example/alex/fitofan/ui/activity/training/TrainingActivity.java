@@ -80,6 +80,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         setSupportActionBar(mBinding.toolbar);
 
+//        mBinding.include.tvExercisesDescriptionFirst.setMovementMethod(new ScrollingMovementMethod());
+
         initListeners();
         if (getIntent().getIntExtra("trainingModel", -1) != -1)
             initTraining(getIntent().getIntExtra("trainingModel", -1));
@@ -124,7 +126,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 positionMusic = -1;
                 releaseMP();
                 stopTimer();
-                mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                 setData();
                 isStop = true;
                 isPause = false;
@@ -180,9 +182,9 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     private void initRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mBinding.content.rv.setLayoutManager(linearLayoutManager);
+        mBinding.rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapter(this, UnpackingTraining.buildExercises(mTrainingModel));
-        mBinding.content.rv.setAdapter(adapter);
+        mBinding.rv.setAdapter(adapter);
     }
 
     @Override
@@ -203,23 +205,25 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             }
         });
 
-        mBinding.content.numberProgressBar.setOnProgressBarListener(this);
+        mBinding.numberProgressBar.setOnProgressBarListener(this);
 
-        mBinding.content.changeBt.setOnClickListener(view ->
+        mBinding.changeBt.setOnClickListener(view ->
 
         {
             if (!isVisibility) {
                 isVisibility = true;
-                mBinding.content.descriptionExercise.setVisibility(View.VISIBLE);
-                mBinding.content.type.setVisibility(View.GONE);
-                mBinding.content.timer.setVisibility(View.GONE);
-                mBinding.content.timerProgress.setVisibility(View.GONE);
+                mBinding.descriptionExercise.setVisibility(View.VISIBLE);
+                mBinding.type.setVisibility(View.GONE);
+                mBinding.timer.setVisibility(View.GONE);
+                mBinding.timerProgress.setVisibility(View.GONE);
+                mBinding.tvNameExercise.setVisibility(View.GONE);
             } else {
                 isVisibility = false;
-                mBinding.content.descriptionExercise.setVisibility(View.GONE);
-                mBinding.content.type.setVisibility(View.VISIBLE);
-                mBinding.content.timer.setVisibility(View.VISIBLE);
-                mBinding.content.timerProgress.setVisibility(View.VISIBLE);
+                mBinding.descriptionExercise.setVisibility(View.GONE);
+                mBinding.type.setVisibility(View.VISIBLE);
+                mBinding.timer.setVisibility(View.VISIBLE);
+                mBinding.timerProgress.setVisibility(View.VISIBLE);
+                mBinding.tvNameExercise.setVisibility(View.VISIBLE);
             }
         });
 
@@ -229,17 +233,17 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 //            Log.e("initListeners: ", String.valueOf(e));
 //        }
 
-        mBinding.content.btStart.setOnClickListener(v ->
+        mBinding.btStart.setOnClickListener(v ->
 
         {
             if (!isPreparationTime) {
                 if (isPause) {
-                    mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
+                    mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
                     playMP();
                     startTimer(temp_pause);
                     isPause = false;
                 } else if (!isRunning() && isStop) {
-                    mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
+                    mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
                     preparationTimer();
                     isStop = false;
                 } else if (!isStop && !isRunning()) {
@@ -251,17 +255,17 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                         isStop = true;
                         releaseMP();
                         Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
-                        mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                        mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                         positionMusic = -1;
                     }
                 } else {
-                    mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                    mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                     pauseTimer(tempTime);
                 }
             }
         });
 
-        ItemClickSupport.addTo(mBinding.content.rv).
+        ItemClickSupport.addTo(mBinding.rv).
 
                 setOnItemClickListener((recyclerView, position, v) ->
 
@@ -273,7 +277,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                                 "Yes",
                                 "No");
                         dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                            mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                            mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                             mPosition = position;
                             isPause = false;
                             isStop = true;
@@ -302,12 +306,12 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
             }
 
             if (adapter.getModel().get(mPosition).getTime() % 10 == 0) {
-                mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
+                mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
                 startTimer(!adapter.getModel().get(mPosition).isRest() ?
                         adapter.getModel().get(mPosition).getTime() / 10 :
                         adapter.getModel().get(mPosition).getTime());
             } else {
-                mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.done_white));
+                mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.done_white));
                 isStop = false;
             }
         }
@@ -316,10 +320,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
     private void preparationTimer() {
         isPreparationTime = true;
         final long[] preparationTime = {5000L};
-        mBinding.content.tvNameExercise.setText(getResources().getString(R.string.prepare_time));
-        mBinding.content.type.setText("Time");
-        mBinding.content.descriptionExercise.setText("");
-        mBinding.content.timer.setText(FormatTime.formatTime(preparationTime[0]));
+        mBinding.tvNameExercise.setText(getResources().getString(R.string.prepare_time));
+        mBinding.type.setText("Time");
+        mBinding.descriptionExercise.setText("");
+        mBinding.timer.setText(FormatTime.formatTime(preparationTime[0]));
         mTimerThread = Executors.newSingleThreadScheduledExecutor();
         mTimerThread.scheduleWithFixedDelay(() -> new Handler(Looper.getMainLooper()).post(() -> {
             long elapsedTime = preparationTime[0] - DEFAULT_REFRESH_INTERVAL;
@@ -329,8 +333,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                 ifMethod();
             } else {
                 preparationTime[0] -= DEFAULT_REFRESH_INTERVAL;
-                mBinding.content.timerProgress.setProgress(preparationTime[0] * 100 / 5000);
-                mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
+                mBinding.timerProgress.setProgress(preparationTime[0] * 100 / 5000);
+                mBinding.timer.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
@@ -351,80 +355,83 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
                     stopTimer();
                     releaseMP();
                     Toast.makeText(getContext(), "All done", Toast.LENGTH_SHORT).show();
-                    mBinding.content.numberProgressBar.setProgress(100);
-                    mBinding.content.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                    mBinding.numberProgressBar.setProgress(100);
+                    mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.play));
                     isStop = true;
                 }
                 sp.play(soundIdPoint, 1, 1, 0, 0, 1);
             } else {
                 tempTime[0] -= DEFAULT_REFRESH_INTERVAL;
 
-                mBinding.content.timerProgress.setProgress(100 - (tempTime[0] * 100 /
+                mBinding.timerProgress.setProgress(100 - (tempTime[0] * 100 /
                         (!adapter.getModel().get(mPosition).isRest() ?
                                 adapter.getModel().get(mPosition).getTime() / 10 :
                                 adapter.getModel().get(mPosition).getTime())));
-                mBinding.content.timer.setText(FormatTime.formatTime(elapsedTime));
+                mBinding.timer.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
 
     }
 
     private void setData() {
-        mBinding.content.timerProgress.setProgress(0);
+        mBinding.timerProgress.setProgress(0);
 
-        mBinding.content.rv.smoothScrollToPosition(mPosition);
-        mBinding.content.numberProgressBar.setProgress(mPosition * 100 / adapter.getItemCount());
+        mBinding.desExercise.setText(adapter.getModel().get(mPosition).getDescription());
+
+        mBinding.rv.smoothScrollToPosition(mPosition);
+        mBinding.numberProgressBar.setProgress(mPosition * 100 / adapter.getItemCount());
 
         if (!adapter.getModel().get(mPosition).isRest() &&
                 adapter.getModel().get(mPosition).getImage() != null) {
-            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            mBinding.imageExercise.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(getContext())
                     .load(Uri.parse(adapter.getModel().get(mPosition).getImage()))
-                    .into(mBinding.content.imageExercise);
+                    .into(mBinding.imageExercise);
         } else if (adapter.getModel().get(mPosition).isRest()) {
-            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            mBinding.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(getContext())
                     .load(R.mipmap.logo_fitofan)
-                    .into(mBinding.content.imageExercise);
+                    .into(mBinding.imageExercise);
         } else {
-            mBinding.content.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            mBinding.imageExercise.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(getContext())
                     .load(R.mipmap.logo_fitofan_old)
-                    .into(mBinding.content.imageExercise);
+                    .into(mBinding.imageExercise);
         }
 
-        mBinding.content.tvNameExercise.setText(adapter.getModel().get(mPosition).getName());
-        mBinding.content.descriptionExercise.setMovementMethod(new ScrollingMovementMethod());
+        mBinding.tvNameExercise.setText(adapter.getModel().get(mPosition).getName());
+        mBinding.descriptionExercise.setMovementMethod(new ScrollingMovementMethod());
 
         if (!adapter.getModel().get(mPosition).isRest())
-            mBinding.content.descriptionExercise.setText(adapter.getModel().get(mPosition).getDescription());
+            mBinding.descriptionExercise.setText(adapter.getModel().get(mPosition).getDescription());
         else
-            mBinding.content.descriptionExercise.setText(getResources().getString(R.string.rest));
+            mBinding.descriptionExercise.setText(getResources().getString(R.string.rest));
 
         String temp = null;
         switch ((int) (adapter.getModel().get(mPosition).getTime() % 10)) {
             case StaticValues.TIME:
                 if (!adapter.getModel().get(mPosition).isRest())
-                    mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                    mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 else
-                    mBinding.content.timer.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
+                    mBinding.timer.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
 
                 temp = "Time";
                 break;
             case StaticValues.DISTANCE:
-                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Distance" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
             case StaticValues.WEIGHT:
-                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Weight" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
             case StaticValues.COUNT:
-                mBinding.content.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Count" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
         }
-        mBinding.content.type.setText(temp);
+        mBinding.type.setText(temp);
+        mBinding.toolbar.setTitle(adapter.getModel().get(mPosition).getName());
         adapter.notifyDataSetChanged();
     }
 

@@ -24,10 +24,12 @@ import com.example.alex.fitofan.interfaces.DelStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
+import com.example.alex.fitofan.interfaces.UserStatus;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
@@ -49,7 +51,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus, DelStatus {
+public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus, DelStatus, UserStatus {
 
     private ActivityPlanPreviewBinding mBinding;
     private PreviewPlanPresenter mPresenter;
@@ -76,11 +78,13 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             mModel = new TrainingModel();
             mModel.setExercises(models);
             initRecyclerView();
-            HashMap<String, String> map = new HashMap<>();
-            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("plan_id", getIntent().getStringExtra("planId"));
-            Request.getInstance().getPlan(map, this);
+            if (Connection.isNetworkAvailable(getContext())) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("plan_id", getIntent().getStringExtra("planId"));
+                Request.getInstance().getPlan(map, this);
+            }
         } else
             getPlanFromBD(getIntent().getIntExtra("trainingModel", -1));
         initListeners();
@@ -183,7 +187,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         return super.onOptionsItemSelected(item);
     }
 
-    private void like(){
+    private void like() {
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
@@ -213,8 +217,16 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            mBinding.content.tvTrainingName.setText(mModel.getName());
+            mBinding.collapsing.setTitle(mModel.getName());
+            if (mModel.getImage() != null)
+                Glide.with(getContext())
+                        .load(Uri.parse(mModel.getImage()))
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                        .transition(withCrossFade())
+                        .into(mBinding.traningImage);
             initRecyclerView();
+            adapter.setUserModel(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser());
+            adapter.notifyItemChanged(0);
         } else {
             mModel = new TrainingModel();
         }
@@ -222,55 +234,58 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        mBinding.content.goToTraining.setOnClickListener(v -> {
+        mBinding.goToTraining.setOnClickListener(v -> {
             goTraining();
         });
 
-        ItemClickSupport.addTo(mBinding.content.rv).setOnItemClickListener((recyclerView, position, v) -> {
-            int[] pos = {adapter.getModel().get(position).getPosition()};
-            if (!adapter.getModel().get(position).isRest()) {
-                Dialog dialog = CustomDialog.card(getContext(),
-                        mModel.getExercises().get(pos[0]).getName(),
-                        mModel.getExercises().get(pos[0]).getDescription(),
-                        mModel.getExercises().get(pos[0]).getImage());
-                dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
-                    if (mModel.getExercises().size() - 1 > pos[0]) {
-                        pos[0]++;
-                        if (mModel.getExercises().size() > pos[0]) {
-                            CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                    mModel.getExercises().get(pos[0]).getDescription(),
-                                    mModel.getExercises().get(pos[0]).getImage());
+        ItemClickSupport.addTo(mBinding.rv).setOnItemClickListener((recyclerView, position, v) -> {
+            if (position != 0) {
+                int[] pos = {adapter.getModel().get(position - 1).getPosition()};
+                if (!adapter.getModel().get(position - 1).isRest()) {
+                    Dialog dialog = CustomDialog.card(getContext(),
+                            mModel.getExercises().get(pos[0]).getName(),
+                            mModel.getExercises().get(pos[0]).getDescription(),
+                            mModel.getExercises().get(pos[0]).getImage());
+                    dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
+                        if (mModel.getExercises().size() - 1 > pos[0]) {
+                            pos[0]++;
+                            if (mModel.getExercises().size() > pos[0]) {
+                                CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                        mModel.getExercises().get(pos[0]).getDescription(),
+                                        mModel.getExercises().get(pos[0]).getImage());
 
+                            }
+                        } else {
+                            Toast.makeText(this, "Это последнее упражнение", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(this, "Это последнее упражнение", Toast.LENGTH_LONG).show();
-                    }
-                });
+                    });
 
-                dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
-                    if (pos[0] > 0) {
-                        pos[0]--;
-                        if (pos[0] + 1 > 0) {
-                            CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                    mModel.getExercises().get(pos[0]).getDescription(),
-                                    mModel.getExercises().get(pos[0]).getImage());
+                    dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
+                        if (pos[0] > 0) {
+                            pos[0]--;
+                            if (pos[0] + 1 > 0) {
+                                CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                        mModel.getExercises().get(pos[0]).getDescription(),
+                                        mModel.getExercises().get(pos[0]).getImage());
+                            }
+                        } else {
+                            Toast.makeText(this, "Это первое упражнение", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(this, "Это первое упражнение", Toast.LENGTH_LONG).show();
-                    }
-                });
+                    });
+                }
             }
         });
+
     }
 
     private void initRecyclerView() {
 
-        mBinding.content.rv.setHasFixedSize(false);
-        mBinding.content.rv.setNestedScrollingEnabled(true);
+        mBinding.rv.setHasFixedSize(false);
+        mBinding.rv.setNestedScrollingEnabled(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mBinding.content.rv.setLayoutManager(linearLayoutManager);
+        mBinding.rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterPreviewPlan(this, UnpackingTraining.buildExercises(mModel));
-        mBinding.content.rv.setAdapter(adapter);
+        mBinding.rv.setAdapter(adapter);
 
     }
 
@@ -290,16 +305,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         }
     }
 
-    private void setData(){
-        mBinding.content.tvTrainingName.setText(mModelfromServer.getTraining().getName());
-        mBinding.content.tvTrainingDescription.setText(mModelfromServer.getTraining().getDescription());
-        mBinding.content.tvTrainingDescription.setMovementMethod(new ScrollingMovementMethod());
+    private void setData() {
+        mBinding.collapsing.setTitle(mModelfromServer.getTraining().getName());
 
         Glide.with(getContext())
                 .load(Uri.parse(mModelfromServer.getTraining().getImage()))
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                 .transition(withCrossFade())
-                .into(mBinding.content.traningImage);
+                .into(mBinding.traningImage);
 
     }
 
@@ -312,6 +325,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     public void onSuccess(GetPlanModel info) {
         if (info.getTraining() != null) {
             adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
+            adapter.setTrainingModel(setTraining(info));
             adapter.notifyDataSetChanged();
             if (info.getTraining().getIsSaved() == 1) {
                 menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
@@ -321,6 +335,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             if (info.getTraining().getLiked() == 1) {
                 menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
                 like = true;
+            }
+
+            if (info.getTraining().getUserId() != null) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("user_id", info.getTraining().getUserId());
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                Request.getInstance().getUserData(map, this);
             }
         }
     }
@@ -346,6 +368,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         mModel.setDescription(training.getTraining().getDescription());
         mModel.setImage(training.getTraining().getImage());
         mModel.setId(Integer.valueOf(training.getTraining().getId()));
+        mModel.setCreatedTime(training.getTraining().getCreationDate());
         setData();
         return mModel;
     }
@@ -377,6 +400,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     @Override
     public void onSuccess(String info) {
         onBackPressed();
+    }
+
+    @Override
+    public void onSuccess(User info) {
+        if (info != null) {
+            adapter.setUserModel(info);
+            adapter.notifyItemChanged(0);
+        }
     }
 
     @Override

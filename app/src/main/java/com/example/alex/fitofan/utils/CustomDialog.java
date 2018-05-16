@@ -1,6 +1,5 @@
 package com.example.alex.fitofan.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,31 +7,20 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.models.GetUserModel;
-import com.example.alex.fitofan.settings.MSharedPreferences;
-import com.google.gson.Gson;
 
 import java.util.Objects;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public final class CustomDialog {
 
@@ -63,7 +51,7 @@ public final class CustomDialog {
             mDialog.dismiss();
         });
 
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
 
         return mDialog;
@@ -93,7 +81,7 @@ public final class CustomDialog {
 
         tvClose.setOnClickListener(v -> mDialog.dismiss());
 
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
 
         return mDialog;
@@ -124,7 +112,7 @@ public final class CustomDialog {
 
         tvClose.setOnClickListener(v -> mDialog.dismiss());
 
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
 
         return mDialog;
@@ -144,7 +132,7 @@ public final class CustomDialog {
 
         tvClose.setOnClickListener(v -> mDialog.dismiss());
 
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
 
         return mDialog;
@@ -152,7 +140,6 @@ public final class CustomDialog {
 
     public static Dialog card(Context context, String title, String description, String image) {
         mDialog = new Dialog(context);
-        mDialog.setCancelable(false);
         mDialog.setContentView(R.layout.dialog_card);
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         TextView tvDescription = mDialog.findViewById(R.id.description_exercise);
@@ -162,7 +149,7 @@ public final class CustomDialog {
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvDescription.setMovementMethod(new ScrollingMovementMethod());
-        if(image != null){
+        if (image != null) {
             Glide.with(context) //передаем контекст приложения
                     .load(Uri.parse(image))
                     .apply(centerCropTransform())
@@ -185,7 +172,7 @@ public final class CustomDialog {
         return mDialog;
     }
 
-    public static Dialog cardSet(Dialog dialog, String title, String description, String image) {
+    public static void cardSet(Dialog dialog, String title, String description, String image) {
         TextView tvTitle = dialog.findViewById(R.id.name_exercise);
         TextView tvDescription = dialog.findViewById(R.id.description_exercise);
         ImageView imageExercise = dialog.findViewById(R.id.image_exercise);
@@ -193,7 +180,7 @@ public final class CustomDialog {
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvDescription.setMovementMethod(new ScrollingMovementMethod());
-        if(image != null){
+        if (image != null) {
             Glide.with(dialog.getContext()) //передаем контекст приложения
                     .load(Uri.parse(image))
                     .apply(centerCropTransform())
@@ -208,9 +195,5 @@ public final class CustomDialog {
                     .into(imageExercise);
         }
 
-        return mDialog;
     }
-
-
-
 }

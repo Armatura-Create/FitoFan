@@ -45,6 +45,7 @@ public class TrainingModel implements Serializable, Parcelable {
     private ArrayList<ExerciseModel> exercises;
 
     private String userId;
+    private String createdTime;
 
     public TrainingModel() {
     }
@@ -157,5 +158,13 @@ public class TrainingModel implements Serializable, Parcelable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 }

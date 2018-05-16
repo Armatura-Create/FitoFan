@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public final class UnpackingTraining {
 
-
     public static ArrayList<ExerciseModelFromTraining> buildExercises(TrainingModel model) {
 
         ArrayList<ExerciseModelFromTraining> result = new ArrayList<>();

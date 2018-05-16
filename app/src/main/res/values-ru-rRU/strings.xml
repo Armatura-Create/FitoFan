@@ -67,5 +67,8 @@
     <string name="add_comment">Добавьте \nкоментарий…</string>
     <string name="tab_subscribers">Подписчики</string>
     <string name="tab_subscriptions">Подписки</string>
+    <string name="about_you">Про себя</string>
+    <string name="change">изменить</string>
+    <string name="location">Город проживания</string>
 
 </resources>

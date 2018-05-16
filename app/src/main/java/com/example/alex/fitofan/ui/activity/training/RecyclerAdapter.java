@@ -68,18 +68,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         name.setText(model.get(position).getName());
         description.setText(model.get(position).getDescription());
 
-        if (model.get(position).getImage() != "rest")
+        if (model.get(position).isRest())
             time.setText(FormatTime.formatCountWithDimension(model.get(position).getTime()));
         else
             time.setText(FormatTime.formatTime(model.get(position).getTime()));
 
-        if (model.get(position).getImage() != null && model.get(position).getImage() != "rest") {
+        if (model.get(position).getImage() != null && !model.get(position).isRest()) {
             image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(trainingActivity.getContext())
                     .load(Uri.parse(model.get(position).getImage()))
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .into(image);
-        } else if (model.get(position).getImage() != null && model.get(position).getImage() == "rest") {
+        } else if (model.get(position).getImage() != null && model.get(position).isRest()) {
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(trainingActivity.getContext())
                     .load(R.mipmap.logo_fitofan)

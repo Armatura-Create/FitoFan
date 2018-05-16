@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_exercises_description_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxHeight="50dp"
+            android:maxLines="6"
+            android:scrollbars="vertical"
+            android:textColor="@color/transparent_text_white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

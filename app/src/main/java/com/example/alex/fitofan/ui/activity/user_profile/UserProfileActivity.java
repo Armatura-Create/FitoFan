@@ -1,6 +1,7 @@
 package com.example.alex.fitofan.ui.activity.user_profile;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -22,6 +23,7 @@ import com.example.alex.fitofan.interfaces.ILoadingStatusUserPlans;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.interfaces.SubStatus;
+import com.example.alex.fitofan.interfaces.UserStatus;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
@@ -34,12 +36,11 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserProfileActivity extends AppCompatActivity implements UserProfileContract.View, ILoadingStatus<User>, ILoadingStatusUserPlans, LikeStatus, SubStatus, SaveStatus {
+public class UserProfileActivity extends AppCompatActivity implements ILoadingStatus<User>, ILoadingStatusUserPlans, LikeStatus, SubStatus, SaveStatus, UserStatus {
 
     //TODO: It might be useful to use DataBinding
     //TODO: Будет хорошо, если вы будете использовать DataBinding
     private ActivityProfileUserBinding mBinding;
-    private UserProfilePresenter presenter;
     private RecyclerAdapterUserProfile adapter;
     private User mUser;
     private boolean isSub;
@@ -49,14 +50,20 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
     private int position;
     private GetPlansModel mPlans;
     private ImageView save;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_user);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_profile_user);
-        presenter = new UserProfilePresenter(this);
         setSupportActionBar(mBinding.toolbar);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
+
         initListeners();
         initRecycler();
         initRequest();
@@ -75,6 +82,10 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         return true;
     }
 
+    Context getContext(){
+        return this;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -85,7 +96,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         //noinspection SimplifiableIfStatement
 
         if (id == R.id.action_sub) {
-            if (Connection.isNetworkAvailable(getContext())) {
+            if (Connection.isNetworkAvailable(this)) {
                 if (isSub) {
                     HashMap<String, String> map = new HashMap<>();
                     map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -113,7 +124,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
         map.put("plan_id", id);
-        if (Connection.isNetworkAvailable(getContext())) {
+        if (Connection.isNetworkAvailable(this)) {
             if (!isButton) {
                 Request.getInstance().like(map, this);
             }
@@ -133,7 +144,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
         map.put("plan_id", id);
-        if (Connection.isNetworkAvailable(getContext())) {
+        if (Connection.isNetworkAvailable(this)) {
             if (mPlans.getTrainings().get(position).getIsSaved() == 1)
                 Request.getInstance().unSavePlan(map, this);
             if (mPlans.getTrainings().get(position).getIsSaved() != 1)
@@ -150,11 +161,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
             map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
             Request.getInstance().getUserData(map, this);
 
-            HashMap<String, String> map2 = new HashMap<>();
-            map2.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            map2.put("user_id", getIntent().getStringExtra("uid"));
-            map2.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            Request.getInstance().getUserPlans(map2, this);
+
         }
     }
 
@@ -187,11 +194,6 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
     }
 
     @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
     public void onSuccess(User info) {
         if (!new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
                 .equals(getIntent().getStringExtra("uid"))
@@ -203,9 +205,16 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         }
         mUser = info;
         adapter.setmUserModel(info);
-        adapter.notifyDataSetChanged();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(info.getName() + " " + info.getSurname());
+
+        if (Connection.isNetworkAvailable(this)) {
+            HashMap<String, String> map2 = new HashMap<>();
+            map2.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map2.put("user_id", getIntent().getStringExtra("uid"));
+            map2.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            Request.getInstance().getUserPlans(map2, this);
+        }
     }
 
     @Override
@@ -213,6 +222,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
         mPlans = info;
         adapter.setmWallModels(info.getTrainings());
         adapter.notifyDataSetChanged();
+        progressDialog.dismiss();
     }
 
     @SuppressLint("ResourceType")
@@ -238,7 +248,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
                 mPlans.getTrainings().get(position).setLiked(0);
             }
         }
-        like.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
+        like.startAnimation(AnimationUtils.loadAnimation(this, R.animator.animation_scale_like));
     }
 
     @Override
@@ -264,7 +274,7 @@ public class UserProfileActivity extends AppCompatActivity implements UserProfil
             save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
             mPlans.getTrainings().get(position).setIsSaved(0);
         }
-        save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
+        save.startAnimation(AnimationUtils.loadAnimation(this, R.animator.animation_scale_like));
     }
 
     @Override

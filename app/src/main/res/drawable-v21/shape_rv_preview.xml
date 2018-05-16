@@ -20,16 +20,4 @@
                 android:type="radial" />
         </shape>
     </item>
-    <item>
-        <shape>
-            <gradient
-                android:centerColor="#88020015"
-                android:centerX="1"
-                android:centerY="1"
-                android:endColor="#00020015"
-                android:gradientRadius="250dp"
-                android:startColor="#FF020015"
-                android:type="radial" />
-        </shape>
-    </item>
 </layer-list>

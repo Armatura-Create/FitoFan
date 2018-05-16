@@ -1,9 +1,13 @@
 package com.example.alex.fitofan.ui.activity.launch_screen;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
@@ -17,7 +21,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
-public class LaunchScreenActivity extends AppCompatActivity implements ILoadingStatus {
+public class LaunchScreenActivity extends AppCompatActivity {
 
     private Handler handler;
     private Runnable runnable;
@@ -28,15 +32,33 @@ public class LaunchScreenActivity extends AppCompatActivity implements ILoadingS
         if (MSharedPreferences.getInstance().getUserInfo() != null &&
                 new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class) != null
                 && new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser() != null) {
-            GetUserModel model = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
-            HashMap<String, String> params = new HashMap<>();
-            params.put("uid", model.getUser().getUid());
-            params.put("signature", model.getUser().getSignature());
-            Request.getInstance().singIn(params, this);
+            handler = new Handler();
+            runnable = () -> {
+                startActivity(new Intent(LaunchScreenActivity.this, MainActivity.class));
+                overridePendingTransition(R.anim.abc_slide_in_bottom, android.R.anim.fade_out);
+                finish();
+            };
+
+            setContentView(R.layout.activity_launch_screen);
+
+            anim();
+
+            // переход на другое активити спустя 3 сек
+            handler.postDelayed(runnable, 3000);
         } else {
             goSingIn();
         }
 
+    }
+
+    private void anim() {
+        // Получим ссылку на солнце
+        ImageView sunImageView = findViewById(R.id.logo_launch);
+        // Анимация для восхода солнца
+        @SuppressLint("ResourceType")
+        Animation animation = AnimationUtils.loadAnimation(this, R.animator.logo_down_anim);
+        // Подключаем анимацию к нужному View
+        sunImageView.startAnimation(animation);
     }
 
     private void goSingIn() {
@@ -49,27 +71,9 @@ public class LaunchScreenActivity extends AppCompatActivity implements ILoadingS
 
         setContentView(R.layout.activity_launch_screen);
 
-        // переход на другое активити спустя 3 сек
-        handler.postDelayed(runnable, 3000);
-    }
-
-    @Override
-    public void onSuccess(Object info) {
-        handler = new Handler();
-        runnable = () -> {
-            startActivity(new Intent(LaunchScreenActivity.this, MainActivity.class));
-            overridePendingTransition(R.anim.abc_slide_in_bottom, android.R.anim.fade_out);
-            finish();
-        };
-
-        setContentView(R.layout.activity_launch_screen);
+        anim();
 
         // переход на другое активити спустя 3 сек
         handler.postDelayed(runnable, 3000);
-    }
-
-    @Override
-    public void onFailure(String message) {
-        goSingIn();
     }
 }

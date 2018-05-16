@@ -25,10 +25,10 @@ public class ActionPlanCard {
         context.startActivity(intent);
     }
 
-    public static void goPreviewPlan(Context context, String planId, String userId) {
+    public static void goPreviewPlan(Context context, String planId, String userId, boolean isWall) {
         Intent intent = new Intent(context, PreviewPlanActivity.class);
         intent.putExtra("planId", planId);
-        intent.putExtra("isWall", true);
+        intent.putExtra("isWall", isWall);
         intent.putExtra("userId", userId);
         context.startActivity(intent);
     }

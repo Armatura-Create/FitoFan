@@ -11,16 +11,19 @@ import com.example.alex.fitofan.interfaces.ILoadingStatusMyPlans;
 import com.example.alex.fitofan.interfaces.ILoadingStatusUserPlans;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
+import com.example.alex.fitofan.interfaces.SearchStatus;
 import com.example.alex.fitofan.interfaces.SubStatus;
+import com.example.alex.fitofan.interfaces.UserStatus;
 import com.example.alex.fitofan.models.GetCommentsModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
+import com.example.alex.fitofan.models.GetSearchPlansModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
+import com.example.alex.fitofan.models.StatusModel;
 import com.example.alex.fitofan.models.SubModel;
-import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.google.gson.Gson;
 
@@ -118,6 +121,126 @@ public class Request {
 
             @Override
             public void onFailure(@NonNull Call<GetUserModel> call, @NonNull Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+                Log.e("onFailure: ", t.toString());
+            }
+        });
+
+    }
+
+    public void changeUserInfo(HashMap<String, String> params, final ILoadingStatus loader) {
+        Call<StatusModel> call;
+        call = RetrofitClient.getAPI().changeUserInfo(params);
+
+        call.enqueue(new Callback<StatusModel>() {
+            @Override
+            public void onResponse(@NonNull Call<StatusModel> call, @NonNull Response<StatusModel> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), StatusModel.class));
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("trueData");
+                        }
+                        if (jsonObject.getInt("status") == 0) {
+                            loader.onFailure("incorrect");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<StatusModel> call, @NonNull Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+                Log.e("onFailure: ", t.toString());
+            }
+        });
+
+    }
+
+    public void changeUserPhoto(HashMap<String, String> params, final ILoadingStatus loader) {
+        Call<StatusModel> call;
+        call = RetrofitClient.getAPI().changeUserPhoto(params);
+
+        call.enqueue(new Callback<StatusModel>() {
+            @Override
+            public void onResponse(@NonNull Call<StatusModel> call, @NonNull Response<StatusModel> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), StatusModel.class));
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("truePhoto");
+                            GetUserModel app = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
+                            assert response.body() != null;
+                            app.getUser().setSurname(response.body().getImageUrl());
+
+                            MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(app));
+                        }
+                        if (jsonObject.getInt("status") == 0) {
+                            loader.onFailure("incorrect");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<StatusModel> call, @NonNull Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+                Log.e("onFailure: ", t.toString());
+            }
+        });
+
+    }
+
+    public void changeUserPassword(HashMap<String, String> params, final ILoadingStatus loader) {
+        Call<StatusModel> call;
+        call = RetrofitClient.getAPI().changeUserPassword(params);
+
+        call.enqueue(new Callback<StatusModel>() {
+            @Override
+            public void onResponse(@NonNull Call<StatusModel> call, @NonNull Response<StatusModel> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), StatusModel.class));
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("Success");
+                            Log.e("onLLL2", new Gson().toJson(response.body(), GetUserModel.class));
+                        }
+                        if (jsonObject.getInt("status") == 0) {
+                            loader.onFailure("incorrect");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<StatusModel> call, @NonNull Throwable t) {
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
                 Log.e("onFailure: ", t.toString());
             }
@@ -904,7 +1027,7 @@ public class Request {
 
     }
 
-    public void getUserData(HashMap<String, String> params, final ILoadingStatus<User> loader) {
+    public void getUserData(HashMap<String, String> params, final UserStatus loader) {
         Call<GetUserModel> call;
         call = RetrofitClient.getAPI().getUserData(params);
 
@@ -939,6 +1062,41 @@ public class Request {
         });
     }
 
+    public void searchPlans(HashMap<String, String> params, final SearchStatus loader) {
+        Call<GetSearchPlansModel> call;
+        call = RetrofitClient.getAPI().searchPlans(params);
+
+        call.enqueue(new Callback<GetSearchPlansModel>() {
+            @Override
+            public void onResponse(Call<GetSearchPlansModel> call, Response<GetSearchPlansModel> response) {
+
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetSearchPlansModel.class));
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess(response.body());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+
+                } else {
+                    loader.onFailure(response.message());
+                    Log.e("onResponse: ", response.headers().toString());
+                    Log.e("onResponse: ", response.message());
+                    Log.e("onResponse: ", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSearchPlansModel> call, Throwable t) {
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+                Log.e("onFailureFB: ", t.toString());
+            }
+        });
+    }
+
     public void getMyData(final GetMyData loader) {
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -956,7 +1114,7 @@ public class Request {
                         JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetUserModel.class));
                         if (jsonObject.getInt("status") == 1) {
                             assert response.body() != null;
-                            loader.onSuccess(response.body().getUser().getLikes());
+                            loader.onSuccess(response.body().getUser());
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -972,7 +1130,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetUserModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetUserModel> call, @NonNull Throwable t) {
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
                 Log.e("onFailureFB: ", t.toString());
             }

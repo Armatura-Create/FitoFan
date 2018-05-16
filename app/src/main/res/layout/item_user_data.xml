@@ -180,6 +180,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:ellipsize="end"
+        android:minLines="3"
         android:maxLines="3"
         android:text="New York New York New York New York New York New York New York New York New York New York New York New York New York New York New York New YorkNew York New Yorkv "
         android:textColor="@color/transparent_text_white"

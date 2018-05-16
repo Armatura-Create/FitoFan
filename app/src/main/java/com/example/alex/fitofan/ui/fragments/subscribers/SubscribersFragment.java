@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @SuppressLint("ValidFragment")
-public class SubscribersFragment extends Fragment implements ILoadingStatus<GetRatingModel>, GetMyData, SubStatus {
+public class SubscribersFragment extends Fragment implements ILoadingStatus<GetRatingModel>, SubStatus {
 
     private RecyclerAdapterSub adapter;
     private View view;

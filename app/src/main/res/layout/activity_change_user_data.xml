@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_fragment">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/shape_special"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:title="@string/action_settings" />
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_user"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:src="@drawable/background"
+                    app:civ_border_color="@color/button_blue"
+                    app:civ_border_width="1dp" />
+
+                <TextView
+                    android:id="@+id/tv_change"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/button_blue"
+                    android:text="@string/change"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/first_name"
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/first_name"
+                android:inputType="textCapSentences"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/text_gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/last_name"
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/last_name"
+                android:inputType="textCapSentences"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/text_gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/location"
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/location"
+                android:inputType="textCapSentences"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/text_gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/about_you"
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/my_story"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/about_you"
+                android:inputType="textCapSentences"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/text_gray" />
+
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

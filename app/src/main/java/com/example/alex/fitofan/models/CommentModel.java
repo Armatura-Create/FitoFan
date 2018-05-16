@@ -21,6 +21,10 @@ public class CommentModel {
     @Expose
     private String planId;
 
+    @SerializedName("create_time")
+    @Expose
+    private String createTime;
+
     @SerializedName("comment")
     @Expose
     private String comment;
@@ -75,5 +79,13 @@ public class CommentModel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

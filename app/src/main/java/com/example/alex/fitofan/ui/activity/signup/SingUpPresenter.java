@@ -74,7 +74,7 @@ class SingUpPresenter implements SingUpContract.EventListener {
             HashMap<String, String> params = new HashMap<>();
             params.put("email", email);
             params.put("name", firstName);
-            params.put("surname", firstName);
+            params.put("surname", "");
             params.put("password", password);
             Request.getInstance().singUp(params, this);
         } else onFailure(CONNECTION_ERROR);

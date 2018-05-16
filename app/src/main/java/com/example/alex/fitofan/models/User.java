@@ -24,6 +24,10 @@ public class User {
     @Expose
     private String savedTrainingPlans;
 
+    @SerializedName("mystory")
+    @Expose
+    private String mystory;
+
     @SerializedName("plan_rating")
     @Expose
     private String rating;
@@ -183,5 +187,13 @@ public class User {
 
     public void setSubscribers(String subscribers) {
         this.subscribers = subscribers;
+    }
+
+    public String getMystory() {
+        return mystory;
+    }
+
+    public void setMystory(String mystory) {
+        this.mystory = mystory;
     }
 }

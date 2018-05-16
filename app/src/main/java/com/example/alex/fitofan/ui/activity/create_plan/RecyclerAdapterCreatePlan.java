@@ -22,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
@@ -30,6 +32,8 @@ import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
 
 import java.util.Objects;
+
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdapterCreatePlan.ViewHolder> {
 
@@ -447,6 +451,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             cvImage.setVisibility(View.VISIBLE);
             Glide.with(mCreatePlanActivity.getContext())
                     .load(Uri.parse(mTrainingModel.getExercises().get(position - 1).getImage()))
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .into(image);
         }
     }

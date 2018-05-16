@@ -167,8 +167,8 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     }
 
     @Override
-    public void onSuccess(String info) {
-        mBinding.yourPlace.likeRating.setText(info);
+    public void onSuccess(User info) {
+        mBinding.yourPlace.likeRating.setText(info.getLikes());
     }
 
     @Override

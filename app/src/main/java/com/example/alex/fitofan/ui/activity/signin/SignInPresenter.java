@@ -66,20 +66,23 @@ class SignInPresenter implements SignInContract.EventListener {
             public void onSuccess(LoginResult loginResult) {
                 GraphRequest request = GraphRequest.newGraphPathRequest(
                         AccessToken.getCurrentAccessToken(),
-                        "/" + loginResult.getAccessToken().getUserId() + "?fields=location",
+                        "/" + loginResult.getAccessToken().getUserId() + "?fields=location,email",
                         new GraphRequest.Callback() {
                             @Override
                             public void onCompleted(GraphResponse response) {
                                 try {
-                                    if(!response.getJSONObject().isNull("location")) {
-                                        Log.e("onCompleted: ", response.getJSONObject().get("location").toString());
+                                    if (!response.getJSONObject().isNull("location") && !response.getJSONObject().isNull("email")) {
+                                        Log.e("onCompleted: ", response.getJSONObject().get("email").toString());
                                         String resp = response.getJSONObject().get("location").toString();
+                                        Log.e("onCompleted: ", new Gson().fromJson(resp, LocationModel.class)
+                                                .getCity());
                                         loginUserWithFB(loginResult.getAccessToken().getUserId(),
                                                 new Gson().fromJson(resp, LocationModel.class)
-                                                        .getCity());
+                                                        .getCity(),
+                                                response.getJSONObject().get("email").toString());
                                     } else {
                                         loginUserWithFB(loginResult.getAccessToken().getUserId(),
-                                                "");
+                                                "", "");
                                     }
                                 } catch (JSONException e) {
                                     Log.e("onCompleted: ", e.toString());
@@ -112,20 +115,20 @@ class SignInPresenter implements SignInContract.EventListener {
         });
     }
 
-    private void loginUserWithFB(String id, String city) {
+    private void loginUserWithFB(String id, String city, String email) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(500L);
-                    for (;;){
-                        Log.e("PPPPP", String.valueOf(Profile.getCurrentProfile().getFirstName() != null));
-                        if(Profile.getCurrentProfile().getFirstName() != null) {
+                    for (; ; ) {
+                        if (Profile.getCurrentProfile().getFirstName() != null) {
                             HashMap<String, String> params = new HashMap<>();
                             params.put("name", Profile.getCurrentProfile().getFirstName());
                             params.put("surname", Profile.getCurrentProfile().getLastName());
                             params.put("image", String.valueOf(Profile.getCurrentProfile().getProfilePictureUri(800, 640)));
                             params.put("location", city);
+                            params.put("email", email);
                             params.put("facebook_id", id);
                             Request.getInstance().singInWithFB(params, SignInPresenter.this);
                             return;
@@ -170,7 +173,7 @@ class SignInPresenter implements SignInContract.EventListener {
 
     @Override
     public void onFailure(String message) {
-        if(message.equals("incorrect")) {
+        if (message.equals("incorrect")) {
             Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.incorrect_email_or_pass), Toast.LENGTH_SHORT).show();
         }
     }

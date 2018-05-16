@@ -53,6 +53,10 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
     private ProgressDialog mProgressDialog;
     private boolean isMy;
 
+    int numberOfClicks = 0;
+    boolean threadStarted = false;
+    final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 250;
+
     public RecyclerAdapterMyPlans(ArrayList<TrainingModel> trainings, ProgressDialog mProgressDialog, MyPlansFragment mMyPlansFragment) {
         mTrainings = trainings;
         this.mMyPlansFragment = mMyPlansFragment;
@@ -138,10 +142,6 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                     .into(imageTraining);
         }
 
-        planLinear.setOnClickListener(view -> {
-            mMyPlansFragment.goToPreview(mTrainings.get(position).getId(), mTrainings.get(position).getUserId());
-        });
-
         sharePlan.setOnClickListener(view -> {
             mProgressDialog.show();
             Bitmap imageBitmap = null;
@@ -191,6 +191,30 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        planLinear.setOnClickListener(v -> {
+            ++numberOfClicks;
+            if (!threadStarted) {
+                new Thread(() -> {
+                    threadStarted = true;
+                    try {
+                        Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
+                        if (numberOfClicks == 1) {
+                            mMyPlansFragment.goToPreview(
+                                    mTrainings.get(position).getId(),
+                                    mTrainings.get(position).getUserId());
+                        } else if (numberOfClicks == 2) {
+                            mMyPlansFragment.likePlan(String.valueOf(mTrainings.get(position).getId()),
+                                    like, countLike, false, position);
+                        }
+                        numberOfClicks = 0;
+                        threadStarted = false;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         });
 

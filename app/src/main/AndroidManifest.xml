@@ -46,7 +46,7 @@
         <activity
             android:name=".ui.activity.launch_screen.LaunchScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar">
+            android:theme="@style/AppTheme.SimpleCoordinatorTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +58,7 @@
             android:name=".ui.activity.main.MainActivity"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
+            android:theme="@style/AppTheme.SimpleCoordinatorTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
@@ -91,9 +91,21 @@
             android:theme="@style/Theme.Design.NoActionBar" />
 
         <activity
+            android:name=".ui.activity.settings.PasswordChangeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.activity.settings.UserDataChangeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.activity.training.TrainingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/AppTheme.SimpleCoordinatorTheme" />
 
         <activity
             android:name=".ui.activity.create_plan.CreatePlanActivity"
@@ -104,12 +116,12 @@
         <activity
             android:name=".ui.activity.preview_plan.PreviewPlanActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/AppTheme.SimpleCoordinatorTheme" />
 
         <activity
             android:name=".ui.activity.user_profile.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.sub.SubActivity"
@@ -118,8 +130,8 @@
 
         <activity
             android:name=".ui.activity.comments.CommentsActivity"
-            android:screenOrientation="portrait"
             android:focusableInTouchMode="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
     </application>

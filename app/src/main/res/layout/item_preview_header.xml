@@ -1,111 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="330dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <ImageView
-        android:id="@+id/traning_image"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:src="@drawable/images"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/shape_preview_top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/linear_body"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/background" />
-
-    <LinearLayout
-        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-        <android.support.design.widget.CoordinatorLayout
+        <TextView
+            android:id="@+id/tv_training_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:isScrollContainer="true"
+            android:maxLines="6"
+            android:scrollbars="vertical"
+            android:textColor="@color/transparent_text_white"
+            android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="270dp"
-                android:gravity="bottom"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_training_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="2"
-                    android:text="@string/start_training"
-                    android:textColor="@android:color/white"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_training_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="start"
-                    android:isScrollContainer="true"
-                    android:maxLines="4"
-                    android:scrollbars="vertical"
-                    android:text="@string/start_training"
-                    android:textColor="@color/transparent_text_white"
-                    android:textSize="16sp" />
-
-                <include
-                    android:id="@+id/info_user"
-                    layout="@layout/part_user_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="10dp" />
-
-                <include
-                    android:id="@+id/info_plan"
-                    layout="@layout/part_info_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="10dp" />
-            </LinearLayout>
-        </android.support.design.widget.CoordinatorLayout>
+        <include
+            android:id="@+id/info_user"
+            layout="@layout/part_user_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

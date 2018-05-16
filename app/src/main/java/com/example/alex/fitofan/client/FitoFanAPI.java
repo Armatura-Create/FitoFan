@@ -4,9 +4,11 @@ import com.example.alex.fitofan.models.GetCommentsModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
+import com.example.alex.fitofan.models.GetSearchPlansModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
+import com.example.alex.fitofan.models.StatusModel;
 import com.example.alex.fitofan.models.SubModel;
 
 import java.util.HashMap;
@@ -108,5 +110,20 @@ interface FitoFanAPI {
     @FormUrlEncoded
     Call<GetCommentsModel> getPlanComments(@FieldMap(encoded = true) HashMap<String, String> params);
 
+    @POST("/v1/searchPlans")
+    @FormUrlEncoded
+    Call<GetSearchPlansModel> searchPlans(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/changeUserInfo")
+    @FormUrlEncoded
+    Call<StatusModel> changeUserInfo(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/changeUserPhoto")
+    @FormUrlEncoded
+    Call<StatusModel> changeUserPhoto(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/changeUserPassword")
+    @FormUrlEncoded
+    Call<StatusModel> changeUserPassword(@FieldMap(encoded = true) HashMap<String, String> params);
 
 }

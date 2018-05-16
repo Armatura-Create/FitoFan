@@ -18,6 +18,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.CommentModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
@@ -76,6 +77,7 @@ public class RecyclerAdapterComments extends RecyclerView.Adapter<RecyclerAdapte
         this.holder = holder;
 
         holder.comment.setText(model.get(position).getComment());
+        holder.timeCreation.setText(model.get(position).getCreateTime());
 
         if (model.get(position).getUser().getImage_url() != null) {
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -106,6 +108,7 @@ public class RecyclerAdapterComments extends RecyclerView.Adapter<RecyclerAdapte
 
         protected LinearLayout setLiner;
         protected TextView comment;
+        protected TextView timeCreation;
         protected ImageView image;
 
         public LinearSet(View v) {
@@ -113,6 +116,7 @@ public class RecyclerAdapterComments extends RecyclerView.Adapter<RecyclerAdapte
             setLiner = v.findViewById(R.id.linear_comment);
             comment = v.findViewById(R.id.comment);
             image = v.findViewById(R.id.image_user);
+            timeCreation = v.findViewById(R.id.time_creation);
 
             setLiner.setOnClickListener(this);
             image.setOnClickListener(this);
@@ -131,7 +135,7 @@ public class RecyclerAdapterComments extends RecyclerView.Adapter<RecyclerAdapte
                 }
             }
             if (v.equals(image)) {
-                mCommentsActivity.goUserProfile(model.get(getAdapterPosition()).getUser().getUid());
+                ActionPlanCard.goUserProfile(mCommentsActivity.getContext(), model.get(getAdapterPosition()).getUser().getUid());
             }
         }
 

@@ -93,5 +93,12 @@
     <string name="comments">Comments</string>
     <string name="add_comment">Add \ncomment…</string>
     <string name="cancel">Cancel</string>
+    <string name="new_pass">New password</string>
+    <string name="new_pass_again">New password recovery</string>
+    <string name="current_password">Current password</string>
+    <string name="done">Done</string>
+    <string name="about_you">About you</string>
+    <string name="change">change</string>
+    <string name="location">Location</string>
 
 </resources>

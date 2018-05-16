@@ -22,21 +22,20 @@ import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SaveStatus;
+import com.example.alex.fitofan.interfaces.SearchStatus;
+import com.example.alex.fitofan.models.GetSearchPlansModel;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
-import com.example.alex.fitofan.ui.activity.comments.CommentsActivity;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
-import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
-import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SaveStatus {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SaveStatus, SearchStatus {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -93,6 +92,21 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding.fabAddTraining.setOnClickListener(view1 -> {
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
         });
+
+        mBinding.searchWall.setOnEditorActionListener((v, actionId, event) -> {
+            search(v.getText().toString());
+            return true;
+        });
+    }
+
+    private void search(String s) {
+        if (Connection.isNetworkAvailable(getContext())) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("search", s);
+            Request.getInstance().searchPlans(map, this);
+        }
     }
 
     protected void likePlan(String id, ImageView like, TextView countLike, boolean isButton, int position) {
@@ -252,6 +266,16 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             models.get(position).setIsSaved(0);
         }
         save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
+    }
+
+    @Override
+    public void onSuccess(GetSearchPlansModel info) {
+        if (info.getTrainings() != null) {
+            models.clear();
+            models.addAll(info.getTrainings());
+            adapter.setmWallModels(models);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

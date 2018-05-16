@@ -116,6 +116,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             TextView lastName = linear.findViewById(R.id.last_name);
             ImageView imageUser = linear.findViewById(R.id.user_photo);
             TextView city = linear.findViewById(R.id.city);
+            TextView bio = linear.findViewById(R.id.bio);
             TextView place = linear.findViewById(R.id.tv_place);
             TextView countPlans = linear.findViewById(R.id.tv_count_plans);
             TextView subscriberse = linear.findViewById(R.id.tv_subscriberse);
@@ -126,6 +127,8 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 firstName.setText(mUserModel.getName());
                 lastName.setText(mUserModel.getSurname());
                 city.setText(mUserModel.getLocation());
+                if (mUserModel.getMystory() != null)
+                    bio.setText(mUserModel.getMystory());
                 countPlans.setText(mUserModel.getTrainingPlans());
                 place.setText(mUserModel.getRating());
                 subscriberse.setText(mUserModel.getSubscribers());
@@ -210,7 +213,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                             try {
                                 Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                                 if (numberOfClicks == 1) {
-                                    ActionPlanCard.goPreviewPlan(mUserProfileActivity.getContext(), mWallModels.get(position - 1).getId(), mWallModels.get(position - 1).getUserId());
+                                    ActionPlanCard.goPreviewPlan(mUserProfileActivity.getContext(), mWallModels.get(position - 1).getId(), mWallModels.get(position - 1).getUserId(), true);
                                 } else if (numberOfClicks == 2) {
                                     mUserProfileActivity.likePlan(mWallModels.get(position - 1).getId(), like, countLike, false, position - 1);
                                 }

@@ -171,9 +171,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                int visibleItemCount = linearLayoutManager.getChildCount();//смотрим сколько элементов на экране
-//                int totalItemCount = linearLayoutManager.getItemCount();//сколько всего элементов
-//                int firstVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();//какая позиция первого элемента
 
                 if (dy > 0 || dy < 0 && mBinding.fabAddTraining.isShown())
                     mBinding.fabAddTraining.hide();

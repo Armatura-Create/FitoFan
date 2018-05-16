@@ -1,9 +1,5 @@
 package com.example.alex.fitofan.utils;
 
-/**
- * Created by alex on 10/14/17.
- */
-
 public abstract class StaticValues {
 
     //for alerts
