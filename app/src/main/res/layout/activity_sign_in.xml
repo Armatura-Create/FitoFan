@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_special"
+        android:fitsSystemWindows="true">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.activity.signin.SignInActivity">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/background" />
 
             <ImageView
                 android:id="@+id/logo"
@@ -32,7 +34,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/login_data"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/login_data"
@@ -67,14 +69,14 @@
                         android:inputType="textEmailAddress"
                         android:textColor="@color/transparent_text_white"
                         android:textColorHint="@color/transparent_text_white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
                 </android.support.design.widget.TextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/transparent_text_white"/>
+                    android:background="@color/transparent_text_white" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -92,14 +94,14 @@
                         android:inputType="textPassword"
                         android:textColor="@color/transparent_text_white"
                         android:textColorHint="@color/transparent_text_white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
                 </android.support.design.widget.TextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/transparent_text_white"/>
+                    android:background="@color/transparent_text_white" />
             </LinearLayout>
 
             <Button
@@ -117,7 +119,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_data"/>
+                app:layout_constraintTop_toBottomOf="@+id/login_data" />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/facebook_bt"
@@ -128,9 +130,7 @@
                 android:layout_marginStart="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/registration_liner"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bt_login_and_forgot"
-                app:layout_constraintVertical_bias="0.86"/>
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <LinearLayout
                 android:id="@+id/registration_liner"
@@ -152,7 +152,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/forgot_pass"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/registration"
@@ -161,10 +161,8 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:text="@string/registration"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
-
-    </FrameLayout>
-
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

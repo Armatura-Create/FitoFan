@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.utils.ActionPlanCard;
+import com.example.alex.fitofan.utils.CountData;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
@@ -83,6 +85,8 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         TextView tvTimeCreate = linear.findViewById(R.id.data_publication);
         TextView tvDescription = linear.findViewById(R.id.tv_description);
         TextView countLike = linear.findViewById(R.id.count_like);
+        TextView countSaved = linear.findViewById(R.id.saved_plan);
+        TextView countComments = linear.findViewById(R.id.count_comments);
 
         LinearLayout userLiner = linear.findViewById(R.id.user_liner);
         LinearLayout planLiner = linear.findViewById(R.id.plan_liner);
@@ -91,7 +95,9 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         ImageView save = linear.findViewById(R.id.icon_save);
         ImageView comments = linear.findViewById(R.id.icon_comments);
 
-        countLike.setText(mWallFragment.getResources().getString(R.string.like) + ": " + mWallModels.get(position).getLikes());
+        countSaved.setText(mWallFragment.getResources().getString(R.string.saved) + ": " + mWallModels.get(position).getSaved());
+        countLike.setText(CountData.mathLikes(mWallModels.get(position).getLikes()));
+        countComments.setText(CountData.mathLikes(mWallModels.get(position).getComments()));
         tvNameTrainig.setText(mWallModels.get(position).getName());
         tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position).getPlan_time())));
         tvTimeCreate.setText(mWallModels.get(position).getCreationDate());
@@ -101,9 +107,11 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
 
         like.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_favorite_black));
         save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_black));
+        countLike.setTextColor(Color.parseColor("#000000"));
 
         if (mWallModels.get(position).getLiked() == 1) {
             like.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_favorite_full_red));
+            countLike.setTextColor(Color.parseColor("#ffffff"));
         }
         if (mWallModels.get(position).getIsSaved() == 1) {
             save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_full_black));
@@ -157,7 +165,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         });
 
         save.setOnClickListener(view -> {
-            mWallFragment.savePlan(mWallModels.get(position).getId(), save, position);
+            mWallFragment.savePlan(mWallModels.get(position).getId(), save, countSaved, position);
         });
 
         comments.setOnClickListener(view -> {
@@ -166,7 +174,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
     }
 
     @Override
-    public void onSuccess(Boolean info) {
+    public void onSuccess(String info) {
 
     }
 

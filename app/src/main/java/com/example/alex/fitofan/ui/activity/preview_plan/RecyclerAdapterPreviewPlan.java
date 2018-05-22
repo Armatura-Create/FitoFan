@@ -22,7 +22,7 @@ import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.ActionPlanCard;
-import com.example.alex.fitofan.utils.CountDataOnPreview;
+import com.example.alex.fitofan.utils.CountData;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.google.gson.Gson;
 
@@ -123,27 +123,27 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             TextView descriptionTraning = linear.findViewById(R.id.tv_training_description);
             TextView userName = linear.findViewById(R.id.name_user);
 
-//            TextView time = linear.findViewById(R.id.time);
-//            TextView disance = linear.findViewById(R.id.distance);
-//            TextView count = linear.findViewById(R.id.count);
-//            TextView weight = linear.findViewById(R.id.weight);
-//            TextView distanceParam = linear.findViewById(R.id.distance_text);
-//            TextView weightParam = linear.findViewById(R.id.weight_text);
+            TextView time = linear.findViewById(R.id.time);
+            TextView distance = linear.findViewById(R.id.distance);
+            TextView count = linear.findViewById(R.id.count);
+            TextView weight = linear.findViewById(R.id.weight);
+            TextView distanceParam = linear.findViewById(R.id.distance_text);
+            TextView weightParam = linear.findViewById(R.id.weight_text);
 
             ImageView userImage = linear.findViewById(R.id.image_user);
 
             if (trainingModel != null) {
-//                CountDataOnPreviewModel model = CountDataOnPreview.mathData(trainingModel);
-//
+                CountDataOnPreviewModel model = CountData.mathData(trainingModel);
+
                 descriptionTraning.setText(trainingModel.getDescription());
                 descriptionTraning.setMovementMethod(new ScrollingMovementMethod());
-//
-//                time.setText(model.getTime());
-//                disance.setText(model.getDistance());
-//                count.setText(model.getCount());
-//                weight.setText(model.getWeight());
-//                distanceParam.setText(model.getDistanceParam());
-//                weightParam.setText(model.getWeightParam());
+
+                time.setText(model.getTime());
+                distance.setText(model.getDistance());
+                count.setText(model.getCount());
+                weight.setText(model.getWeight());
+                distanceParam.setText(model.getDistanceParam());
+                weightParam.setText(model.getWeightParam());
 
                 createdDate.setText(trainingModel.getCreatedTime());
             }

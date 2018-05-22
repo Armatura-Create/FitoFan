@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/shape_special"/>
+        android:src="@drawable/shape_special" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                 android:layout_height="27dp"
                 android:layout_gravity="center"
                 android:layout_weight="4"
-                android:src="@drawable/icon_dialog"/>
+                android:src="@drawable/logo_fitofan_white" />
 
             <TextView
                 android:id="@+id/title"
@@ -48,7 +47,7 @@
                 android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cancel_dialog"
@@ -61,7 +60,7 @@
                 android:paddingRight="15dp"
                 android:text="X"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView
@@ -75,14 +74,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <Spinner
-                    android:id="@+id/spinner_type"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="@android:color/black"/>
+                    android:layout_marginTop="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,7 +98,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/class_description"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <LinearLayout
                         android:id="@+id/liner_time"
@@ -135,13 +134,13 @@
                                 android:textColor="@color/button_blue"
                                 android:textColorHint="@color/text_gray"
                                 android:textSize="45sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
                                 android:layout_marginTop="3dp"
-                                android:background="@color/background_delimiter"/>
+                                android:background="@color/background_delimiter" />
                         </LinearLayout>
 
                         <TextView
@@ -151,7 +150,7 @@
                             android:layout_marginRight="5dp"
                             android:gravity="center"
                             android:text=":"
-                            android:textColor="@color/button_blue"/>
+                            android:textColor="@color/button_blue" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -177,13 +176,13 @@
                                 android:textColor="@color/button_blue"
                                 android:textColorHint="@color/text_gray"
                                 android:textSize="45sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
                                 android:layout_marginTop="3dp"
-                                android:background="@color/background_delimiter"/>
+                                android:background="@color/background_delimiter" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -203,24 +202,25 @@
                             android:background="#00000000"
                             android:textColor="@color/button_blue"
                             android:textColorHint="@color/button_blue"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
                             android:layout_marginTop="3dp"
-                            android:background="@color/background_delimiter"/>
+                            android:background="@color/background_delimiter" />
                     </LinearLayout>
 
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:gravity="bottom"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
                     android:orientation="vertical">
+
                     <Button
                         android:id="@+id/bt_dialog_add"
                         android:layout_width="match_parent"

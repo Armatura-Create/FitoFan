@@ -2,11 +2,10 @@ package com.example.alex.fitofan.ui.activity.main;
 
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.utils.CustomDialog;
+import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 
 public class MainPresenter implements MainContract.EventListener {
 

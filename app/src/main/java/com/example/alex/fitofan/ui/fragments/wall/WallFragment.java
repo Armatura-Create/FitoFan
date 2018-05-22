@@ -3,12 +3,15 @@ package com.example.alex.fitofan.ui.fragments.wall;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +33,13 @@ import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.utils.Connection;
+import com.example.alex.fitofan.utils.CountData;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SaveStatus, SearchStatus {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SearchStatus {
 
     FragmentWallBinding mBinding;
     private View view;
@@ -49,6 +53,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private int position;
     private ImageView save;
     private TextView countLike;
+    private TextView countSaved;
 
     @Nullable
     @Override
@@ -71,6 +76,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onResume() {
+        startRequest();
         super.onResume();
     }
 
@@ -93,10 +99,23 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
         });
 
-        mBinding.searchWall.setOnEditorActionListener((v, actionId, event) -> {
-            search(v.getText().toString());
-            return true;
+        mBinding.searchWall.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                search(mBinding.searchWall.getText().toString());
+            }
         });
+
     }
 
     private void search(String s) {
@@ -130,7 +149,8 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
-    protected void savePlan(String id, ImageView save, int position) {
+    protected void savePlan(String id, ImageView save, TextView countSaved, int position) {
+        this.countSaved = countSaved;
         this.save = save;
         this.position = position;
         HashMap<String, String> map = new HashMap<>();
@@ -228,46 +248,6 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding.refresh.setRefreshing(false);
     }
 
-    @SuppressLint({"ResourceType", "SetTextI18n"})
-    @Override
-    public void onSuccess(Boolean info) {
-        if (info) {
-            if (models.get(position).getLiked() != 1) {
-                like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_full_red));
-                countLike.setText(getResources().getString(R.string.like) + ": " +
-                        String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1)
-                );
-                adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1));
-                models.get(position).setLiked(1);
-            }
-        }
-        if (!info) {
-            if (models.get(position).getLiked() == 1) {
-                like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_black));
-                countLike.setText(getResources().getString(R.string.like) + ": " +
-                        String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1)
-                );
-                adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1));
-                models.get(position).setLiked(0);
-            }
-        }
-        like.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
-    }
-
-    @SuppressLint("ResourceType")
-    @Override
-    public void onSuccess(int status) {
-        if (status == 1) {
-            save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_full_black));
-            models.get(position).setIsSaved(1);
-        }
-        if (status != 1) {
-            save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
-            models.get(position).setIsSaved(0);
-        }
-        save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
-    }
-
     @Override
     public void onSuccess(GetSearchPlansModel info) {
         if (info.getTrainings() != null) {
@@ -275,6 +255,60 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             models.addAll(info.getTrainings());
             adapter.setmWallModels(models);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @SuppressLint({"ResourceType", "SetTextI18n"})
+    @Override
+    public void onSuccess(String info) {
+        if (info.equals("like") || info.equals("dislike")) {
+            if (info.equals("like")) {
+                if (models.get(position).getLiked() != 1) {
+                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_full_red));
+                    countLike.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1))
+                    );
+                    countLike.setTextColor(Color.parseColor("#FFFFFF"));
+                    adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1));
+                    models.get(position).setLiked(1);
+                }
+            }
+            if (info.equals("dislike")) {
+                if (models.get(position).getLiked() == 1) {
+                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_black));
+                    countLike.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1))
+                    );
+                    countLike.setTextColor(Color.parseColor("#000000"));
+                    adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1));
+                    models.get(position).setLiked(0);
+                }
+            }
+            like.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
+        }
+
+        if (info.equals("save") || info.equals("unsave")) {
+            if (info.equals("save")) {
+                if (models.get(position).getIsSaved() != 1) {
+                    save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_full_black));
+                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
+                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1)
+                    );
+                    adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1));
+                    models.get(position).setIsSaved(1);
+                }
+            }
+            if (info.equals("unsave")) {
+                if (models.get(position).getIsSaved() == 1) {
+                    save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
+                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
+                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1)
+                    );
+                    adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1));
+                    models.get(position).setIsSaved(0);
+                }
+            }
+            save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
         }
     }
 

@@ -28,6 +28,7 @@ import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.utils.CheckerInputData;
 import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
@@ -77,35 +78,41 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("name", mBinding.name.getText().toString().trim());
-            map.put("surname", mBinding.surname.getText().toString().trim());
-            map.put("location", mBinding.location.getText().toString().trim());
-            map.put("mystory", mBinding.myStory.getText().toString().trim());
-            if (Connection.isNetworkAvailable(this))
-                Request.getInstance().changeUserInfo(map, this);
-        }
-
-        if (changePhoto) {
-            try {
-                mProgressDialog.show();
-                Bitmap imageBitmap = null;
-                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                assert imageBitmap != null;
-                imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+            if (CheckerInputData.isEmail(mBinding.email.getText().toString().trim())) {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
                 map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                map.put("image", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
-                if (Connection.isNetworkAvailable(this))
-                    Request.getInstance().changeUserPhoto(map, this);
-            } catch (IOException e) {
-                e.printStackTrace();
+                map.put("name", mBinding.name.getText().toString().trim());
+                map.put("surname", mBinding.surname.getText().toString().trim());
+                map.put("location", mBinding.location.getText().toString().trim());
+                map.put("mystory", mBinding.myStory.getText().toString().trim());
+                map.put("email", mBinding.email.getText().toString().trim());
+                if (Connection.isNetworkAvailable(this)) {
+                    Request.getInstance().changeUserInfo(map, this);
+                    Request.getInstance().changeUserEmail(map, this);
+                }
             }
-        }
 
+
+            if (changePhoto) {
+                try {
+                    mProgressDialog.show();
+                    Bitmap imageBitmap = null;
+                    imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    assert imageBitmap != null;
+                    imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                    map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                    map.put("image", URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+                    if (Connection.isNetworkAvailable(this))
+                        Request.getInstance().changeUserPhoto(map, this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -117,6 +124,7 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
 
     private void initAll() {
         mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Please wait...");
         mProgressDialog.setCancelable(false);
         mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
         mBinding.tvChange.setOnClickListener(v -> {
@@ -136,6 +144,7 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
             mBinding.surname.setText(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSurname());
             mBinding.location.setText(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getLocation());
             mBinding.myStory.setText(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getMystory());
+            mBinding.email.setText(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getEmail());
         }
     }
 

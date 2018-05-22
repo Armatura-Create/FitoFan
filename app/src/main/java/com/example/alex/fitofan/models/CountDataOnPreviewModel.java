@@ -1,6 +1,7 @@
 package com.example.alex.fitofan.models;
 
 public class CountDataOnPreviewModel {
+    private long timeLong;
     private String time;
     private String distance;
     private String distanceParam;
@@ -54,5 +55,13 @@ public class CountDataOnPreviewModel {
 
     public void setWeightParam(String weightParam) {
         this.weightParam = weightParam;
+    }
+
+    public long getTimeLong() {
+        return timeLong;
+    }
+
+    public void setTimeLong(long timeLong) {
+        this.timeLong = timeLong;
     }
 }

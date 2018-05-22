@@ -20,6 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapterRaiting.ViewHolder> {
 
@@ -152,9 +153,10 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
 
         if (position > 0) {
 
-            Glide.with(mParticipantFragment.getActivity().getApplicationContext()) //передаем контекст приложения
+            Glide.with(mParticipantFragment.getContext()) //передаем контекст приложения
                     .load(Uri.parse(mModel.get(position + 2).getImage_url()))
                     .apply(centerCropTransform())
+                    .apply(placeholderOf(R.drawable.profile))
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView

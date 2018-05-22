@@ -7,29 +7,28 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.utils.CustomDialog;
+import com.example.alex.fitofan.utils.CountData;
+import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
+import com.example.alex.fitofan.utils.CustomDialog.RecyclerAdapterCard;
 import com.example.alex.fitofan.utils.FormatTime;
-import com.google.gson.Gson;
+import com.example.alex.fitofan.utils.ItemClickSupport;
 
 import java.util.Objects;
 
@@ -198,6 +197,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         //body methods
         if (position > 0 && position != getItemCount() - 1) {
 
+            cvImageExercise.setVisibility(View.GONE);
+            imageExercise.setImageDrawable(null);
+
             etRelaxTime.setText(FormatTime.formatTime(0));
             etTimeBetweenExercise.setText(FormatTime.formatTime(0));
             etTimeExercise.setText(FormatTime.formatTime(0));
@@ -279,55 +281,67 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
                 LinearLayout time = dialog.findViewById(R.id.liner_time);
                 LinearLayout text = dialog.findViewById(R.id.liner_text);
-                Spinner sp = dialog.findViewById(R.id.spinner_type);
+                RecyclerView rv = dialog.findViewById(R.id.rv);
 
-                String[] data = {"Time", "Distance", "Weight", "Count"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(mCreatePlanActivity.getContext(), R.layout.spinner_item, data);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                sp.setAdapter(adapter);
-                sp.setSelection(0);
-                sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int p, long id) {
-                        switch (p) {
-                            case 0:
-                                time.setVisibility(View.VISIBLE);
-                                text.setVisibility(View.GONE);
-                                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(viev -> {
-                                    EditText min = dialog.findViewById(R.id.select_time_min),
-                                            sec = dialog.findViewById(R.id.select_time_sec);
-                                    if (Objects.equals(String.valueOf(min.getText()), "")) {
-                                        min.setText("0");
-                                    }
-                                    if (Objects.equals(String.valueOf(sec.getText()), "")) {
-                                        sec.setText("0");
-                                    }
-                                    long temp_time = Integer.valueOf(String.valueOf(min.getText())) * MILISEC_MIN;
-                                    temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
-                                    mTrainingModel.getExercises().get(position - 1).setTime(temp_time * 10 + p);
-                                    etTimeExercise.setText(FormatTime.formatTime(temp_time));
-                                    RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
-                                    dialog.dismiss();
-                                });
-                                break;
-                            default:
-                                time.setVisibility(View.GONE);
-                                text.setVisibility(View.VISIBLE);
-                                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
-                                    EditText et = dialog.findViewById(R.id.et_add_field_dialog);
-                                    long temp = et.getText().length() <= 0 ? 0 : Integer.valueOf(String.valueOf(et.getText()));
-                                    mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + p);
-                                    etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
-                                    RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
-                                    dialog.dismiss();
-                                });
-                                break;
-                        }
+                LinearLayoutManager linearLayoutManager =
+                        new LinearLayoutManager(mCreatePlanActivity.getContext(),
+                                LinearLayoutManager.HORIZONTAL, false);
+                rv.setLayoutManager(linearLayoutManager);
+                final RecyclerAdapterCard adapter = new RecyclerAdapterCard();
+                rv.setAdapter(adapter);
+
+                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(viev -> {
+                    EditText min = dialog.findViewById(R.id.select_time_min),
+                            sec = dialog.findViewById(R.id.select_time_sec);
+                    if (Objects.equals(String.valueOf(min.getText()), "")) {
+                        min.setText("0");
                     }
+                    if (Objects.equals(String.valueOf(sec.getText()), "")) {
+                        sec.setText("0");
+                    }
+                    long temp_time = Integer.valueOf(String.valueOf(min.getText())) * MILISEC_MIN;
+                    temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
+                    mTrainingModel.getExercises().get(position - 1).setTime(temp_time * 10);
+                    etTimeExercise.setText(FormatTime.formatTime(temp_time));
+                    RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
+                    dialog.dismiss();
+                });
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
+                ItemClickSupport.addTo(rv).setOnItemClickListener((recyclerView, position1, v1) -> {
+                    adapter.getHolder().changeState(position1);
+                    switch (position1) {
+                        case 0:
+                            time.setVisibility(View.VISIBLE);
+                            text.setVisibility(View.GONE);
+                            dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(viev -> {
+                                EditText min = dialog.findViewById(R.id.select_time_min),
+                                        sec = dialog.findViewById(R.id.select_time_sec);
+                                if (Objects.equals(String.valueOf(min.getText()), "")) {
+                                    min.setText("0");
+                                }
+                                if (Objects.equals(String.valueOf(sec.getText()), "")) {
+                                    sec.setText("0");
+                                }
+                                long temp_time = Integer.valueOf(String.valueOf(min.getText())) * MILISEC_MIN;
+                                temp_time += Long.valueOf(String.valueOf(sec.getText())) * MILISEC_SEC;
+                                mTrainingModel.getExercises().get(position - 1).setTime(temp_time * 10 + position1);
+                                etTimeExercise.setText(FormatTime.formatTime(temp_time));
+                                RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
+                                dialog.dismiss();
+                            });
+                            break;
+                        default:
+                            time.setVisibility(View.GONE);
+                            text.setVisibility(View.VISIBLE);
+                            dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(viev -> {
+                                EditText et = dialog.findViewById(R.id.et_add_field_dialog);
+                                long temp = et.getText().length() <= 0 ? 0 : Integer.valueOf(String.valueOf(et.getText()));
+                                mTrainingModel.getExercises().get(position - 1).setTime(temp * 10 + position1);
+                                etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
+                                RecyclerAdapterCreatePlan.this.notifyItemChanged(getItemCount() - 1);
+                                dialog.dismiss();
+                            });
+                            break;
                     }
                 });
             });
@@ -395,7 +409,6 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             });
 
             btSaveTraining.setOnClickListener(v -> {
-                Log.e("onBindViewHolder: ", new Gson().toJson(mTrainingModel));
                 mCreatePlanActivity.setPlans(mTrainingModel);
             });
 
@@ -428,16 +441,17 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     }
 
     private String setAllTime() {
-        long allTime = 0L;
 
-        for (int i = 0; i < mTrainingModel.getExercises().size(); i++) {
-            if (mTrainingModel.getExercises().get(i).getTime() % 10 == 0)
-                allTime += mTrainingModel.getExercises().get(i).getTime() / 10 * mTrainingModel.getExercises().get(i).getCountRepetitions();
-            allTime += mTrainingModel.getExercises().get(i).getTimeBetween() * mTrainingModel.getExercises().get(i).getCountRepetitions();
-            allTime += mTrainingModel.getExercises().get(i).getRecoveryTime() * mTrainingModel.getExercises().get(i).getCountRepetitions();
-        }
+        long allTime = Long.valueOf(CountData.mathData(mTrainingModel).getTimeLong());
+//
+//        for (int i = 0; i < mTrainingModel.getExercises().size(); i++) {
+//            if (mTrainingModel.getExercises().get(i).getTime() % 10 == 0)
+//                allTime += mTrainingModel.getExercises().get(i).getTime() / 10 * mTrainingModel.getExercises().get(i).getCountRepetitions();
+//            allTime += mTrainingModel.getExercises().get(i).getTimeBetween() * mTrainingModel.getExercises().get(i).getCountRepetitions();
+//            allTime += mTrainingModel.getExercises().get(i).getRecoveryTime() * mTrainingModel.getExercises().get(i).getCountRepetitions();
+//        }
         mTrainingModel.setTime(allTime);
-        return FormatTime.formatTime(allTime);
+        return CountData.mathData(mTrainingModel).getTime();
     }
 
     private void setDataEditExercise(int position, TextView etNameExercise, TextView etDescription, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, ImageView image, CardView cvImage) {

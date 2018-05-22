@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_special"
         android:fitsSystemWindows="true"
-        tools:context="com.example.alex.fitofan.ui.activity.forgot_password.ForgotPasswordActivity">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background" />
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
+            android:translationZ="20dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:shadowColor="@android:color/transparent"
+            android:shadowColor="@color/transparent"
             app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="@drawable/ic_left_white_24dp"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/forgot_password"
-                app:titleTextColor="@android:color/white" />
+                android:background="@android:color/transparent"
+                app:navigationIcon="@drawable/ic_left_white_24dp" />
 
         </android.support.design.widget.AppBarLayout>
 
-        <include
-            android:id="@+id/content_forgot_pass"
-            layout="@layout/content_forgot_password" />
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/imageView_full_screen"
+            android:layout_width="match_parent"
+            android:fitsSystemWindows="true"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            app:srcCompat="@mipmap/ic_launcher" />
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

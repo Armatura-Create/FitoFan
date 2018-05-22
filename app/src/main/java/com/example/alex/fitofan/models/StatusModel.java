@@ -24,6 +24,10 @@ public class StatusModel {
     @Expose
     private String imageUrl;
 
+    @SerializedName("user")
+    @Expose
+    private User user;
+
     public int getStatus() {
         return status;
     }
@@ -62,5 +66,13 @@ public class StatusModel {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

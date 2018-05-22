@@ -6,124 +6,150 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_fragment">
+        android:background="@drawable/shape_special"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:shadowColor="@color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/shape_special"
-                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:navigationIcon="@drawable/ic_left_white_24dp"
                 app:title="@string/action_settings" />
         </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
+        <ScrollView
             android:layout_marginTop="?attr/actionBarSize"
-            android:orientation="vertical">
+            android:background="@color/background_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="15dp"
+                android:paddingStart="15dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/image_user"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:src="@drawable/background"
-                    app:civ_border_color="@color/button_blue"
-                    app:civ_border_width="1dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_user"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/background"
+                        app:civ_border_color="@color/button_blue"
+                        app:civ_border_width="1dp" />
+
+                    <TextView
+                        android:id="@+id/tv_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/change"
+                        android:textColor="@color/button_blue" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_change"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/button_blue"
-                    android:text="@string/change"/>
+                    android:layout_marginTop="15dp"
+                    android:text="@string/first_name"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:inputType="textCapSentences"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/text_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/last_name"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/surname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/last_name"
+                    android:inputType="textCapSentences"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/text_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Email"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/Email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/text_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/location"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/location"
+                    android:inputType="textCapSentences"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/text_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/about_you"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/my_story"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/about_you"
+                    android:inputType="textCapSentences"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/text_gray" />
 
             </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/first_name"
-                android:textColor="@android:color/black"
-                android:textSize="18dp" />
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/first_name"
-                android:inputType="textCapSentences"
-                android:textColor="@android:color/black"
-                android:textColorHint="@color/text_gray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/last_name"
-                android:textColor="@android:color/black"
-                android:textSize="18dp" />
-
-            <EditText
-                android:id="@+id/surname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:inputType="textCapSentences"
-                android:textColor="@android:color/black"
-                android:textColorHint="@color/text_gray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/location"
-                android:textColor="@android:color/black"
-                android:textSize="18dp" />
-
-            <EditText
-                android:id="@+id/location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/location"
-                android:inputType="textCapSentences"
-                android:textColor="@android:color/black"
-                android:textColorHint="@color/text_gray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/about_you"
-                android:textColor="@android:color/black"
-                android:textSize="18dp" />
-
-            <EditText
-                android:id="@+id/my_story"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/about_you"
-                android:inputType="textCapSentences"
-                android:textColor="@android:color/black"
-                android:textColorHint="@color/text_gray" />
-
-        </LinearLayout>
+        </ScrollView>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

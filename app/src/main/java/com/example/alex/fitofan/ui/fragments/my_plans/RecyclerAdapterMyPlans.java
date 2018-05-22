@@ -147,6 +147,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
             Bitmap imageBitmap = null;
             if (mTrainings.get(position).getImage() != null) {
                 try {
+                    mMyPlansFragment.requestMultiplePermissions();
                     imageBitmap = MediaStore.Images.Media.getBitmap(mMyPlansFragment.getActivity().getContentResolver(),
                             Uri.parse(mTrainings.get(position).getImage()));
                     imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);

@@ -70,5 +70,9 @@
     <string name="about_you">Про себя</string>
     <string name="change">изменить</string>
     <string name="location">Город проживания</string>
+    <string name="time">Время</string>
+    <string name="count">Количество</string>
+    <string name="exercise_name">Название упражнения</string>
+    <string name="add_description">Добавить описание</string>
 
 </resources>

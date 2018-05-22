@@ -1,13 +1,11 @@
 package com.example.alex.fitofan.ui.activity.main;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity
             Uri uri = Uri.parse("http://backbreaker.net/wp-content/uploads/2015/11/1295992106_brad_pitt.jpg");
             Glide.with(getApplicationContext()) //передаем контекст приложения
                     .load(uri)
+                    .apply(placeholderOf(R.drawable.profile))
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
                     .into(imageProfile); //ссылка на ImageView
@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         EventBus.getDefault().unregister(this);
         EventBus.getDefault().register(this);
         loadHeader();
@@ -211,7 +212,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_profile) {
-            startActivity(new Intent(this, UserProfileActivity.class));
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            startActivity(intent);
         } else if (id == R.id.nav_wall) {
             mBinding.appBarMain.contentMain.viewpager.setCurrentItem(0);
         } else if (id == R.id.nav_participants) {

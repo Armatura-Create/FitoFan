@@ -153,7 +153,7 @@
                         android:background="@drawable/ripple_back"
                         android:clickable="true"
                         android:focusable="true"
-                        android:src="@drawable/plus"
+                        android:src="@drawable/ic_text_white"
                         android:translationZ="10dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

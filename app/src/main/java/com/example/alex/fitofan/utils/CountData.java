@@ -6,7 +6,7 @@ import com.example.alex.fitofan.models.TrainingModel;
 
 import java.util.ArrayList;
 
-public class CountDataOnPreview {
+public class CountData {
 
     public static CountDataOnPreviewModel mathData(TrainingModel model) {
         long time = 0;
@@ -38,6 +38,8 @@ public class CountDataOnPreview {
             }
         }
 
+        result.setTimeLong(time);
+
         result.setCount(count + "");
         result.setWeight(weight + "");
         result.setTime(FormatTime.formatTime(time));
@@ -50,6 +52,18 @@ public class CountDataOnPreview {
         } else {
             result.setDistance(distance + "");
             result.setDistanceParam("m");
+        }
+
+        return result;
+    }
+
+    public static String mathLikes(String likes){
+        String result = likes;
+
+        int likesCount = Integer.valueOf(likes);
+
+        if(likesCount > 999){
+            result = likesCount/1000 + "k";
         }
 
         return result;

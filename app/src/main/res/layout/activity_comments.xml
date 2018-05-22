@@ -7,6 +7,8 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/shape_special"
+        android:fitsSystemWindows="true"
         tools:context="com.example.alex.fitofan.ui.activity.training.TrainingActivity">
 
         <android.support.design.widget.AppBarLayout
@@ -21,7 +23,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:navigationIcon="@drawable/ic_left_white_24dp"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="@string/comments">
 

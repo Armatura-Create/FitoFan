@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="#FF050054"
     android:layout_gravity="center"
-    android:layout_margin="20dp"
     app:cardCornerRadius="10dp">
 
     <LinearLayout
@@ -53,8 +53,9 @@
                     android:layout_marginStart="20dp"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:minLines="2"
                     android:textColor="@android:color/white"
-                    android:textSize="44sp"
+                    android:textSize="38sp"
                     android:textStyle="bold"
                     tools:text="Cross" />
 
@@ -64,7 +65,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="20dp"
                     android:isScrollContainer="true"
-                    android:minHeight="150dp"
+                    android:minLines="15"
+                    android:maxLines="15"
                     android:scrollbars="vertical"
                     android:textColor="@android:color/white"
                     tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
@@ -72,7 +74,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
@@ -88,14 +90,16 @@
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
+                    android:layout_gravity="bottom"
                     android:src="@drawable/ic_left_white_24dp" />
 
                 <ImageView
                     android:id="@+id/close_dialog"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
@@ -107,6 +111,7 @@
                     android:layout_height="35dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
+                    android:layout_gravity="bottom"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
@@ -114,5 +119,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </android.support.v7.widget.CardView>

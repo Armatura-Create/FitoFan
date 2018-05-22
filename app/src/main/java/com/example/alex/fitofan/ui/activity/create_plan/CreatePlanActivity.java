@@ -20,7 +20,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityCreatePlanBinding;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.utils.CustomDialog;
+import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -29,10 +29,9 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CreatePlanActivity extends AppCompatActivity implements CreatePlanContract.View {
+public class CreatePlanActivity extends AppCompatActivity{
 
     private ActivityCreatePlanBinding mBinding;
-    private CreatePlanPresenter mPresenter;
     private RecyclerAdapterCreatePlan adapter;
     private int tempPosition;
     private ImageView imageExercise;
@@ -50,7 +49,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_plan);
-        mPresenter = new CreatePlanPresenter(this);
         mModel = new TrainingModel();
         ExerciseModel exerciseModel = new ExerciseModel();
         ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
@@ -73,33 +71,10 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
                 mTrainings = OpenHelperManager.getHelper(this, DatabaseHelper.class).getTrainingDAO();
                 assert mTrainings != null;
                 mModel = mTrainings.queryForId(trainingModelEdit);
-                initDataTraining();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void initDataTraining() {
-//        mBinding.contentCreatePlan.tvTotalTime.setText(FormatTime.formatTime(
-//                mModel.getTime()
-//        ));
-//        mBinding.contentCreatePlan.etTrainingNameCreate.setText(
-//                mModel.getName()
-//        );
-//        mBinding.contentCreatePlan.edDescription.setText(
-//                mModel.getDescription()
-//        );
-//        if (mModel.getImage() != null) {
-//            mBinding.contentCreatePlan.imageTrainingPlanCard.setVisibility(View.VISIBLE);
-//            Glide.with(getContext())
-//                    .load(Uri.parse(mModel.getImage()))
-//                    .placeholder(R.mipmap.icon)
-//                    .fitCenter()
-//                    .thumbnail(0.5f)
-//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                    .into(mBinding.contentCreatePlan.imageTrainingPlanCreate);
-//        }
     }
 
     private void initListeners() {
@@ -125,6 +100,7 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
     private void initRecyclerView(int id) {
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setNestedScrollingEnabled(false);
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setHasFixedSize(false);
+        mBinding.contentCreatePlan.rvExerciseCreatePlan.setItemViewCacheSize(999);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterCreatePlan(this, mModel, id);
@@ -232,7 +208,6 @@ public class CreatePlanActivity extends AppCompatActivity implements CreatePlanC
         onBackPressed();
     }
 
-    @Override
     public Context getContext() {
         return this;
     }

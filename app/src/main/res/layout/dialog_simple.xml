@@ -32,7 +32,7 @@
                 android:layout_height="27dp"
                 android:layout_gravity="center"
                 android:layout_weight="4"
-                android:src="@drawable/icon_dialog"/>
+                android:src="@drawable/logo_fitofan_white"/>
 
             <TextView
                 android:id="@+id/title"

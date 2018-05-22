@@ -1,224 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_special">
+    android:background="@color/background_fragment">
 
-    <ImageView
-        android:id="@+id/user_photo"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_special"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/shape_special_test"
-        app:layout_constraintBottom_toBottomOf="@+id/user_photo"
-        app:layout_constraintEnd_toEndOf="@+id/user_photo"
-        app:layout_constraintStart_toStartOf="@+id/user_photo"
-        app:layout_constraintTop_toTopOf="@+id/user_photo" />
+        <ImageView
+            android:id="@+id/user_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/background"
+            android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/first_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:shadowColor="@android:color/black"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:singleLine="true"
-        android:textColor="@android:color/white"
-        android:textSize="46sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/last_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/shape_special_test" />
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/last_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:shadowColor="@android:color/black"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:singleLine="true"
-        android:textColor="@android:color/white"
-        android:textSize="46sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/city"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/city"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/liner_information_user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/liner_information_user"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        app:layout_constraintBottom_toTopOf="@+id/bio"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="2dp"
-                android:src="@drawable/icon_pedestal" />
-
-            <TextView
-                android:id="@+id/tv_place"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="17sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="2dp"
-                android:src="@drawable/icon_timer" />
-
-            <TextView
-                android:id="@+id/tv_count_plans"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="17sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear_sub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="2dp"
-                android:src="@drawable/icon_subscrierse" />
-
-            <TextView
-                android:id="@+id/tv_subscriberse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="17sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/bio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:ellipsize="end"
-        android:minLines="3"
-        android:maxLines="3"
-        android:text="New York New York New York New York New York New York New York New York New York New York New York New York New York New York New York New YorkNew York New Yorkv "
-        android:textColor="@color/transparent_text_white"
-        app:layout_constraintBottom_toTopOf="@+id/linear_group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linear_group"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:visibility="gone"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/shape_white_radial"
+        android:padding="30dp">
+
+        <ImageView
+            android:id="@+id/like_ava"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp" />
 
         <TextView
-            android:id="@+id/show_all"
+            android:id="@+id/count_like_ava"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="8sp"
+            android:textStyle="bold" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="@string/show_all" />
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="46sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/last_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_group"
+        <TextView
+            android:id="@+id/last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:listitem="@layout/item_group" />
-    </LinearLayout>
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="46sp"
+            android:textStyle="bold" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:id="@+id/liner_information_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_pedestal" />
+
+                <TextView
+                    android:id="@+id/tv_place"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_timer" />
+
+                <TextView
+                    android:id="@+id/tv_count_plans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_subscrierse" />
+
+                <TextView
+                    android:id="@+id/tv_subscriberse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:minLines="3"
+            android:text="New York New York New York New York New York New York New York New York New York New York New York New York New York New York New York New YorkNew York New Yorkv "
+            android:textColor="@color/transparent_text_white" />
+
+        <LinearLayout
+            android:id="@+id/linear_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/show_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/show_all" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:listitem="@layout/item_group" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

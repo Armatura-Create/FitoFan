@@ -22,7 +22,12 @@ public class GetExerciseModel {
     @Expose
     private String countRepetitions;
 
+    @SerializedName("music_urls")
+    @Expose
+    private String musicUrls;
+
     @SerializedName("image_path")
+    @Expose
     private String image;
 
     @SerializedName("time_between")
@@ -87,5 +92,13 @@ public class GetExerciseModel {
 
     public void setRecoveryTime(String recoveryTime) {
         this.recoveryTime = recoveryTime;
+    }
+
+    public String getMusicUrls() {
+        return musicUrls;
+    }
+
+    public void setMusicUrls(String musicUrls) {
+        this.musicUrls = musicUrls;
     }
 }

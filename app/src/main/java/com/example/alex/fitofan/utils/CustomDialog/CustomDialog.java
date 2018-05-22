@@ -1,12 +1,16 @@
-package com.example.alex.fitofan.utils;
+package com.example.alex.fitofan.utils.CustomDialog;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -138,13 +142,23 @@ public final class CustomDialog {
         return mDialog;
     }
 
-    public static Dialog card(Context context, String title, String description, String image) {
+    public static Dialog card(Context context, Window window, String title, String description, String image) {
         mDialog = new Dialog(context);
-        mDialog.setContentView(R.layout.dialog_card);
+
+        // retrieve display dimensions
+        Rect displayRectangle = new Rect();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_card, null);
+//        layout.setMinimumWidth((int)(displayRectangle.width() * 0.7f));
+        layout.setMinimumHeight((int) (displayRectangle.height() * 0.8f));
+        mDialog.setContentView(layout);
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         TextView tvDescription = mDialog.findViewById(R.id.description_exercise);
         ImageView imageExercise = mDialog.findViewById(R.id.image_exercise);
         ImageView close = mDialog.findViewById(R.id.close_dialog);
+
 
         tvTitle.setText(title);
         tvDescription.setText(description);
@@ -165,6 +179,8 @@ public final class CustomDialog {
         }
 
         close.setOnClickListener(v -> mDialog.dismiss());
+
+        mDialog.setCancelable(true);
 
         Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();

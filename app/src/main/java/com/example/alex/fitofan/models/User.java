@@ -12,6 +12,18 @@ public class User {
     @Expose
     private String uid;
 
+    @SerializedName("avatar_id")
+    @Expose
+    private String avatarId;
+
+    @SerializedName("avatar_likes")
+    @Expose
+    private String avatarLikes;
+
+    @SerializedName("avatar_liked")
+    @Expose
+    private int avatarLiked;
+
     @SerializedName("signature")
     @Expose
     private String signature;
@@ -68,6 +80,9 @@ public class User {
     @SerializedName("location")
     @Expose
     private String location;
+
+    public User() {
+    }
 
     public String getLink() {
         return link;
@@ -195,5 +210,29 @@ public class User {
 
     public void setMystory(String mystory) {
         this.mystory = mystory;
+    }
+
+    public String getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(String avatarId) {
+        this.avatarId = avatarId;
+    }
+
+    public String getAvatarLikes() {
+        return avatarLikes;
+    }
+
+    public void setAvatarLikes(String avatarLikes) {
+        this.avatarLikes = avatarLikes;
+    }
+
+    public int getAvatarLiked() {
+        return avatarLiked;
+    }
+
+    public void setAvatarLiked(int avatarLiked) {
+        this.avatarLiked = avatarLiked;
     }
 }

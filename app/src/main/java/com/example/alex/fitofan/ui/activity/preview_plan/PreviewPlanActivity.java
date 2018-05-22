@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,12 +28,11 @@ import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.models.User;
-import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.Connection;
-import com.example.alex.fitofan.utils.CustomDialog;
+import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.example.alex.fitofan.utils.db.DatabaseHelper;
@@ -51,7 +48,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, SaveStatus, DelStatus, UserStatus {
+public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, DelStatus, UserStatus {
 
     private ActivityPlanPreviewBinding mBinding;
     private PreviewPlanPresenter mPresenter;
@@ -221,7 +218,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             if (mModel.getImage() != null)
                 Glide.with(getContext())
                         .load(Uri.parse(mModel.getImage()))
-                        .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                        .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                         .transition(withCrossFade())
                         .into(mBinding.traningImage);
             initRecyclerView();
@@ -240,12 +237,22 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
         ItemClickSupport.addTo(mBinding.rv).setOnItemClickListener((recyclerView, position, v) -> {
             if (position != 0) {
+
                 int[] pos = {adapter.getModel().get(position - 1).getPosition()};
                 if (!adapter.getModel().get(position - 1).isRest()) {
-                    Dialog dialog = CustomDialog.card(getContext(),
+                    Dialog dialog = CustomDialog.card(this, this.getWindow(),
                             mModel.getExercises().get(pos[0]).getName(),
                             mModel.getExercises().get(pos[0]).getDescription(),
                             mModel.getExercises().get(pos[0]).getImage());
+                    dialog.setCancelable(true);
+                    if (mModel.getExercises().size() - 1 == pos[0])
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                    if (pos[0] == 0)
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
                     dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
                         if (mModel.getExercises().size() - 1 > pos[0]) {
                             pos[0]++;
@@ -255,9 +262,15 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                                         mModel.getExercises().get(pos[0]).getImage());
 
                             }
-                        } else {
-                            Toast.makeText(this, "Это последнее упражнение", Toast.LENGTH_LONG).show();
                         }
+                        if (mModel.getExercises().size() - 1 == pos[0])
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                        if (pos[0] == 0)
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
                     });
 
                     dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
@@ -268,9 +281,15 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
                                         mModel.getExercises().get(pos[0]).getDescription(),
                                         mModel.getExercises().get(pos[0]).getImage());
                             }
-                        } else {
-                            Toast.makeText(this, "Это первое упражнение", Toast.LENGTH_LONG).show();
                         }
+                        if (mModel.getExercises().size() - 1 == pos[0])
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                        if (pos[0] == 0)
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
                     });
                 }
             }
@@ -374,31 +393,29 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     }
 
     @Override
-    public void onSuccess(Boolean info) {
-        if (info) {
-            menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-            like = info;
-            return;
-        }
-        menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
-        like = info;
-    }
-
-    @Override
-    public void onSuccess(int status) {
-        if (status == 1) {
-            menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-            isSave = true;
-            return;
-        }
-
-        menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save));
-        isSave = false;
-
-    }
-
-    @Override
     public void onSuccess(String info) {
+        if(info.equals("like") || info.equals("dislike")){
+            if (info.equals("like")) {
+                menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                like = true;
+                return;
+            }
+            menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
+            like = false;
+            return;
+        }
+
+        if (info.equals("save") || info.equals("unsave")){
+            if (info.equals("save")) {
+                menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+                isSave = true;
+                return;
+            }
+
+            menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save));
+            isSave = false;
+            return;
+        }
         onBackPressed();
     }
 

@@ -100,5 +100,9 @@
     <string name="about_you">About you</string>
     <string name="change">change</string>
     <string name="location">Location</string>
+    <string name="time">Time</string>
+    <string name="count">Count</string>
+    <string name="exercise_name">Exercises name</string>
+    <string name="add_description">Add description</string>
 
 </resources>

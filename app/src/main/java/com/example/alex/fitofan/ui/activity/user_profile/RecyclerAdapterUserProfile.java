@@ -1,9 +1,12 @@
 package com.example.alex.fitofan.ui.activity.user_profile;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +21,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.User;
+import com.example.alex.fitofan.ui.activity.FullScreenImage;
 import com.example.alex.fitofan.utils.ActionPlanCard;
+import com.example.alex.fitofan.utils.CountData;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 
@@ -37,9 +42,9 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     private User mUserModel;
     private ArrayList<GetTrainingModel> mWallModels;
 
-    int numberOfClicks = 0;
-    boolean threadStarted = false;
-    final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 250;
+    private int numberOfClicks = 0;
+    private boolean threadStarted = false;
+    private final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 250;
 
     RecyclerAdapterUserProfile(UserProfileActivity mUserProfileActivity, User mUserModel, ArrayList<GetTrainingModel> mWallModels) {
         this.mWallModels = mWallModels;
@@ -65,9 +70,9 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         //Определение класса ViewHolder
-        private ConstraintLayout mLinearLayout;
+        private CoordinatorLayout mLinearLayout;
 
-        ViewHolder(ConstraintLayout v) {
+        ViewHolder(CoordinatorLayout v) {
             super(v);
             mLinearLayout = v;
         }
@@ -81,17 +86,18 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             return 1;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Создание нового представления
-        ConstraintLayout linear = null;
+        CoordinatorLayout linear = null;
         switch (viewType) {
             case 0:
-                linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
+                linear = (CoordinatorLayout) LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_user_data, parent, false);
                 break;
             case 1:
-                linear = (ConstraintLayout) LayoutInflater.from(parent.getContext())
+                linear = (CoordinatorLayout) LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_user_trainig, parent, false);
                 break;
         }
@@ -102,7 +108,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //Заполнение заданного представления данными
-        final ConstraintLayout linear = holder.mLinearLayout;
+        final CoordinatorLayout linear = holder.mLinearLayout;
 
         //header view
 
@@ -120,6 +126,8 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             TextView place = linear.findViewById(R.id.tv_place);
             TextView countPlans = linear.findViewById(R.id.tv_count_plans);
             TextView subscriberse = linear.findViewById(R.id.tv_subscriberse);
+//            ImageView likeAva = linear.findViewById(R.id.like_ava);
+//            TextView countLikeAva = linear.findViewById(R.id.count_like_ava);
 
             LinearLayout sub = linear.findViewById(R.id.linear_sub);
 
@@ -137,8 +145,6 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                     Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
                             .load(Uri.parse(mUserModel.getImage_url()))
                             .apply(centerCropTransform())
-                            .transition(withCrossFade())
-                            .apply(placeholderOf(R.drawable.background))
                             .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                             .into(imageUser); //ссылка на ImageView
 
@@ -164,9 +170,24 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
                 sub.setOnClickListener(view -> {
                     mUserProfileActivity.goSub();
                 });
+
+//                countLikeAva.setText(CountData.mathLikes(mUserModel.getAvatarLikes()));
+//                countLikeAva.setTextColor(Color.parseColor("#000000"));
+//                likeAva.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_black));
+
+//                if (mUserModel.getAvatarLiked() == 1) {
+//                    likeAva.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_full_red));
+//                    countLikeAva.setTextColor(Color.parseColor("#ffffff"));
+//                }
+//
+                imageUser.setOnClickListener(view -> {
+                    Intent intent = new Intent(mUserProfileActivity.getContext(), FullScreenImage.class);
+                    intent.putExtra("url", mUserModel.getImage_url());
+                    intent.putExtra("name", mUserModel.getName() + " " + mUserModel.getSurname());
+                    mUserProfileActivity.startActivity(intent);
+                });
             }
         }
-        //sub
         //body methods
         if (position >= 1) {
             ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
@@ -178,12 +199,19 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             ImageView like = linear.findViewById(R.id.icon_like);
             ImageView save = linear.findViewById(R.id.icon_save);
             TextView countLike = linear.findViewById(R.id.count_like);
+            TextView countSaved = linear.findViewById(R.id.saved_plan);
 
             LinearLayout planLeaner = linear.findViewById(R.id.plan_liner);
+            like.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_black));
+            save.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_save_black));
 
-            countLike.setText(mUserProfileActivity.getResources().getString(R.string.like) + ": " + mWallModels.get(position - 1).getLikes());
+            countSaved.setText(mUserProfileActivity.getResources().getString(R.string.saved) + ": " + mWallModels.get(position - 1).getSaved());
+            countLike.setText(CountData.mathLikes(mWallModels.get(position - 1).getLikes()));
+            countLike.setTextColor(Color.parseColor("#000000"));
+
             if (mWallModels.get(position - 1).getLiked() == 1) {
                 like.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_full_red));
+                countLike.setTextColor(Color.parseColor("#ffffff"));
             }
             if (mWallModels.get(position - 1).getIsSaved() == 1) {
                 save.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_save_full_black));
@@ -236,7 +264,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             });
 
             save.setOnClickListener(view -> {
-                mUserProfileActivity.savePlan(mWallModels.get(position).getId(), save, position);
+                mUserProfileActivity.savePlan(mWallModels.get(position - 1).getId(), save, countSaved, position - 1);
             });
         }
     }

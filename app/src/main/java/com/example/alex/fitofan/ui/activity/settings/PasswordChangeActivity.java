@@ -55,8 +55,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
             boolean isEmpty = false;
             List<EditText> list = Arrays.asList(
                     mBinding.nowPass,
-                    mBinding.newPass,
-                    mBinding.newPassAgain
+                    mBinding.newPass
+//                    mBinding.newPassAgain
             );
             for (EditText edit : list) {
                 if (TextUtils.isEmpty(edit.getText().toString().trim())) {

@@ -23,6 +23,26 @@ public class GetTrainingModel {
     @Expose
     private int isSaved;
 
+    @SerializedName("parent_id")
+    @Expose
+    private String parentId;
+
+    @SerializedName("is_private")
+    @Expose
+    private String isPrivate;
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    @SerializedName("music_urls")
+    @Expose
+    private String musicUrls;
+
+    @SerializedName("comments")
+    @Expose
+    private String comments;
+
     @SerializedName("liked")
     @Expose
     private int liked;
@@ -149,5 +169,45 @@ public class GetTrainingModel {
 
     public void setIsSaved(int isSaved) {
         this.isSaved = isSaved;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(String isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMusicUrls() {
+        return musicUrls;
+    }
+
+    public void setMusicUrls(String musicUrls) {
+        this.musicUrls = musicUrls;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

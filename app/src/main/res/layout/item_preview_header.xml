@@ -18,6 +18,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="8dp"
             android:gravity="start"
+            android:ellipsize="end"
             android:isScrollContainer="true"
             android:maxLines="6"
             android:scrollbars="vertical"
@@ -27,6 +28,16 @@
         <include
             android:id="@+id/info_user"
             layout="@layout/part_user_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp" />
+
+        <include
+            android:id="@+id/info_plan"
+            layout="@layout/part_info_preview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"

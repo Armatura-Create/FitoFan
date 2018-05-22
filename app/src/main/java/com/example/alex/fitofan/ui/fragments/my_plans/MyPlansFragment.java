@@ -1,14 +1,18 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +46,9 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String>, ILoadingStatusMyPlans, SaveStatus, LikeStatus {
+public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<String>, ILoadingStatusMyPlans, LikeStatus {
 
     private FragmentMyPlansBinding mBinding;
     private ProgressDialog mProgressDialog;
@@ -58,6 +63,8 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ImageView like;
     private int position;
     private ImageView save;
+
+    private int PERMISSION_REQUEST_CODE = 100;
 
     @Nullable
     @Override
@@ -75,11 +82,20 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onStart() {
-
         super.onStart();
     }
 
+    @Override
+    public void onResume() {
+        if (isSaved)
+            initRequest();
+        else
+            initDB();
+        super.onResume();
+    }
+
     private void initDB() {
+        isSaved = false;
         mModelsCreated.clear();
         try {
             mTrainings = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class).getTrainingDAO();
@@ -94,6 +110,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initRequest() {
+        isSaved = true;
         if (Connection.isNetworkAvailable(getContext())) {
             mBinding.refresh.setRefreshing(true);
             HashMap<String, String> map = new HashMap<>();
@@ -124,26 +141,45 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void initListeners() {
 
-        mBinding.searchMyPlans.setOnEditorActionListener((v, actionId, event) -> {
-            searchResult(v.getText().toString());
-            return true;
+        mBinding.searchMyPlans.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchResult(mBinding.searchMyPlans.getText().toString());
+            }
         });
 
         mBinding.sevedPlans.setOnClickListener(view1 -> {
             adapter.setMy(false);
-            isSaved = true;
             initRequest();
         });
 
         mBinding.createdPlans.setOnClickListener(view1 -> {
             adapter.setMy(true);
-            isSaved = false;
             initDB();
         });
 
         mBinding.fabAddTraining.setOnClickListener(view1 -> startActivity(new Intent(getContext(), CreatePlanActivity.class)));
 
         mBinding.refresh.setOnRefreshListener(this);
+    }
+
+    public void requestMultiplePermissions() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                PERMISSION_REQUEST_CODE);
     }
 
     protected void goToPreview(int id, String userId) {
@@ -296,16 +332,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mBinding.refresh.setRefreshing(false);
         setTraining(info);
         Log.e("onSuccess: ", new Gson().toJson(info));
-    }
-
-    @Override
-    public void onSuccess(int status) {
-
-    }
-
-    @Override
-    public void onSuccess(Boolean info) {
-
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
 import com.example.alex.fitofan.models.StatusModel;
 import com.example.alex.fitofan.models.SubModel;
+import com.example.alex.fitofan.settings.MApplication;
 
 import java.util.HashMap;
 
@@ -126,4 +127,15 @@ interface FitoFanAPI {
     @FormUrlEncoded
     Call<StatusModel> changeUserPassword(@FieldMap(encoded = true) HashMap<String, String> params);
 
+    @POST("/v1/changeUserEmail")
+    @FormUrlEncoded
+    Call<StatusModel> changeUserEmail(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/likeUserAvatar")
+    @FormUrlEncoded
+    Call<LikeModel> likeUserAvatar(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/dislikeUserAvatar")
+    @FormUrlEncoded
+    Call<LikeModel> dislikeUserAvatar(@FieldMap(encoded = true) HashMap<String, String> params);
 }

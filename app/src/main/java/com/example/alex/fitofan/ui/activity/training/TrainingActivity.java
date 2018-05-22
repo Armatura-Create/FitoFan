@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.activity.training;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,25 +11,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.daimajia.numberprogressbar.OnProgressBarListener;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
 import com.example.alex.fitofan.models.TrainingModel;
-import com.example.alex.fitofan.utils.CustomDialog;
-import com.example.alex.fitofan.utils.CustomFontsLoader;
+import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.StaticValues;
@@ -43,11 +44,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TrainingActivity extends AppCompatActivity implements TrainingContact.View, SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener,
+public class TrainingActivity extends AppCompatActivity implements SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener, OnProgressBarListener {
 
     private ActivityTrainingBinding mBinding;
-    private TrainingPresenter mPresenter;
     private TrainingModel mTrainingModel;
     private Dao<TrainingModel, Integer> mTrainings;
     private MediaPlayer mMediaPlayer;
@@ -76,11 +76,9 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_training);
 
-        mPresenter = new TrainingPresenter(this);
-
         setSupportActionBar(mBinding.toolbar);
 
-//        mBinding.include.tvExercisesDescriptionFirst.setMovementMethod(new ScrollingMovementMethod());
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         initListeners();
         if (getIntent().getIntExtra("trainingModel", -1) != -1)
@@ -189,42 +187,44 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
 
     @Override
     public void onBackPressed() {
-        if (!isStop) {
-            Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        super.onBackPressed();
+        Dialog dialog = CustomDialog.dialogSimple(getContext(),
+                null,
+                "Exit training?",
+                "Yes",
+                "No");
+        dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
+            super.onBackPressed();
+            dialog.dismiss();
+        });
     }
 
+    @SuppressLint("ResourceType")
     private void initListeners() {
-        mBinding.toolbar.setNavigationOnClickListener(view -> {
-            if (isStop) {
-                onBackPressed();
-            } else {
-                Toast.makeText(this, "First stop the current exercise", Toast.LENGTH_SHORT).show();
-            }
-        });
+        mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
         mBinding.numberProgressBar.setOnProgressBarListener(this);
 
-        mBinding.changeBt.setOnClickListener(view ->
-
-        {
+        mBinding.changeBt.setOnClickListener(view -> {
             if (!isVisibility) {
+                mBinding.changeBt.setImageDrawable(getResources().getDrawable(R.drawable.ic_timer_white_24dp));
                 isVisibility = true;
                 mBinding.descriptionExercise.setVisibility(View.VISIBLE);
+                mBinding.desExercise.setVisibility(View.GONE);
                 mBinding.type.setVisibility(View.GONE);
                 mBinding.timer.setVisibility(View.GONE);
                 mBinding.timerProgress.setVisibility(View.GONE);
                 mBinding.tvNameExercise.setVisibility(View.GONE);
             } else {
+                mBinding.changeBt.setImageDrawable(getResources().getDrawable(R.drawable.ic_text_white));
                 isVisibility = false;
                 mBinding.descriptionExercise.setVisibility(View.GONE);
+                mBinding.desExercise.setVisibility(View.VISIBLE);
                 mBinding.type.setVisibility(View.VISIBLE);
                 mBinding.timer.setVisibility(View.VISIBLE);
                 mBinding.timerProgress.setVisibility(View.VISIBLE);
                 mBinding.tvNameExercise.setVisibility(View.VISIBLE);
             }
+            mBinding.changeBt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
         });
 
 //        try {
@@ -487,7 +487,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingConta
         mp.start();
     }
 
-    @Override
     public Context getContext() {
         return this;
     }

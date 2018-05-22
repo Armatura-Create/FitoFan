@@ -58,7 +58,7 @@
             android:name=".ui.activity.main.MainActivity"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SimpleCoordinatorTheme"
+            android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
@@ -66,14 +66,14 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.signup.SingUpActivity"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.contact.ContactActivity"
@@ -83,23 +83,29 @@
         <activity
             android:name=".ui.activity.forgot_password.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.settings.SettingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.settings.PasswordChangeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.activity.FullScreenImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activity.settings.UserDataChangeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
+            android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -111,7 +117,7 @@
             android:name=".ui.activity.create_plan.CreatePlanActivity"
             android:focusableInTouchMode="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.preview_plan.PreviewPlanActivity"
@@ -121,18 +127,19 @@
         <activity
             android:name=".ui.activity.user_profile.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activity.sub.SubActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/NoActionBar" />
 
         <activity
             android:name=".ui.activity.comments.CommentsActivity"
             android:focusableInTouchMode="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
+            android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustResize" />
     </application>
 
