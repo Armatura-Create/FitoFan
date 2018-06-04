@@ -136,7 +136,6 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
                 CountDataOnPreviewModel model = CountData.mathData(trainingModel);
 
                 descriptionTraning.setText(trainingModel.getDescription());
-                descriptionTraning.setMovementMethod(new ScrollingMovementMethod());
 
                 time.setText(model.getTime());
                 distance.setText(model.getDistance());

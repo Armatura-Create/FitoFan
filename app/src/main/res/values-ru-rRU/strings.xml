@@ -62,7 +62,7 @@
     <string name="incorrect_email_or_pass">Невеный логин или пароль</string>
     <string name="distance">Дистанция</string>
     <string name="weight">Вес</string>
-    <string name="number_of_times">Количество раз</string>
+    <string name="number_of_times">Количество повторений</string>
     <string name="comments">Комментарии</string>
     <string name="add_comment">Добавьте \nкоментарий…</string>
     <string name="tab_subscribers">Подписчики</string>
@@ -74,5 +74,35 @@
     <string name="count">Количество</string>
     <string name="exercise_name">Название упражнения</string>
     <string name="add_description">Добавить описание</string>
+    <string name="created_plans">Созданные</string>
+    <string name="edit_music">Изменить музыку</string>
+    <string name="remove_from_wall">Удалить со стены</string>
+    <string name="removed_from_wall">Удаленно со стены</string>
+    <string name="remove_from_all">Удалить для всех</string>
+    <string name="saved_plans">Сохраненные</string>
+    <string name="number_repetitions_description">Добавте количество повторений на выполнение упражнения, к примеру: \"5\", \"15\", \"100\" и т.д. \nВ зависимости от класса тренировки количество упражнений может ровняться \"1\". </string>
+    <string name="exercise_name_description">Добавте упражнение например: \"бег трусцой\", \"боковой удар по груше\", \"отжимания от пола\" и т.д. </string>
+    <string name="time_exercise_description">Добавте время на упражения, например: \"12:00\", \"0:30\", \"120:00\" и т.д. \nВ зависимости от класса тренировки время упражнения может ровняться \"0\".</string>
+    <string name="time_between_exercise_description">Добавте время отдыха между выполнением упражнения, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимоти от класса тренировки время отдыха может ровняться \"0\".</string>
+    <string name="relax_time_description">Добавте время отдыха на восстановление. Этот вид времени устанавливаеться между разными видами упражнений, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимотсти от класса теринировки, время на восстановление может ровняться \"0\".</string>
+    <string name="description_description_plan">Добавьте  описание класса тренировки. \nОписывается поставка цели и задачи при выполнении данного типа тренировки.</string>
+    <string name="description_description_exercise">Добавьте  описание класса упражнения, правильность и особенность его выполнения.</string>
+    <string name="class_description">Добавьте класс тренировки например: \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
+    <string name="fans">Фаны</string>
+    <string name="plans">Планы</string>
+    <string name="sure">Вы уверены?</string>
+    <string name="new_pass">Новый пароль</string>
+    <string name="new_pass_again">Новый пароль еще раз</string>
+    <string name="current_password">Текущий пароль</string>
+    <string name="obligatory_field">Обязательное поле</string>
+    <string name="not_valid_email">Логин не валидный\nПример:example@gmail.com</string>
+    <string name="pass_not_match">Пароли не совподают</string>
+    <string name="exemple_pass">Пароль должен содержать не менее 8 символов, цифры, буквы верхнего и нижнего регистра</string>
+    <string name="training">Тренировка</string>
+    <string name="my_place">Мое место</string>
+    <string name="user_profile">Профиль</string>
+    <string name="connection_error">Ошибка соединения...</string>
+    <string name="cancel">Отклонено</string>
+    <string name="edited">Изменено</string>
 
 </resources>

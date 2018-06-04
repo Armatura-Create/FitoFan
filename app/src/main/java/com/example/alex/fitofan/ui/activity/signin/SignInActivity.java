@@ -49,18 +49,14 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
             );
             for (EditText edit : list) {
                 if (TextUtils.isEmpty(edit.getText().toString().trim())) {
-                    edit.setError("Обязательное поле");
+                    edit.setError(getResources().getString(R.string.obligatory_field));
                     isEmpty = true;
                 }
             }
 
             if (isEmpty) return;
             if (!CheckerInputData.isEmail(mBinding.login.getText().toString().trim())) {
-                Toast.makeText(this, "Логин не валидный.\nExample:example@gmail.com", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!CheckerInputData.isPassword(mBinding.password.getText().toString().trim())) {
-                Toast.makeText(this, "Пароль должен содержать не менее 8 символов", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.not_valid_email), Toast.LENGTH_SHORT).show();
                 return;
             }
             presenter.signIn(mBinding.password.getText().toString().trim(), mBinding.login.getText().toString().trim());

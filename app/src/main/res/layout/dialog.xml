@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:weightSum="5">
+                android:weightSum="8">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,40 +81,52 @@
                     android:layout_marginLeft="27dp"
                     android:layout_marginRight="27dp"
                     android:layout_marginTop="15dp"
-                    android:layout_weight="4"
-                    android:orientation="vertical"
-                    android:weightSum="2">
+                    android:layout_weight="7"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/dialog_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_weight="1"
                         android:text="@string/class_description"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="13sp" />
 
-                    <EditText
-                        android:id="@+id/et_add_field_dialog"
+                    <LinearLayout
+                        android:layout_marginTop="40dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:background="@null"
-                        android:scrollHorizontally="false"
-                        android:scrollbars="vertical"
-                        android:singleLine="false"
-                        android:textColor="@color/button_blue"
-                        android:focusable="true"
-                        android:textSize="18sp">
-                        <requestFocus />
-                    </EditText>
+                        android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
-                        android:background="@color/background_delimiter" />
+                        <EditText
+                            android:id="@+id/et_add_field_dialog"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:background="@null"
+                            android:enabled="true"
+                            android:layout_gravity="center"
+                            android:focusable="true"
+                            android:inputType="textMultiLine"
+                            android:isScrollContainer="true"
+                            android:maxLines="6"
+                            android:scrollHorizontally="false"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:textColor="@color/button_blue"
+                            android:textSize="18sp">
+
+                            <requestFocus />
+                        </EditText>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/background_delimiter" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

@@ -36,10 +36,10 @@
     <string name="send_plan">Send plan</string>
     <string name="create_plan">Create a training plan</string>
     <string name="training_class">Training name</string>
-    <string name="class_description">Добавте класс тренировки к примеру: \"бег\", \"тренировка на развитие силы\", \"тренировка пресса\" и т.д.</string>
+    <string name="class_description">Add a workout class for example: \"running\", \"strength training\", \"press training\", etc.</string>
     <string name="add_image_file">Add image class</string>
-    <string name="description_description_plan">Добавьте  описание класса тренировки. \nОписывается поставка цели и задачи при выполнении данного типа тренировки.</string>
-    <string name="description_description_exercise">Добавьте  описание класса уражнения, правиьность и особенность его выполнения.</string>
+    <string name="description_description_plan">Add a description for the workout class.\nDescribes the delivery of a goal and a task when performing this type of training.</string>
+    <string name="description_description_exercise">Add a description of the correctness class, the correctness and the peculiarity of its execution.</string>
     <string name="add_audio_file">Add audio file</string>
     <string name="training_description">Description</string>
     <string name="save">Save</string>
@@ -55,11 +55,11 @@
     <string name="hide">Hide</string>
     <string name="back">back</string>
     <string name="next">next</string>
-    <string name="number_repetitions_description">Добавте количество повторений на выполнение упражнения, к примеру: \"5\", \"15\", \"100\" и т.д. \nВ зависимости от класса тренировки количество упражнений может ровняться \"1\". </string>
-    <string name="exercise_name_description">Добавте упражнение к примеру: \"бег трусцой\", \"боковой удар по груше\", \"отжимания от пола\" и т.д. </string>
-    <string name="time_exercise_description">Добавте время на упражения, к примеру: \"12:00\", \"0:30\", \"120:00\" и т.д. \nВ зависимости от класса тренировки время упражнения может ровняться \"0\".</string>
-    <string name="time_between_exercise_description">Добавте время отдыха между выполнением упражнения, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимоти от класса тренировки время отдыха может ровняться \"0\".</string>
-    <string name="relax_time_description">Добавте время отдыха на восстановление. Этот вид времени устанавливаеться между разными видами упражнений, к примеру: \"3:00\", \"0:45\", \"2:10\" и т.д. \nВ зависимотсти от класса теринировки, время на восстановление может ровняться \"0\".</string>
+    <string name="number_repetitions_description">Add the number of repetitions to the exercise, for example: \"5\", \"15\", \"100\", etc.\nDepending on the class of training, the number of exercises can be equal to \"1\".</string>
+    <string name="exercise_name_description">Add an exercise for example: \"jogging\", \"side impact on the pear\", \"push-ups from the floor\", etc.</string>
+    <string name="time_exercise_description">Add time to the controls, for example: \"12:00\", \"0:30\", \"120:00\" etc.\nDepending on the class of training, the exercise time may be equal to \"0\".</string>
+    <string name="time_between_exercise_description">Add a rest time between the exercises, for example: \"3:00\", \"0:45\", \"2:10\", etc.\nDepending on the class of training, the rest time can be equaled \"0\".</string>
+    <string name="relax_time_description">Add a rest time for the restoration. This kind of time is established between different types of exercises, for example: \"3:00\", \"0:45\", \"2:10\", etc.\n Depending on the terrain class, the recovery time can be \"0\".</string>
     <string name="relax">Relax</string>
     <string name="start_training">Start training</string>
     <string name="remove">Remove</string>
@@ -104,5 +104,20 @@
     <string name="count">Count</string>
     <string name="exercise_name">Exercises name</string>
     <string name="add_description">Add description</string>
+    <string name="edited">Changed</string>
+    <string name="created_plans">Created plans</string>
+    <string name="edit_music">Edit music</string>
+    <string name="remove_from_wall">Remove from the wall</string>
+    <string name="remove_from_all">Delete for all</string>
+    <string name="removed_from_wall">Removed from the wall</string>
+    <string name="saved_plans">Saved plans</string>
+    <string name="fans">Fans</string>
+    <string name="plans">Plans</string>
+    <string name="connection_error">Connection error…</string>
+    <string name="sure">Are you sure?</string>
+    <string name="obligatory_field">Obligatory field</string>
+    <string name="not_valid_email">Email is not valid\nExample:example@gmail.com</string>
+    <string name="pass_not_match">Passwords do not match</string>
+    <string name="exemple_pass">The password must contain at least 8 characters, numbers, upper and lower case letters</string>
 
 </resources>

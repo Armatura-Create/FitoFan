@@ -68,7 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         name.setText(model.get(position).getName());
         description.setText(model.get(position).getDescription());
 
-        if (model.get(position).isRest())
+        if (!model.get(position).isRest())
             time.setText(FormatTime.formatCountWithDimension(model.get(position).getTime()));
         else
             time.setText(FormatTime.formatTime(model.get(position).getTime()));

@@ -30,9 +30,17 @@ public class SendExerciseModel {
     @Expose
     private String imagePath;
 
+    @SerializedName("is_new")
+    @Expose
+    private String isNew;
+
     @SerializedName("recovery_time")
     @Expose
     private long recoveryTime;
+
+    @SerializedName("music_urls")
+    @Expose
+    private String musicUrls;
 
     public long getTime() {
         return time;
@@ -88,5 +96,21 @@ public class SendExerciseModel {
 
     public void setRecoveryTime(long recoveryTime) {
         this.recoveryTime = recoveryTime;
+    }
+
+    public String getMusicUrls() {
+        return musicUrls;
+    }
+
+    public void setMusicUrls(String musicUrls) {
+        this.musicUrls = musicUrls;
+    }
+
+    public String getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(String isNew) {
+        this.isNew = isNew;
     }
 }

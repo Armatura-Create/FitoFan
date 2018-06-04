@@ -5,6 +5,7 @@ import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
 import com.example.alex.fitofan.models.GetSearchPlansModel;
+import com.example.alex.fitofan.models.GetSearchUsersModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
@@ -41,7 +42,7 @@ interface FitoFanAPI {
 
     @POST("/v1/deletePlan")
     @FormUrlEncoded
-    Call<GetPlanModel> deletePlan(@FieldMap(encoded = true) HashMap<String, String> params);
+    Call<LikeModel> deletePlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getPlan")
     @FormUrlEncoded
@@ -138,4 +139,21 @@ interface FitoFanAPI {
     @POST("/v1/dislikeUserAvatar")
     @FormUrlEncoded
     Call<LikeModel> dislikeUserAvatar(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/editPlan")
+    @FormUrlEncoded
+    Call<LikeModel> editPlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/getMyUnpublishedPlans")
+    @FormUrlEncoded
+    Call<GetPlansModel> getMyUnpublishedPlans(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/changePlanStatus")
+    @FormUrlEncoded
+    Call<LikeModel> changePlanStatus(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/searchUsers")
+    @FormUrlEncoded
+    Call<GetSearchUsersModel> searchUsers(@FieldMap(encoded = true) HashMap<String, String> params);
+
 }

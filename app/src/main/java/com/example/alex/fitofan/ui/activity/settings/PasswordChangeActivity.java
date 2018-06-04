@@ -11,16 +11,20 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPasswordChangeBinding;
+import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.CheckerInputData;
+import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-public class PasswordChangeActivity extends AppCompatActivity {
+public class PasswordChangeActivity extends AppCompatActivity implements ILoadingStatus {
 
     private ActivityPasswordChangeBinding mBinding;
     private Menu menu;
@@ -53,24 +57,35 @@ public class PasswordChangeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
             boolean isEmpty = false;
+            boolean isOk = true;
             List<EditText> list = Arrays.asList(
-                    mBinding.nowPass,
-                    mBinding.newPass
+                    mBinding.newPass,
+                    mBinding.newPassAgain
 //                    mBinding.newPassAgain
             );
             for (EditText edit : list) {
                 if (TextUtils.isEmpty(edit.getText().toString().trim())) {
-                    edit.setError("Обязательное поле");
+                    edit.setError(getResources().getString(R.string.obligatory_field));
                     isEmpty = true;
                 }
             }
             if (!isEmpty) {
-                if (!CheckerInputData.isPassword(mBinding.nowPass.getText().toString().trim())) {
-                    Toast.makeText(PasswordChangeActivity.this, "Пароль должен содержать не менее 8 символов, цифры, буквы верхнего и нижнего регистра", Toast.LENGTH_SHORT).show();
+                if (!CheckerInputData.isPassword(mBinding.newPass.getText().toString().trim())) {
+                    Toast.makeText(PasswordChangeActivity.this, getResources().getString(R.string.exemple_pass), Toast.LENGTH_SHORT).show();
+                    isOk = false;
                 }
 
                 if (!mBinding.newPass.getText().toString().trim().equals(mBinding.newPassAgain.getText().toString().trim())) {
-                    Toast.makeText(PasswordChangeActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PasswordChangeActivity.this, getResources().getString(R.string.pass_not_match), Toast.LENGTH_SHORT).show();
+                    isOk = false;
+                }
+                if (isOk) {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                    map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                    map.put("password", mBinding.newPass.getText().toString().trim());
+                    if (Connection.isNetworkAvailable(this))
+                        Request.getInstance().changeUserPassword(map, this);
                 }
             }
         }
@@ -80,5 +95,16 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
+    }
+
+    @Override
+    public void onSuccess(Object info) {
+        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
+        onBackPressed();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(this, getResources().getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,9 +1,12 @@
 package com.example.alex.fitofan.utils;
 
+import com.example.alex.fitofan.settings.MApplication;
+import com.example.alex.fitofan.R;
+
 public abstract class StaticValues {
 
     //for alerts
-    public static final String CONNECTION_ERROR = "Connection error";
+    public static final String CONNECTION_ERROR = MApplication.getInstance().getResources().getString(R.string.connection_error);
     public static final String CHECK_YOUR_CONNECTION = "please check your internet connection";
     public static final String GO_TO_SETTINGS = "Go to settings";
     public static final String REGISTRATION_ERROR = "Registration error";

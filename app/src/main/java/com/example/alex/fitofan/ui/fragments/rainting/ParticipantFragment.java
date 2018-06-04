@@ -74,6 +74,8 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
             map.put("page", String.valueOf(scrolling));
             isRefresh = true;
             Request.getInstance().getRating(map, this);
+        } else {
+            mBinding.refresh.setRefreshing(false);
         }
     }
 
@@ -169,6 +171,10 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     @Override
     public void onSuccess(User info) {
         mBinding.yourPlace.likeRating.setText(info.getLikes());
+        GetUserModel app = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
+        app.getUser().setLikes(info.getLikes());
+
+        MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(app));
     }
 
     @Override

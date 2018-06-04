@@ -19,8 +19,18 @@
         android:title="@string/edit"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_remove_server"
+        android:id="@+id/action_music_server"
         android:orderInCategory="400"
-        android:title="@string/remove"
+        android:title="@string/edit_music"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_remove_all"
+        android:orderInCategory="500"
+        android:title="@string/remove_from_all"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_remove_wall"
+        android:orderInCategory="600"
+        android:title="@string/remove_from_wall"
         app:showAsAction="never"/>
 </menu>

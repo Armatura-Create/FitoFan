@@ -158,6 +158,7 @@ class SignInPresenter implements SignInContract.EventListener {
     @Override
     public void onSuccess(String info) {
         ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
         new Thread(() -> {

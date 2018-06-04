@@ -187,6 +187,7 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
             mProgressDialog.dismiss();
         if (info.equals("trueData"))
             Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
+        mProgressDialog.cancel();
     }
 
     @Override
@@ -196,12 +197,13 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
         app.getUser().setName(info.getName());
         app.getUser().setSurname(info.getSurname());
         app.getUser().setMystory(info.getMystory());
+        app.getUser().setImage_url(info.getImage_url());
 
         MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(app));
     }
 
     @Override
     public void onFailure(String message) {
-
+        mProgressDialog.cancel();
     }
 }

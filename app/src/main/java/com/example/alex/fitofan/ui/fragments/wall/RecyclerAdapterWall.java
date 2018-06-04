@@ -1,7 +1,9 @@
 package com.example.alex.fitofan.ui.fragments.wall;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.CountData;
@@ -27,7 +28,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
-public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> implements LikeStatus {
+public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
 
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
@@ -43,7 +44,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         return mWallModels;
     }
 
-    public void setmWallModels(ArrayList<GetTrainingModel> mWallModels) {
+    public void setWallModels(ArrayList<GetTrainingModel> mWallModels) {
         this.mWallModels = mWallModels;
     }
 
@@ -52,6 +53,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         this.mWallFragment = mWallFragment;
         mRequestOptions = new RequestOptions();
     }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         //Определение класса ViewHolder
@@ -63,16 +65,18 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Создание нового представления
         LinearLayout linear = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_wall, parent, false);
         return new ViewHolder(linear);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         //Заполнение заданного представления данными
         final LinearLayout linear = holder.mLinearLayout;
 
@@ -95,9 +99,10 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         ImageView save = linear.findViewById(R.id.icon_save);
         ImageView comments = linear.findViewById(R.id.icon_comments);
 
-        countSaved.setText(mWallFragment.getResources().getString(R.string.saved) + ": " + mWallModels.get(position).getSaved());
+        countSaved.setText(CountData.mathLikes(mWallModels.get(position).getSaved()));
         countLike.setText(CountData.mathLikes(mWallModels.get(position).getLikes()));
         countComments.setText(CountData.mathLikes(mWallModels.get(position).getComments()));
+
         tvNameTrainig.setText(mWallModels.get(position).getName());
         tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position).getPlan_time())));
         tvTimeCreate.setText(mWallModels.get(position).getCreationDate());
@@ -107,6 +112,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
 
         like.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_favorite_black));
         save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_black));
+        countSaved.setTextColor(Color.parseColor("#000000"));
         countLike.setTextColor(Color.parseColor("#000000"));
 
         if (mWallModels.get(position).getLiked() == 1) {
@@ -115,16 +121,17 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         }
         if (mWallModels.get(position).getIsSaved() == 1) {
             save.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.ic_save_full_black));
+            countSaved.setTextColor(Color.parseColor("#ffffff"));
         }
 
-        Glide.with(mWallFragment.getActivity().getApplicationContext()) //передаем контекст приложения
+        Glide.with(mWallFragment.getContext()) //передаем контекст приложения
                 .load(Uri.parse(mWallModels.get(position).getImage()))
                 .apply(centerCropTransform())
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())
                 .into(imageTrainingPlan);
 
-        Glide.with(mWallFragment.getActivity().getApplicationContext())
+        Glide.with(mWallFragment.getContext())
                 .load(Uri.parse(mWallModels.get(position).getUser().getImage_url()))
                 .apply(centerCropTransform())
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
@@ -174,17 +181,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
     }
 
     @Override
-    public void onSuccess(String info) {
-
-    }
-
-    @Override
-    public void onFailure(String message) {
-
-    }
-
-    @Override
     public int getItemCount() {
-        return mWallModels.size();
+        return mWallModels != null ? mWallModels.size() : 0;
     }
 }

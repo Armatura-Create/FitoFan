@@ -200,14 +200,18 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             ImageView save = linear.findViewById(R.id.icon_save);
             TextView countLike = linear.findViewById(R.id.count_like);
             TextView countSaved = linear.findViewById(R.id.saved_plan);
+            TextView countComments = linear.findViewById(R.id.count_comments);
 
             LinearLayout planLeaner = linear.findViewById(R.id.plan_liner);
+
             like.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_black));
             save.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_save_black));
 
-            countSaved.setText(mUserProfileActivity.getResources().getString(R.string.saved) + ": " + mWallModels.get(position - 1).getSaved());
+            countSaved.setText(CountData.mathLikes(mWallModels.get(position - 1).getSaved()));
             countLike.setText(CountData.mathLikes(mWallModels.get(position - 1).getLikes()));
+            countComments.setText(CountData.mathLikes(mWallModels.get(position - 1).getComments()));
             countLike.setTextColor(Color.parseColor("#000000"));
+            countSaved.setTextColor(Color.parseColor("#000000"));
 
             if (mWallModels.get(position - 1).getLiked() == 1) {
                 like.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_favorite_full_red));
@@ -215,6 +219,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             }
             if (mWallModels.get(position - 1).getIsSaved() == 1) {
                 save.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.ic_save_full_black));
+                countSaved.setTextColor(Color.parseColor("#FFFFFF"));
             }
 
             if (mWallModels != null) {

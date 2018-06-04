@@ -39,7 +39,7 @@ public class ExerciseModel implements Serializable, Parcelable {
     @DatabaseField(columnName = "time_between")
     @SerializedName("time_between")
     @Expose
-    private long timeBetween;
+    private long timeBetween = 0;
 
     @DatabaseField(columnName = "audio")
     private String audio;
@@ -50,7 +50,7 @@ public class ExerciseModel implements Serializable, Parcelable {
     @DatabaseField(columnName = "recovery_time")
     @SerializedName("recovery_time")
     @Expose
-    private long recoveryTime;
+    private long recoveryTime = 0;
 
     public ExerciseModel() {
     }

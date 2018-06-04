@@ -19,10 +19,10 @@ public class MainPresenter implements MainContract.EventListener {
     public void alertExit() {
 
         Dialog dialog = CustomDialog.dialogSimple(view.getContext(),
-                "Sing Out",
-                "Are you sure?",
-                "Yes",
-                "No");
+                view.getContext().getResources().getString(R.string.sing_out),
+                view.getContext().getResources().getString(R.string.sure),
+                view.getContext().getResources().getString(R.string.yes),
+                view.getContext().getResources().getString(R.string.no));
         dialog.findViewById(R.id.bt_positive).setOnClickListener(v -> view.goSingOut());
         dialog.findViewById(R.id.bt_negative).setOnClickListener(v -> dialog.dismiss());
     }

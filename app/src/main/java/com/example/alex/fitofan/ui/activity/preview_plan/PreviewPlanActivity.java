@@ -1,16 +1,21 @@
 package com.example.alex.fitofan.ui.activity.preview_plan;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +26,6 @@ import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
 import com.example.alex.fitofan.interfaces.DelStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
-import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.interfaces.UserStatus;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.GetPlanModel;
@@ -29,61 +33,62 @@ import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
-import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.ItemClickSupport;
+import com.example.alex.fitofan.utils.StaticValues;
 import com.example.alex.fitofan.utils.UnpackingTraining;
-import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.google.gson.Gson;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
-import java.sql.SQLException;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
-public class PreviewPlanActivity extends AppCompatActivity implements PreviewPlanContract.View, ILoadingStatus<GetPlanModel>, LikeStatus, DelStatus, UserStatus {
+public class PreviewPlanActivity extends AppCompatActivity implements ILoadingStatus<GetPlanModel>, LikeStatus, DelStatus, UserStatus {
 
     private ActivityPlanPreviewBinding mBinding;
-    private PreviewPlanPresenter mPresenter;
     private RecyclerAdapterPreviewPlan adapter;
     private TrainingModel mModel;
     private GetPlanModel mModelfromServer;
-    private Dao<TrainingModel, Integer> mTrainings;
 
     private Menu menu;
+    private ProgressDialog progressDialog;
     private boolean like;
     private boolean isSave;
     private int positionLike = 1;
     private int positionSave = 0;
+    private int tempPosition;
+
+    private static final int FILE_SELECT_CODE = 400;
+    private LinearLayout borderLinear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_preview);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_plan_preview);
-        mPresenter = new PreviewPlanPresenter(this);
         setSupportActionBar(mBinding.toolbar);
-        if (getIntent().getBooleanExtra("isWall", false)) {
-            ArrayList<ExerciseModel> models = new ArrayList<>();
-            mModel = new TrainingModel();
-            mModel.setExercises(models);
-            initRecyclerView();
-            if (Connection.isNetworkAvailable(getContext())) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                map.put("plan_id", getIntent().getStringExtra("planId"));
-                Request.getInstance().getPlan(map, this);
-            }
-        } else
-            getPlanFromBD(getIntent().getIntExtra("trainingModel", -1));
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+        ArrayList<ExerciseModel> models = new ArrayList<>();
+        mModel = new TrainingModel();
+        mModel.setExercises(models);
+        initRecyclerView();
+        if (Connection.isNetworkAvailable(getContext())) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("plan_id", getIntent().getStringExtra("planId"));
+            Request.getInstance().getPlan(map, this);
+        } else {
+            progressDialog.cancel();
+        }
         initListeners();
     }
 
@@ -91,18 +96,13 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (getIntent().getBooleanExtra("isWall", false)) {
-            if (getIntent().getStringExtra("userId").equals(
-                    new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
-            )) {
-                getMenuInflater().inflate(R.menu.preview_plan_wall_with_del, menu);
-                return true;
-            }
-            getMenuInflater().inflate(R.menu.preview_plan_wall, menu);
+        if (getIntent().getStringExtra("userId").equals(
+                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
+        )) {
+            getMenuInflater().inflate(R.menu.preview_plan_wall_with_del, menu);
             return true;
         }
-        getMenuInflater().inflate(R.menu.preview_plan, menu);
-
+        getMenuInflater().inflate(R.menu.preview_plan_wall, menu);
         return true;
     }
 
@@ -114,74 +114,133 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (getIntent().getIntExtra("trainingModel", -1) != -1) {
-            if (id == R.id.action_edit) {
-                Intent intent = new Intent(getContext(), CreatePlanActivity.class);
-                intent.putExtra("trainingModel", getIntent().getIntExtra("trainingModel", -1));
-                startActivity(intent);
-                finish();
-                return true;
-            }
-            if (id == R.id.action_remove) {
-                Dialog dialog = CustomDialog.dialogSimple(getContext(),
-                        getResources().getString(R.string.remove),
-                        null,
-                        getResources().getString(R.string.yes),
-                        getResources().getString(R.string.no));
-                dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                    Toast.makeText(getContext(), getResources().getString(R.string.removed), Toast.LENGTH_SHORT).show();
-                    deletePlan(getIntent().getIntExtra("trainingModel", -1));
-                    onBackPressed();
-                    dialog.dismiss();
-                });
-
-                dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
-                    dialog.dismiss();
-                });
-                return true;
-            }
+        if (id == R.id.action_like) {
+            like();
+            return true;
         }
-        assert mModelfromServer != null;
-        if (getIntent().getBooleanExtra("isWall", false) || getIntent().getStringExtra("userId").equals(
-                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
-        )) {
-            if (id == R.id.action_like) {
-                like();
-                return true;
+        if (id == R.id.action_save) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("plan_id", String.valueOf(mModel.getId()));
+            if (Connection.isNetworkAvailable(this)) {
+                if (!isSave)
+                    Request.getInstance().savePlan(map, this);
+                if (isSave)
+                    Request.getInstance().unSavePlan(map, this);
             }
-            if (id == R.id.action_save) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                map.put("plan_id", String.valueOf(mModel.getId()));
-                if (Connection.isNetworkAvailable(this)) {
-                    if (!isSave)
-                        Request.getInstance().savePlan(map, this);
-                    if (isSave)
-                        Request.getInstance().unSavePlan(map, this);
-                }
-                return true;
-            }
+            return true;
+        }
+        if (id == R.id.action_edit_server) {
+
         }
 
-        assert mModelfromServer != null;
-        if (getIntent().getStringExtra("userId").equals(
-                new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
-        )) {
-            if (id == R.id.action_edit_server) {
+        if (id == R.id.action_remove_all) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("plan_id", String.valueOf(mModel.getId()));
+            Request.getInstance().delPlan(map, this);
+        }
 
-            }
+        if (id == R.id.action_remove_wall) {
+            if (mModelfromServer.getStatus() == 1)
+                unpublicationPlan(String.valueOf(mModel.getId()));
+        }
 
-            if (id == R.id.action_remove_server) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                map.put("plan_id", String.valueOf(mModel.getId()));
-                Request.getInstance().delPlan(map, this);
+        if (id == R.id.action_music_server) {
+            if (mModelfromServer.getExercises().size() > 0) {
+                int[] pos = {0};
+                Dialog dialog = CustomDialog.cardMusic(this,
+                        mModelfromServer.getExercises().get(pos[0]).getName(),
+                        mModelfromServer.getExercises().get(pos[0]).getImage());
+                dialog.setCancelable(true);
+                dialog.findViewById(R.id.bt_add_audio_exercise).setOnClickListener(view -> {
+                    chooseAudioExercise(pos[0], dialog.findViewById(R.id.background_border_audio));
+                });
+
+                if (mModelfromServer.getExercises().size() - 1 == pos[0])
+                    dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                else
+                    dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                if (pos[0] == 0)
+                    dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                else
+                    dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
+                dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
+                    if (mModelfromServer.getExercises().size() - 1 > pos[0]) {
+                        pos[0]++;
+                        if (mModelfromServer.getExercises().size() > pos[0]) {
+                            CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                    mModelfromServer.getExercises().get(pos[0]).getImage(),
+                                    mModel.getExercises().get(pos[0]).getAudio()!= null);
+                        }
+                    }
+                    if (mModel.getExercises().size() - 1 == pos[0])
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                    if (pos[0] == 0)
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
+                });
+
+                dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
+                    if (pos[0] > 0) {
+                        pos[0]--;
+                        if (pos[0] + 1 > 0) {
+                            CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
+                                    mModel.getExercises().get(pos[0]).getImage(),
+                                    mModel.getExercises().get(pos[0]).getAudio()!= null);
+                        }
+                    }
+                    if (mModel.getExercises().size() - 1 == pos[0])
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                    if (pos[0] == 0)
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                    else
+                        dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
+                });
             }
         }
 
         return super.onOptionsItemSelected(item);
+
+    }
+
+    void chooseAudioExercise(int position, LinearLayout borderLinear) {
+        tempPosition = position;
+        this.borderLinear = borderLinear;
+        Intent audioPickerIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            audioPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            audioPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            audioPickerIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        } else {
+            audioPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        }
+        audioPickerIntent.setType("audio/*");
+        audioPickerIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(audioPickerIntent, "Select a File to Upload"), FILE_SELECT_CODE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    if (data != null)
+                        if (data.getData() != null) {
+                            Uri uriExercise = data.getData();
+                            mModel.getExercises().get(tempPosition).setAudio(String.valueOf(uriExercise));
+                            borderLinear.setVisibility(View.VISIBLE);
+                        }
+                }
+                break;
+        }
     }
 
     private void like() {
@@ -197,38 +256,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         }
     }
 
-    private void deletePlan(int position) {
-        try {
-            mTrainings.deleteById(position);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getPlanFromBD(int trainingModel) {
-        if (trainingModel >= 0) {
-            try {
-                mTrainings = OpenHelperManager.getHelper(this, DatabaseHelper.class).getTrainingDAO();
-                assert mTrainings != null;
-                mModel = mTrainings.queryForId(trainingModel);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            mBinding.collapsing.setTitle(mModel.getName());
-            if (mModel.getImage() != null)
-                Glide.with(getContext())
-                        .load(Uri.parse(mModel.getImage()))
-                        .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                        .transition(withCrossFade())
-                        .into(mBinding.traningImage);
-            initRecyclerView();
-            adapter.setUserModel(new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser());
-            adapter.notifyItemChanged(0);
-        } else {
-            mModel = new TrainingModel();
-        }
-    }
-
     private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
         mBinding.goToTraining.setOnClickListener(v -> {
@@ -236,6 +263,15 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         });
 
         ItemClickSupport.addTo(mBinding.rv).setOnItemClickListener((recyclerView, position, v) -> {
+            if (position == 0) {
+                Dialog dialog = CustomDialog.card(this, this.getWindow(),
+                        mModel.getName(),
+                        mModel.getDescription(),
+                        mModel.getImage());
+                dialog.setCancelable(true);
+                dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+            }
             if (position != 0) {
 
                 int[] pos = {adapter.getModel().get(position - 1).getPosition()};
@@ -309,12 +345,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
     }
 
     void goTraining() {
-        if (getIntent().getIntExtra("trainingModel", -1) > -1) {
-            Intent intent = new Intent(getContext(), TrainingActivity.class);
-            intent.putExtra("trainingModel", mModel.getId());
-            startActivity(intent);
-        }
-
         if (getIntent().getBooleanExtra("isWall", false)) {
             Bundle bundle = new Bundle();
             bundle.putParcelable("traningModel", mModel);
@@ -324,10 +354,21 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
         }
     }
 
+    public void unpublicationPlan(String id) {
+        HashMap<String, String> map = new HashMap<>();
+        if (Connection.isNetworkAvailable(getContext())) {
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("plan_id", id);
+            map.put("status", "0");
+            Request.getInstance().changePlanStatus(map, this);
+        }
+    }
+
     private void setData() {
         mBinding.collapsing.setTitle(mModelfromServer.getTraining().getName());
 
-        Glide.with(getContext())
+        Glide.with(getContext().getApplicationContext())
                 .load(Uri.parse(mModelfromServer.getTraining().getImage()))
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                 .transition(withCrossFade())
@@ -335,7 +376,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     }
 
-    @Override
     public Context getContext() {
         return this;
     }
@@ -394,7 +434,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
 
     @Override
     public void onSuccess(String info) {
-        if(info.equals("like") || info.equals("dislike")){
+        if (info.equals("like") || info.equals("dislike")) {
             if (info.equals("like")) {
                 menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
                 like = true;
@@ -405,7 +445,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             return;
         }
 
-        if (info.equals("save") || info.equals("unsave")){
+        if (info.equals("save") || info.equals("unsave")) {
             if (info.equals("save")) {
                 menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
                 isSave = true;
@@ -416,7 +456,15 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             isSave = false;
             return;
         }
-        onBackPressed();
+
+        if (info.equals("deleted")) {
+            onBackPressed();
+        }
+
+        if (info.equals("statusChange")) {
+            Toast.makeText(this, getResources().getString(R.string.removed_from_wall), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -425,10 +473,12 @@ public class PreviewPlanActivity extends AppCompatActivity implements PreviewPla
             adapter.setUserModel(info);
             adapter.notifyItemChanged(0);
         }
+        progressDialog.dismiss();
     }
 
     @Override
     public void onFailure(String message) {
-
+        Toast.makeText(this, StaticValues.CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
     }
 }

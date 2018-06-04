@@ -31,6 +31,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="end"
                     android:background="@drawable/radius_liner">
 
                     <TextView
@@ -39,7 +40,6 @@
                         android:layout_height="wrap_content"
                         android:paddingEnd="10dp"
                         android:paddingStart="10dp"
-                        android:text="@string/exercise"
                         android:textColor="@color/button_blue"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -69,37 +69,6 @@
                     android:layout_marginTop="3dp"
                     android:background="@color/background_delimiter" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/liner_description_exercise"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="@string/training_description"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/et_description_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/button_blue"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@color/background_delimiter" />
             </LinearLayout>
         </LinearLayout>
 
@@ -142,49 +111,80 @@
             android:layout_marginEnd="35dp"
             android:layout_marginStart="35dp"
             android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/bt_add_description"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_bg_blue_button"
-                android:gravity="center"
-                android:text="@string/add_description"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_margin="10dp">
 
-            <Button
-                android:id="@+id/bt_add_image_exercise"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_bg_blue_button"
-                android:text="@string/add_image_file"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:id="@+id/background_border_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_border_button"
+                    android:orientation="horizontal"
+                    android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/bt_add_audio_exercise"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_bg_blue_button"
-                android:gravity="center"
-                android:text="@string/add_audio_file"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                <ImageButton
+                    android:id="@+id/bt_add_description"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ripple_bg_blue_button_circular"
+                    android:gravity="center"
+                    android:src="@drawable/ic_text_white" />
+
+            </android.support.design.widget.CoordinatorLayout>
+
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:id="@+id/background_border_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_border_button"
+                    android:orientation="horizontal"
+                    android:visibility="invisible" />
+
+                <ImageButton
+                    android:id="@+id/bt_add_image_exercise"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/ripple_bg_green_button_circular"
+                    android:gravity="center"
+                    android:src="@drawable/ic_image_white_24dp" />
+            </android.support.design.widget.CoordinatorLayout>
+
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:id="@+id/background_border_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_border_button"
+                    android:orientation="horizontal"
+                    android:visibility="invisible" />
+
+                <ImageButton
+                    android:id="@+id/bt_add_audio_exercise"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/ripple_bg_red_button_circular"
+                    android:gravity="center"
+                    android:src="@drawable/ic_music_white_24dp" />
+            </android.support.design.widget.CoordinatorLayout>
         </LinearLayout>
 
         <LinearLayout

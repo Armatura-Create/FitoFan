@@ -1,11 +1,13 @@
 package com.example.alex.fitofan.ui.activity.create_plan;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -102,12 +105,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         return new ViewHolder(linear);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //Заполнение заданного представления данными
         final LinearLayout linear = holder.mLinearLayout;
-
-        Log.e("onBindViewHolder: ", String.valueOf(getItemCount()));
 
         //header view
         LinearLayout linerNameTraining = linear.findViewById(R.id.liner_name_training);
@@ -120,16 +122,17 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
         //body view
         LinearLayout linerNameExercise = linear.findViewById(R.id.liner_name_exercise);
-        LinearLayout linerDescriptionExercise = linear.findViewById(R.id.liner_description_exercise);
         LinearLayout linerTimeBetweenExercise = linear.findViewById(R.id.liner_time_between_exercise);
         LinearLayout linerRecoveryTime = linear.findViewById(R.id.liner_recovery_time);
         LinearLayout linerExerciseTime = linear.findViewById(R.id.liner_exercise_time);
         LinearLayout linerNumberApproaches = linear.findViewById(R.id.liner_number_approaches);
+        LinearLayout borderDescription = linear.findViewById(R.id.background_border_description);
+        LinearLayout borderAudio = linear.findViewById(R.id.background_border_audio);
         TextView exerciseNumber = linear.findViewById(R.id.exercise_number);
         TextView etNameExercise = linear.findViewById(R.id.et_exercise_name);
-        TextView etDescription = linear.findViewById(R.id.et_description_exercise);
-        Button btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
-        Button btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
+        ImageButton btAddImageExercise = linear.findViewById(R.id.bt_add_image_exercise);
+        ImageButton btAddAudio = linear.findViewById(R.id.bt_add_audio_exercise);
+        ImageButton btAddDescriptionExercise = linear.findViewById(R.id.bt_add_description);
         TextView etNumberRepetition = linear.findViewById(R.id.et_number_approaches);
         TextView etTimeExercise = linear.findViewById(R.id.et_exercise_time);
         TextView etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
@@ -204,13 +207,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             etTimeBetweenExercise.setText(FormatTime.formatTime(0));
             etTimeExercise.setText(FormatTime.formatTime(0));
             etNameExercise.setText("");
-            etDescription.setText("");
             etNumberRepetition.setText("1");
 
             if (id > 0) {
                 setDataEditExercise(position,
                         etNameExercise,
-                        etDescription,
                         etNumberRepetition,
                         etTimeExercise,
                         etTimeBetweenExercise,
@@ -219,10 +220,10 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             }
 
             btAddAudio.setOnClickListener(v ->
-                    mCreatePlanActivity.chooseAudioExercise(position)
+                    mCreatePlanActivity.chooseAudioExercise(position, borderAudio)
             );
 
-            exerciseNumber.setText(mCreatePlanActivity.getResources().getString(R.string.exercise) + " #" + position);
+            exerciseNumber.setText("#" + position);
 
             linerRecoveryTime.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialogTime(mCreatePlanActivity.getContext(),
@@ -363,19 +364,22 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
 
-            linerDescriptionExercise.setOnClickListener(v -> {
+            btAddDescriptionExercise.setOnClickListener(v -> {
                 Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
                         mCreatePlanActivity.getResources().getString(R.string.training_description),
                         mCreatePlanActivity.getResources().getString(R.string.description_description_plan),
                         mCreatePlanActivity.getResources().getString(R.string.save), 1);
 
-                //set text if !null
-                setDataEt(dialog, etDescription);
+                EditText et = dialog.findViewById(R.id.et_add_field_dialog);
+                if (mTrainingModel.getExercises().get(position - 1).getDescription() != null)
+                    et.setText(mTrainingModel.getExercises().get(position - 1).getDescription());
 
                 dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
-                    EditText et = dialog.findViewById(R.id.et_add_field_dialog);
-                    etDescription.setText(et.getText());
                     mTrainingModel.getExercises().get(position - 1).setDescription(String.valueOf(et.getText()));
+                    if (et.getText().length() > 0)
+                        borderDescription.setVisibility(View.VISIBLE);
+                    else
+                        borderDescription.setVisibility(View.INVISIBLE);
                     dialog.dismiss();
                 });
             });
@@ -409,7 +413,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             });
 
             btSaveTraining.setOnClickListener(v -> {
-                mCreatePlanActivity.setPlans(mTrainingModel);
+                mCreatePlanActivity.sendPlan(mTrainingModel);
             });
 
             totalTimeTraining.setText(setAllTime());
@@ -454,9 +458,8 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         return CountData.mathData(mTrainingModel).getTime();
     }
 
-    private void setDataEditExercise(int position, TextView etNameExercise, TextView etDescription, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, ImageView image, CardView cvImage) {
+    private void setDataEditExercise(int position, TextView etNameExercise, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, ImageView image, CardView cvImage) {
         etNameExercise.setText(mTrainingModel.getExercises().get(position - 1).getName());
-        etDescription.setText(mTrainingModel.getExercises().get(position - 1).getDescription());
         etNumberRepetition.setText(String.valueOf(mTrainingModel.getExercises().get(position - 1).getCountRepetitions()));
         etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
         etTimeBetweenExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTimeBetween()));
@@ -470,7 +473,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         }
     }
 
-    void setAudio(Uri uriExercise, int position) {
+    void setAudio(Uri uriExercise, int position, LinearLayout border) {
+        if (uriExercise != null)
+            border.setVisibility(View.VISIBLE);
+        else
+            border.setVisibility(View.INVISIBLE);
         mTrainingModel.getExercises().get(position - 1).setAudio(uriExercise.toString());
     }
 

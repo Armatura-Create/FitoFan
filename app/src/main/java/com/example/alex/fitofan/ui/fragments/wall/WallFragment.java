@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +13,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -24,9 +28,10 @@ import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
-import com.example.alex.fitofan.interfaces.SaveStatus;
 import com.example.alex.fitofan.interfaces.SearchStatus;
+import com.example.alex.fitofan.interfaces.SubStatus;
 import com.example.alex.fitofan.models.GetSearchPlansModel;
+import com.example.alex.fitofan.models.GetSearchUsersModel;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.GetWallModel;
@@ -38,11 +43,11 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SearchStatus {
+public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ILoadingStatus<GetWallModel>, LikeStatus, SearchStatus, SubStatus {
 
     FragmentWallBinding mBinding;
-    private View view;
     private RecyclerAdapterWall adapter;
     private int scrolling;
     private ArrayList<GetTrainingModel> models;
@@ -54,15 +59,17 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private ImageView save;
     private TextView countLike;
     private TextView countSaved;
+    private boolean isStop;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_wall, container, false);
+        View view = inflater.inflate(R.layout.fragment_wall, container, false);
 
         mBinding = DataBindingUtil.bind(view);
         models = new ArrayList<>();
+        registerForContextMenu(mBinding.itemSearch.btFilters);
         initListeners();
         initRecyclerView();
         startRequest();
@@ -76,19 +83,28 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onResume() {
-        startRequest();
+        onRefresh();
         super.onResume();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.preview_plan_wall_with_del, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
     }
 
     private void startRequest() {
         if (Connection.isNetworkAvailable(getContext())) {
             scrolling = 1;
             mBinding.refresh.setRefreshing(true);
-            HashMap<String, String> map = new HashMap<>();
-            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("page", String.valueOf(scrolling));
-            Request.getInstance().getWall(map, this);
+            goNexLoad();
         }
     }
 
@@ -99,7 +115,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
         });
 
-        mBinding.searchWall.addTextChangedListener(new TextWatcher() {
+        mBinding.itemSearch.search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -112,10 +128,11 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void afterTextChanged(Editable editable) {
-                search(mBinding.searchWall.getText().toString());
+                search(mBinding.itemSearch.search.getText().toString());
             }
         });
 
+        mBinding.itemSearch.btFilters.setOnClickListener(Objects.requireNonNull(this.getActivity())::openContextMenu);
     }
 
     private void search(String s) {
@@ -168,6 +185,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private void initRecyclerView() {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        mBinding.rvWall.setItemViewCacheSize(100);
         mBinding.rvWall.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterWall(models, this);
         mBinding.rvWall.setAdapter(adapter);
@@ -184,7 +202,8 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 if (!isLoading) {//проверяем, грузим мы что-то или нет, эта переменная должна быть вне класса  OnScrollListener
                     if ((visibleItemCount + firstVisibleItems) >= totalItemCount) {
                         isLoading = true;//ставим флаг что мы попросили еще элемены
-                        goNexLoad();
+                        if (!isStop)
+                            goNexLoad();
                     }
                 }
 
@@ -205,11 +224,14 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void goNexLoad() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-        map.put("page", String.valueOf(scrolling));
-        Request.getInstance().getWall(map, this);
+        if (Connection.isNetworkAvailable(getContext()) && isLoading) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("page", String.valueOf(scrolling));
+            Request.getInstance().getWall(map, this);
+            scrolling++;
+        }
     }
 
     /**
@@ -217,14 +239,20 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Override
     public void onRefresh() {
+        mBinding.itemSearch.search.setText("");
         isRefresh = true;
         isLoading = true;
-        HashMap<String, String> map = new HashMap<>();
-        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-        map.put("page", "1");
+        isStop = false;
         scrolling = 1;
-        Request.getInstance().getWall(map, this);
+        if (Connection.isNetworkAvailable(getContext())) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("page", "1");
+            Request.getInstance().getWall(map, this);
+        } else {
+            mBinding.refresh.setRefreshing(false);
+        }
     }
 
     @Override
@@ -232,30 +260,35 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isRefresh) {
             models.clear();
             models.addAll(info.getTrainings());
-            adapter.setmWallModels(models);
+            adapter.setWallModels(models);
             adapter.notifyDataSetChanged();
             scrolling++;
             isLoading = false;
             isRefresh = false;
-            scrolling++;
-        } else if (info.getTrainings() != null) {
+        } else if (info.getTrainings() != null && info.getTrainings().size() > 0) {
             models.addAll(info.getTrainings());
-            adapter.setmWallModels(models);
+            adapter.setWallModels(models);
             adapter.notifyDataSetChanged();
-            scrolling++;
             isLoading = false;
+        } else {
+            isStop = true;
         }
         mBinding.refresh.setRefreshing(false);
     }
 
     @Override
-    public void onSuccess(GetSearchPlansModel info) {
-        if (info.getTrainings() != null) {
+    public void onSuccessPlans(GetSearchPlansModel info) {
+        if (info.getTrainings() != null && info.getTrainings().size() > 0) {
             models.clear();
             models.addAll(info.getTrainings());
-            adapter.setmWallModels(models);
+            adapter.setWallModels(models);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onSuccessUsers(GetSearchUsersModel info) {
+
     }
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
@@ -269,7 +302,9 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1))
                     );
                     countLike.setTextColor(Color.parseColor("#FFFFFF"));
-                    adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1));
+                    adapter.getmWallModels().get(position).setLikes(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1))
+                    );
                     models.get(position).setLiked(1);
                 }
             }
@@ -291,9 +326,10 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if (info.equals("save")) {
                 if (models.get(position).getIsSaved() != 1) {
                     save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_full_black));
-                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
-                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1)
+                    countSaved.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1))
                     );
+                    countSaved.setTextColor(Color.parseColor("#ffffff"));
                     adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1));
                     models.get(position).setIsSaved(1);
                 }
@@ -301,9 +337,10 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if (info.equals("unsave")) {
                 if (models.get(position).getIsSaved() == 1) {
                     save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
-                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
-                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1)
+                    countSaved.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1))
                     );
+                    countSaved.setTextColor(Color.parseColor("#000000"));
                     adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1));
                     models.get(position).setIsSaved(0);
                 }

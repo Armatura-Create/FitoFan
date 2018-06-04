@@ -29,6 +29,7 @@ import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
+import com.example.alex.fitofan.settings.MApplication;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.settings.UserDataChangeActivity;
 import com.example.alex.fitofan.ui.activity.sub.SubActivity;
@@ -55,8 +56,6 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
     private ImageView save;
     private ProgressDialog progressDialog;
     private TextView countSaved;
-    private TextView countLikeAva;
-    private ImageView likeAva;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,45 +102,37 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
 
         if (id == R.id.action_sub) {
             if (Connection.isNetworkAvailable(this)) {
-                if (isSub) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                    map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                    map.put("user_id", mUser.getUid());
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("user_id", mUser.getUid());
+                if (mUser.getSubscribed() == 1)
                     Request.getInstance().unSubscribeUser(map, this);
-                } else {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                    map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                    map.put("user_id", mUser.getUid());
+                else
                     Request.getInstance().subscribeUser(map, this);
-                }
             }
         }
 
         if (id == R.id.action_like) {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("avatar_id", mUser.getAvatarId());
             if (Connection.isNetworkAvailable(this)) {
-                if (mUser.getAvatarLiked() == 1)
-                    Request.getInstance().dislikeAvatar(map, this);
-                if (mUser.getAvatarLiked() != 1)
-                    Request.getInstance().likeAvatar(map, this);
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                map.put("avatar_id", mUser.getAvatarId());
+                if (Connection.isNetworkAvailable(this)) {
+                    if (mUser.getAvatarLiked() == 1)
+                        Request.getInstance().dislikeAvatar(map, this);
+                    if (mUser.getAvatarLiked() != 1)
+                        Request.getInstance().likeAvatar(map, this);
+                }
             }
         }
 
-        if (id == R.id.action_edit)
-
-        {
+        if (id == R.id.action_edit) {
             startActivity(new Intent(this, UserDataChangeActivity.class));
         }
 
-        return super.
-
-                onOptionsItemSelected(item);
-
+        return super.onOptionsItemSelected(item);
     }
 
     protected void likePlan(String id, ImageView like, TextView countLike, boolean isButton, int position) {
@@ -161,26 +152,6 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                     Request.getInstance().dislikePlan(map, this);
                 if (mPlans.getTrainings().get(position).getLiked() != 1)
                     Request.getInstance().like(map, this);
-            }
-        }
-    }
-
-    protected void likeAva(String id, ImageView likeAva, TextView countLikeAva, boolean isButton) {
-        this.countLikeAva = countLikeAva;
-        this.likeAva = likeAva;
-        HashMap<String, String> map = new HashMap<>();
-        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-        map.put("avatar_id", id);
-        if (Connection.isNetworkAvailable(this)) {
-            if (!isButton) {
-                Request.getInstance().likeAvatar(map, this);
-            }
-            if (isButton) {
-                if (mUser.getAvatarLiked() == 1)
-                    Request.getInstance().dislikeAvatar(map, this);
-                if (mUser.getAvatarLiked() != 1)
-                    Request.getInstance().likeAvatar(map, this);
             }
         }
     }
@@ -209,6 +180,8 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
             map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
             Request.getInstance().getUserData(map, this);
+        } else {
+            progressDialog.cancel();
         }
     }
 
@@ -238,10 +211,9 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                 .equals(getIntent().getStringExtra("uid"))
                 ) {
             if (info.getSubscribed() == 1) {
-                isSub = true;
-                menu.getItem(0).setTitle(getResources().getString(R.string.unsubscribe));
+                menu.getItem(1).setTitle(getResources().getString(R.string.unsubscribe));
             }
-            if(info.getAvatarLiked() == 1){
+            if (info.getAvatarLiked() == 1) {
                 menu.getItem(0).setIcon(R.drawable.ic_favorite_full);
             }
         }
@@ -271,12 +243,12 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
     @Override
     public void onSuccess(String info) {
         if (info.equals("true")) {
-            menu.getItem(0).setTitle(getResources().getString(R.string.unsubscribe));
-            isSub = true;
+            menu.getItem(1).setTitle(MApplication.getInstance().getMResources().getString(R.string.unsubscribe));
+            mUser.setSubscribed(1);
         }
         if (info.equals("false")) {
-            menu.getItem(0).setTitle(getResources().getString(R.string.subscribe));
-            isSub = false;
+            menu.getItem(1).setTitle(MApplication.getInstance().getMResources().getString(R.string.subscribe));
+            mUser.setSubscribed(0);
         }
         if (info.equals("like") || info.equals("dislike")) {
             if (info.equals("like")) {
@@ -285,7 +257,7 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                     countLike.setText(CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1))
                     );
                     countLike.setTextColor(Color.parseColor("#FFFFFF"));
-                    adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1));
+                    adapter.getmWallModels().get(position).setLikes(CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) + 1)));
                     mPlans.getTrainings().get(position).setLiked(1);
                 }
             }
@@ -295,7 +267,7 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                     countLike.setText(CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1))
                     );
                     countLike.setTextColor(Color.parseColor("#000000"));
-                    adapter.getmWallModels().get(position).setLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1));
+                    adapter.getmWallModels().get(position).setLikes(CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getLikes()) - 1)));
                     mPlans.getTrainings().get(position).setLiked(0);
                 }
             }
@@ -329,21 +301,24 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
             if (info.equals("save")) {
                 if (mPlans.getTrainings().get(position).getIsSaved() != 1) {
                     save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_full_black));
-                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
-                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1)
+                    countSaved.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1))
                     );
                     adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) + 1));
                     mPlans.getTrainings().get(position).setIsSaved(1);
+                    countSaved.setTextColor(Color.parseColor("#FFFFFF"));
                 }
             }
             if (info.equals("unsave")) {
                 if (mPlans.getTrainings().get(position).getIsSaved() == 1) {
                     save.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_black));
-                    countSaved.setText(getResources().getString(R.string.saved) + ": " +
-                            String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1)
+                    countSaved.setText(
+                            CountData.mathLikes(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1))
                     );
                     adapter.getmWallModels().get(position).setSaved(String.valueOf(Integer.valueOf(adapter.getmWallModels().get(position).getSaved()) - 1));
                     mPlans.getTrainings().get(position).setIsSaved(0);
+                    countSaved.setTextColor(Color.parseColor("#000000"));
+
                 }
             }
             save.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));

@@ -25,9 +25,10 @@
             android:id="@+id/image_user_raiting"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            app:civ_border_color="@color/button_blue"
             android:layout_weight="0.5"
-            android:src="@drawable/background"
-            app:civ_border_width="0dp" />
+            android:src="@color/transparent"
+            app:civ_border_width="1dp" />
 
         <TextView
             android:id="@+id/name_user_participant"

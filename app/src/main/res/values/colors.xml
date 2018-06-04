@@ -8,6 +8,8 @@
     <color name="transparent_card">#30FFFFFF</color>
     <color name="transparent_text_white">#77FFFFFF</color>
     <color name="button_blue">#0b4573</color>
+    <color name="button_green">#00a606</color>
+    <color name="button_red">#a61e00</color>
     <color name="text_gray">#777777</color>
     <color name="transparent">#00000000</color>
     <color name="text_gray_light">#939292</color>

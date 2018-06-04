@@ -13,4 +13,9 @@
         android:icon="@drawable/ic_favorite"
         android:title="Like"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_music_server"
+        android:orderInCategory="400"
+        android:title="@string/edit_music"
+        app:showAsAction="never"/>
 </menu>

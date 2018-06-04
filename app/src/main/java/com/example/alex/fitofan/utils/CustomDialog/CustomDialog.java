@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -76,7 +77,7 @@ public final class CustomDialog {
 
         switch (inputMode) {
             case 1:
-                et.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//                et.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 break;
             case 2:
                 et.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -186,6 +187,69 @@ public final class CustomDialog {
         mDialog.show();
 
         return mDialog;
+    }
+
+    public static Dialog cardMusic(Context context, String title, String image) {
+        mDialog = new Dialog(context);
+
+        mDialog.setContentView(R.layout.dialog_music);
+        TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
+        ImageView imageExercise = mDialog.findViewById(R.id.image_exercise);
+        ImageView close = mDialog.findViewById(R.id.close_dialog);
+
+
+        tvTitle.setText(title);
+        if (image != null) {
+            Glide.with(context) //передаем контекст приложения
+                    .load(Uri.parse(image))
+                    .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                    .transition(withCrossFade())
+                    .into(imageExercise); //ссылка на ImageView
+        } else {
+            Glide.with(context)
+                    .load(R.drawable.background_launch_screen)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageExercise);
+        }
+
+        close.setOnClickListener(v -> mDialog.dismiss());
+
+        mDialog.setCancelable(true);
+
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mDialog.show();
+
+        return mDialog;
+    }
+
+    public static void cardSetMusic(Dialog dialog, String title, String image, boolean isAudio) {
+        TextView tvTitle = dialog.findViewById(R.id.name_exercise);
+        ImageView imageExercise = dialog.findViewById(R.id.image_exercise);
+        LinearLayout border = dialog.findViewById(R.id.background_border_audio);
+
+        if(isAudio){
+            border.setVisibility(View.VISIBLE);
+        } else {
+            border.setVisibility(View.INVISIBLE);
+        }
+        tvTitle.setText(title);
+        if (image != null) {
+            Glide.with(dialog.getContext()) //передаем контекст приложения
+                    .load(Uri.parse(image))
+                    .apply(centerCropTransform())
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
+                    .transition(withCrossFade())
+                    .into(imageExercise); //ссылка на ImageView
+        } else {
+            Glide.with(dialog.getContext())
+                    .load(R.drawable.background_launch_screen)
+                    .apply(centerCropTransform())
+                    .transition(withCrossFade())
+                    .into(imageExercise);
+        }
+
     }
 
     public static void cardSet(Dialog dialog, String title, String description, String image) {

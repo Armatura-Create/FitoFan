@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +30,7 @@ import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.rainting.ParticipantFragment;
+import com.example.alex.fitofan.ui.fragments.users.UsersFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
 import com.example.alex.fitofan.utils.Connection;
 import com.facebook.login.LoginManager;
@@ -74,6 +79,23 @@ public class MainActivity extends AppCompatActivity
         initListeners();
         loadHeader();
     }
+
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                v.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+            }
+        }
+
+        return super.dispatchTouchEvent(event);
+    }
+
 
     private void initListeners() {
         navHeader.findViewById(R.id.nav_profileImage).setOnClickListener(view -> {
@@ -137,7 +159,8 @@ public class MainActivity extends AppCompatActivity
         adapter.addFragment(new WallFragment(), getResources().getString(R.string.tab_wall));
         adapter.addFragment(new ParticipantFragment(), getResources().getString(R.string.tab_participants));
         adapter.addFragment(new MyPlansFragment(), getResources().getString(R.string.tab_my_plan));
-        mBinding.appBarMain.contentMain.viewpager.setOffscreenPageLimit(3);
+        adapter.addFragment(new UsersFragment(), getResources().getString(R.string.fans));
+        mBinding.appBarMain.contentMain.viewpager.setOffscreenPageLimit(4);
         mBinding.appBarMain.contentMain.viewpager.setAdapter(adapter);
         mBinding.appBarMain.tablayout.setupWithViewPager(mBinding.appBarMain.contentMain.viewpager);
     }

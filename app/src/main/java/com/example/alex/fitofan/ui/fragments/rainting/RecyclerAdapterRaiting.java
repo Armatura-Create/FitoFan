@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.rainting;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -153,10 +154,11 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
 
         if (position > 0) {
 
+            imageUser.setBackgroundColor(Color.parseColor("#00000000"));
+
             Glide.with(mParticipantFragment.getContext()) //передаем контекст приложения
                     .load(Uri.parse(mModel.get(position + 2).getImage_url()))
                     .apply(centerCropTransform())
-                    .apply(placeholderOf(R.drawable.profile))
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView
