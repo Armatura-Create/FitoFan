@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.errorOf;
 
 public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
 
@@ -129,10 +131,12 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
                 .apply(centerCropTransform())
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())
+
                 .into(imageTrainingPlan);
 
         Glide.with(mWallFragment.getContext())
-                .load(Uri.parse(mWallModels.get(position).getUser().getImage_url()))
+                .load(Uri.parse(mWallModels.get(position).getUser().getMiniImageUrl() != null ?
+                        mWallModels.get(position).getUser().getMiniImageUrl() : mWallModels.get(position).getUser().getImage_url()))
                 .apply(centerCropTransform())
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())

@@ -1,11 +1,14 @@
 package com.example.alex.fitofan.utils.CustomDialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -20,7 +23,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.ui.activity.FullScreenImage;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -143,7 +148,7 @@ public final class CustomDialog {
         return mDialog;
     }
 
-    public static Dialog card(Context context, Window window, String title, String description, String image) {
+    public static Dialog card(Context context, Window window, String title, String description, ArrayList<String> images) {
         mDialog = new Dialog(context);
 
         // retrieve display dimensions
@@ -151,34 +156,23 @@ public final class CustomDialog {
         window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.dialog_card, null);
+        assert inflater != null;
+        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.dialog_card, null);
 //        layout.setMinimumWidth((int)(displayRectangle.width() * 0.7f));
-        layout.setMinimumHeight((int) (displayRectangle.height() * 0.8f));
+        layout.setMinimumHeight((int) (displayRectangle.height() * 0.77f));
         mDialog.setContentView(layout);
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         TextView tvDescription = mDialog.findViewById(R.id.description_exercise);
-        ImageView imageExercise = mDialog.findViewById(R.id.image_exercise);
         ImageView close = mDialog.findViewById(R.id.close_dialog);
-
 
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvDescription.setMovementMethod(new ScrollingMovementMethod());
-        if (image != null) {
-            Glide.with(context) //передаем контекст приложения
-                    .load(Uri.parse(image))
-                    .apply(centerCropTransform())
-                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
-                    .transition(withCrossFade())
-                    .into(imageExercise); //ссылка на ImageView
-        } else {
-            Glide.with(context)
-                    .load(R.drawable.background_launch_screen)
-                    .apply(centerCropTransform())
-                    .transition(withCrossFade())
-                    .into(imageExercise);
+        if (images != null) {
+            ViewPager viewPager = mDialog.findViewById(R.id.pager_image);
+            ViewPagerImageAdapter pagerImageAdapter = new ViewPagerImageAdapter(context, images);
+            viewPager.setAdapter(pagerImageAdapter);
         }
-
         close.setOnClickListener(v -> mDialog.dismiss());
 
         mDialog.setCancelable(true);
@@ -252,7 +246,7 @@ public final class CustomDialog {
 
     }
 
-    public static void cardSet(Dialog dialog, String title, String description, String image) {
+    public static void cardSet(Dialog dialog, String title, String description, ArrayList<String> images) {
         TextView tvTitle = dialog.findViewById(R.id.name_exercise);
         TextView tvDescription = dialog.findViewById(R.id.description_exercise);
         ImageView imageExercise = dialog.findViewById(R.id.image_exercise);
@@ -260,19 +254,10 @@ public final class CustomDialog {
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvDescription.setMovementMethod(new ScrollingMovementMethod());
-        if (image != null) {
-            Glide.with(dialog.getContext()) //передаем контекст приложения
-                    .load(Uri.parse(image))
-                    .apply(centerCropTransform())
-                    .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
-                    .transition(withCrossFade())
-                    .into(imageExercise); //ссылка на ImageView
-        } else {
-            Glide.with(dialog.getContext())
-                    .load(R.drawable.background_launch_screen)
-                    .apply(centerCropTransform())
-                    .transition(withCrossFade())
-                    .into(imageExercise);
+        if (images != null) {
+            ViewPager viewPager = mDialog.findViewById(R.id.pager_image);
+            ViewPagerImageAdapter pagerImageAdapter = new ViewPagerImageAdapter(dialog.getContext(), images);
+            viewPager.setAdapter(pagerImageAdapter);
         }
 
     }

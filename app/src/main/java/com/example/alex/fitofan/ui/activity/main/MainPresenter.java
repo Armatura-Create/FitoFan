@@ -3,6 +3,7 @@ package com.example.alex.fitofan.ui.activity.main;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
@@ -29,20 +30,23 @@ public class MainPresenter implements MainContract.EventListener {
 
     @Override
     public void shareApp() {
-        //TODO Разобраться с этим
-//        ProgressDialog dialog = ProgressDialog.show(view.getContext(), "",
-//                "Loading. Please wait...", false);
-//        dialog.setCancelable(true);
         try {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "#thisisFitoFan");
-            String sAux = "\nLet me recommend you this site\n\n";
-            sAux = sAux + "http://tkdo.events/ \n\n";
+            String sAux = "\nLet me recommend you this app\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.fitofan \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             view.getContext().startActivity(Intent.createChooser(i, "Choose one"));
         } catch (Exception e) {
             //e.toString();
         }
+    }
+
+    @Override
+    public void rateApp() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=com.fitofan"));
+        view.getContext().startActivity(intent);
     }
 }

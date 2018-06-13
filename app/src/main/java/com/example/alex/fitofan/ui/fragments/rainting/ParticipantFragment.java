@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,7 @@ import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.Connection;
+import com.example.alex.fitofan.utils.PreCachingLayoutManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     private void initRecyclerView() {
         models = new ArrayList<>();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext());
         mBinding.rvRaiting.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterRaiting(models, this);
         mBinding.rvRaiting.setAdapter(adapter);

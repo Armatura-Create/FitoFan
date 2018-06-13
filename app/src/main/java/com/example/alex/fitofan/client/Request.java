@@ -5,15 +5,19 @@ import android.util.Log;
 
 import com.example.alex.fitofan.interfaces.DelComStatus;
 import com.example.alex.fitofan.interfaces.DelStatus;
+import com.example.alex.fitofan.interfaces.GetExercisePhotosLoader;
 import com.example.alex.fitofan.interfaces.GetMyData;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.ILoadingStatusMyPlans;
 import com.example.alex.fitofan.interfaces.ILoadingStatusUserPlans;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SearchStatus;
+import com.example.alex.fitofan.interfaces.SendPlan;
 import com.example.alex.fitofan.interfaces.SubStatus;
 import com.example.alex.fitofan.interfaces.UserStatus;
 import com.example.alex.fitofan.models.GetCommentsModel;
+import com.example.alex.fitofan.models.GetExerciseModel;
+import com.example.alex.fitofan.models.GetExercisePhotos;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
@@ -31,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,17 +64,23 @@ public class Request {
 
         call.enqueue(new Callback<GetUserModel>() {
             @Override
-            public void onResponse(@NonNull Call<GetUserModel> call, Response<GetUserModel> response) {
-
-                Log.e("onKKK ", new Gson().toJson(response.body(), GetUserModel.class));
+            public void onResponse(@NonNull Call<GetUserModel> call, @NonNull Response<GetUserModel> response) {
 
                 if (response.isSuccessful()) {
 
-                    loader.onSuccess(response.message());
-                    Log.e("onResponseOk: ", response.headers().toString());
-                    Log.e("onResponseOk: ", response.message());
-                    Log.e("onResponseOk: ", String.valueOf(response.code()));
-
+                    try {
+                        JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body(), GetUserModel.class));
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess("Success");
+                            Log.e("onSingUp", new Gson().toJson(response.body(), GetUserModel.class));
+                        }
+                        if (jsonObject.getInt("status") == 0) {
+                            loader.onFailure("incorrect");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
                 } else {
                     loader.onFailure(response.message());
                     Log.e("onResponse: ", response.headers().toString());
@@ -293,7 +304,7 @@ public class Request {
     }
 
 
-    public void sendPlan(HashMap<String, String> data, final LikeStatus loader) {
+    public void sendPlan(HashMap<String, String> data, final SendPlan loader) {
         Call<GetPlanModel> call;
         call = RetrofitClient.getAPI().sendPlan(data);
 
@@ -301,14 +312,15 @@ public class Request {
             @Override
             public void onResponse(@NonNull Call<GetPlanModel> call, @NonNull Response<GetPlanModel> response) {
 
-                Log.e("onGGG ", new Gson().toJson(response.body(), GetPlanModel.class));
+                Log.e("onPlan ", new Gson().toJson(response.body(), GetPlanModel.class));
                 if (response.isSuccessful()) {
-                    JSONObject jsonObject = null;
+                    JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(new Gson().toJson(response.body(), GetPlanModel.class));
 
                         if (jsonObject.getInt("status") == 1) {
-                            loader.onSuccess("send");
+                            assert response.body() != null;
+                            loader.onSuccess(Objects.requireNonNull(response.body()));
                         } else {
                             loader.onFailure(response.message());
                         }
@@ -321,6 +333,76 @@ public class Request {
 
             @Override
             public void onFailure(@NonNull Call<GetPlanModel> call, @NonNull Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void addExercise(HashMap<String, String> data, final LikeStatus loader) {
+        Call<GetExerciseModel> call;
+        call = RetrofitClient.getAPI().addPlanExercise(data);
+
+        call.enqueue(new Callback<GetExerciseModel>() {
+            @Override
+            public void onResponse(@NonNull Call<GetExerciseModel> call, @NonNull Response<GetExerciseModel> response) {
+
+                Log.e("onExercise ", new Gson().toJson(response.body(), GetExerciseModel.class));
+                if (response.isSuccessful()) {
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(new Gson().toJson(response.body(), GetExerciseModel.class));
+
+                        if (jsonObject.getInt("status") == 1 && new Gson().toJson(response.body(), GetExerciseModel.class) != null) {
+                            loader.onSuccess(String.valueOf(response.body().getId()));
+                        } else {
+                            loader.onFailure(response.message());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetExerciseModel> call, @NonNull Throwable t) {
+                Log.e("onResponseOk: ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
+    public void addExercisePhoto(HashMap<String, String> data, final GetExercisePhotosLoader loader) {
+        Call<GetExercisePhotos> call;
+        call = RetrofitClient.getAPI().addExercisePhoto(data);
+
+        call.enqueue(new Callback<GetExercisePhotos>() {
+            @Override
+            public void onResponse(@NonNull Call<GetExercisePhotos> call, @NonNull Response<GetExercisePhotos> response) {
+
+                Log.e("onExercisePhoto", new Gson().toJson(response.body(), GetExercisePhotos.class));
+                if (response.isSuccessful()) {
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(new Gson().toJson(response.body(), GetExercisePhotos.class));
+
+                        if (jsonObject.getInt("status") == 1 && new Gson().toJson(response.body(), GetExercisePhotos.class) != null) {
+                            loader.onSuccess(response.body());
+                        } else {
+                            loader.onFailure(response.message());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetExercisePhotos> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
@@ -647,7 +729,7 @@ public class Request {
                     JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(new Gson().toJson(response.body(), LikeModel.class));
-
+                        Log.e("likeAvatar: ", new Gson().toJson(response.body(), LikeModel.class));
                         if (jsonObject.getInt("status") == 1) {
                             loader.onSuccess("likeAvatar");
                             Log.e("onResponseOk1: ", response.headers().toString());
@@ -1207,7 +1289,7 @@ public class Request {
             }
 
             @Override
-            public void onFailure(Call<GetPlansModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetPlansModel> call, @NonNull Throwable t) {
                 Log.e("onResponseOk: ", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }

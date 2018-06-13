@@ -5,13 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,8 +39,6 @@ import com.example.alex.fitofan.utils.StaticValues;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -58,8 +54,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
 
     private Menu menu;
     private ProgressDialog progressDialog;
-    private boolean like;
-    private boolean isSave;
     private int positionLike = 1;
     private int positionSave = 0;
     private int tempPosition;
@@ -80,6 +74,10 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         mModel = new TrainingModel();
         mModel.setExercises(models);
         initRecyclerView();
+        initListeners();
+    }
+
+    private void initRequest() {
         if (Connection.isNetworkAvailable(getContext())) {
             HashMap<String, String> map = new HashMap<>();
             map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -89,7 +87,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         } else {
             progressDialog.cancel();
         }
-        initListeners();
     }
 
     @Override
@@ -100,9 +97,11 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                 new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
         )) {
             getMenuInflater().inflate(R.menu.preview_plan_wall_with_del, menu);
+            initRequest();
             return true;
         }
         getMenuInflater().inflate(R.menu.preview_plan_wall, menu);
+        initRequest();
         return true;
     }
 
@@ -124,9 +123,9 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
             map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
             map.put("plan_id", String.valueOf(mModel.getId()));
             if (Connection.isNetworkAvailable(this)) {
-                if (!isSave)
+                if (mModelfromServer.getTraining().getIsSaved() == 0)
                     Request.getInstance().savePlan(map, this);
-                if (isSave)
+                if (mModelfromServer.getTraining().getIsSaved() != 0)
                     Request.getInstance().unSavePlan(map, this);
             }
             return true;
@@ -173,7 +172,8 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                         if (mModelfromServer.getExercises().size() > pos[0]) {
                             CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
                                     mModelfromServer.getExercises().get(pos[0]).getImage(),
-                                    mModel.getExercises().get(pos[0]).getAudio()!= null);
+                                    (mModel.getExercises().get(pos[0]).getAudio() != null &&
+                                            !mModel.getExercises().get(pos[0]).getAudio().equals("")));
                         }
                     }
                     if (mModel.getExercises().size() - 1 == pos[0])
@@ -192,7 +192,8 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                         if (pos[0] + 1 > 0) {
                             CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
                                     mModel.getExercises().get(pos[0]).getImage(),
-                                    mModel.getExercises().get(pos[0]).getAudio()!= null);
+                                    (mModel.getExercises().get(pos[0]).getAudio() != null &&
+                                            !mModel.getExercises().get(pos[0]).getAudio().equals("")));
                         }
                     }
                     if (mModel.getExercises().size() - 1 == pos[0])
@@ -215,13 +216,9 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         tempPosition = position;
         this.borderLinear = borderLinear;
         Intent audioPickerIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            audioPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            audioPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            audioPickerIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-        } else {
-            audioPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        }
+        audioPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        audioPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        audioPickerIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         audioPickerIntent.setType("audio/*");
         audioPickerIntent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(audioPickerIntent, "Select a File to Upload"), FILE_SELECT_CODE);
@@ -236,6 +233,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                         if (data.getData() != null) {
                             Uri uriExercise = data.getData();
                             mModel.getExercises().get(tempPosition).setAudio(String.valueOf(uriExercise));
+                            Log.e("startMusicExercise", String.valueOf(uriExercise));
                             borderLinear.setVisibility(View.VISIBLE);
                         }
                 }
@@ -249,9 +247,9 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
         map.put("plan_id", String.valueOf(mModel.getId()));
         if (Connection.isNetworkAvailable(this)) {
-            if (!like)
+            if (mModelfromServer.getTraining().getLiked() == 0)
                 Request.getInstance().like(map, this);
-            if (like)
+            if (mModelfromServer.getTraining().getLiked() != 0)
                 Request.getInstance().dislikePlan(map, this);
         }
     }
@@ -267,7 +265,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                 Dialog dialog = CustomDialog.card(this, this.getWindow(),
                         mModel.getName(),
                         mModel.getDescription(),
-                        mModel.getImage());
+                        mModel.getImageTraining());
                 dialog.setCancelable(true);
                 dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                 dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
@@ -279,7 +277,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                     Dialog dialog = CustomDialog.card(this, this.getWindow(),
                             mModel.getExercises().get(pos[0]).getName(),
                             mModel.getExercises().get(pos[0]).getDescription(),
-                            mModel.getExercises().get(pos[0]).getImage());
+                            mModel.getExercises().get(pos[0]).getImages());
                     dialog.setCancelable(true);
                     if (mModel.getExercises().size() - 1 == pos[0])
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
@@ -295,7 +293,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                             if (mModel.getExercises().size() > pos[0]) {
                                 CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
                                         mModel.getExercises().get(pos[0]).getDescription(),
-                                        mModel.getExercises().get(pos[0]).getImage());
+                                        mModel.getExercises().get(pos[0]).getImages());
 
                             }
                         }
@@ -315,7 +313,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                             if (pos[0] + 1 > 0) {
                                 CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
                                         mModel.getExercises().get(pos[0]).getDescription(),
-                                        mModel.getExercises().get(pos[0]).getImage());
+                                        mModel.getExercises().get(pos[0]).getImages());
                             }
                         }
                         if (mModel.getExercises().size() - 1 == pos[0])
@@ -386,14 +384,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
             adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
             adapter.setTrainingModel(setTraining(info));
             adapter.notifyDataSetChanged();
-            if (info.getTraining().getIsSaved() == 1) {
-                menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-                isSave = true;
-            }
+            if (menu != null) {
+                if (info.getTraining().getIsSaved() == 1) {
+                    menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+                }
 
-            if (info.getTraining().getLiked() == 1) {
-                menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                like = true;
+                if (info.getTraining().getLiked() == 1) {
+                    menu.findItem(R.id.action_like).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                }
             }
 
             if (info.getTraining().getUserId() != null) {
@@ -409,18 +407,31 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
     private TrainingModel setTraining(GetPlanModel training) {
         mModelfromServer = training;
         ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
+        ArrayList<String> image = new ArrayList<>();
         mModel = new TrainingModel();
         for (int i = 0; i < training.getExercises().size(); i++) {
+            ArrayList<String> imageExercises = new ArrayList<>();
             ExerciseModel exerciseModel = new ExerciseModel();
             exerciseModel.setCountRepetitions(Integer.valueOf(training.getExercises().get(i).getCountRepetitions()));
+            imageExercises.add(training.getExercises().get(i).getImage());
             exerciseModel.setImage(training.getExercises().get(i).getImage());
             exerciseModel.setDescription(training.getExercises().get(i).getDescription());
             exerciseModel.setName(training.getExercises().get(i).getName());
             exerciseModel.setRecoveryTime(Long.valueOf(training.getExercises().get(i).getRecoveryTime()));
             exerciseModel.setTime(Long.valueOf(training.getExercises().get(i).getTime()));
             exerciseModel.setTimeBetween(Long.valueOf(training.getExercises().get(i).getTimeBetween()));
+            exerciseModel.setAudio(training.getExercises().get(i).getMusicUrls());
+            if (training.getExercises().get(i).getPhotos() != null) {
+                for (int j = 0; j < training.getExercises().get(i).getPhotos().size(); j++) {
+                    imageExercises.add(training.getExercises().get(i).getPhotos().get(j).getImagePath());
+                }
+            }
+            exerciseModel.setImages(imageExercises);
             exerciseModels.add(exerciseModel);
         }
+
+        image.add(training.getTraining().getImage());
+        mModel.setImageTraining(image);
         mModel.setExercises(exerciseModels);
         mModel.setTime(Long.valueOf(training.getTraining().getPlan_time()));
         mModel.setName(training.getTraining().getName());
@@ -437,23 +448,23 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         if (info.equals("like") || info.equals("dislike")) {
             if (info.equals("like")) {
                 menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                like = true;
+                mModelfromServer.getTraining().setLiked(1);
                 return;
             }
             menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
-            like = false;
+            mModelfromServer.getTraining().setLiked(0);
             return;
         }
 
         if (info.equals("save") || info.equals("unsave")) {
             if (info.equals("save")) {
                 menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-                isSave = true;
+                mModelfromServer.getTraining().setIsSaved(1);
                 return;
             }
 
             menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save));
-            isSave = false;
+            mModelfromServer.getTraining().setIsSaved(0);
             return;
         }
 

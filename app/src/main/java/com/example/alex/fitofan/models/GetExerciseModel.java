@@ -4,11 +4,25 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
+import java.util.ArrayList;
+
 public class GetExerciseModel {
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    @SerializedName("error")
+    @Expose
+    private String error;
 
     @SerializedName("exercise_time")
     @Expose
     private String time;
+
+    @SerializedName("exercise_id")
+    @Expose
+    private int id;
 
     @SerializedName("name")
     @Expose
@@ -37,6 +51,10 @@ public class GetExerciseModel {
     @SerializedName("recovery_time")
     @Expose
     private String recoveryTime;
+
+    @SerializedName("photos")
+    @Expose
+    private ArrayList<PhotoModel> photos;
 
     public String getTime() {
         return time;
@@ -100,5 +118,37 @@ public class GetExerciseModel {
 
     public void setMusicUrls(String musicUrls) {
         this.musicUrls = musicUrls;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<PhotoModel> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<PhotoModel> photos) {
+        this.photos = photos;
     }
 }

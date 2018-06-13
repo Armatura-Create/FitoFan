@@ -71,7 +71,6 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
 
         initListeners();
         initRecycler();
-        initRequest();
     }
 
     @Override
@@ -81,9 +80,11 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                 new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid()
         )) {
             getMenuInflater().inflate(R.menu.user_profile_my, menu);
+            initRequest();
             return true;
         }
         getMenuInflater().inflate(R.menu.user_profile, menu);
+        initRequest();
         return true;
     }
 
@@ -122,7 +123,7 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
                 if (Connection.isNetworkAvailable(this)) {
                     if (mUser.getAvatarLiked() == 1)
                         Request.getInstance().dislikeAvatar(map, this);
-                    if (mUser.getAvatarLiked() != 1)
+                    else
                         Request.getInstance().likeAvatar(map, this);
                 }
             }
@@ -278,9 +279,6 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
             if (info.equals("likeAvatar")) {
                 if (mUser.getAvatarLiked() != 1) {
                     menu.getItem(0).setIcon(R.drawable.ic_favorite_full);
-//                    likeAva.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_full_red));
-//                    countLikeAva.setText(CountData.mathLikes(String.valueOf(Integer.valueOf(mUser.getAvatarLikes()) + 1)));
-//                    countLikeAva.setTextColor(Color.parseColor("#FFFFFF"));
                     mUser.setAvatarLikes(String.valueOf(Integer.valueOf(mUser.getAvatarLikes()) + 1));
                     mUser.setAvatarLiked(1);
                 }
@@ -288,9 +286,6 @@ public class UserProfileActivity extends AppCompatActivity implements ILoadingSt
             if (info.equals("dislikeAvatar")) {
                 if (mUser.getAvatarLiked() == 1) {
                     menu.getItem(0).setIcon(R.drawable.ic_favorite);
-//                    likeAva.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_black));
-//                    countLikeAva.setText(CountData.mathLikes(String.valueOf(Integer.valueOf(mUser.getAvatarLikes()) - 1)));
-//                    countLikeAva.setTextColor(Color.parseColor("#000000"));
                     mUser.setAvatarLikes(String.valueOf(Integer.valueOf(mUser.getAvatarLikes()) - 1));
                     mUser.setAvatarLiked(0);
                 }

@@ -19,7 +19,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private ActivitySettingsBinding mBinding;
 
-    private RecyclerAdapterPreviewPlan adapter;
+    private RecyclerAdapterSettings adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class SettingActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.rv.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterPreviewPlan(this);
+        adapter = new RecyclerAdapterSettings(this);
         mBinding.rv.setAdapter(adapter);
 
     }

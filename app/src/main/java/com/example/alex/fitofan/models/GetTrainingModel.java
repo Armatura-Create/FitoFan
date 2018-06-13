@@ -3,9 +3,6 @@ package com.example.alex.fitofan.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GetTrainingModel {
     @SerializedName("user_id")
     @Expose
@@ -18,6 +15,11 @@ public class GetTrainingModel {
     @SerializedName("saved")
     @Expose
     private String saved;
+
+
+    @SerializedName("inventory")
+    @Expose
+    private String inventory;
 
     @SerializedName("is_saved")
     @Expose
@@ -209,5 +211,13 @@ public class GetTrainingModel {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(String inventory) {
+        this.inventory = inventory;
     }
 }

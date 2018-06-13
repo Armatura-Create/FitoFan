@@ -5,13 +5,13 @@
         android:id="@+id/action_save"
         android:orderInCategory="100"
         android:icon="@drawable/ic_save"
-        android:title="Save"
+        android:title="@string/save"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_like"
         android:orderInCategory="200"
         android:icon="@drawable/ic_favorite"
-        android:title="Like"
+        android:title="@string/like"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_edit_server"

@@ -18,12 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/image_exercise"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/background_launch_screen" />
+                android:layout_height="200dp"/>
 
             <ImageView
                 android:id="@+id/iv_background"

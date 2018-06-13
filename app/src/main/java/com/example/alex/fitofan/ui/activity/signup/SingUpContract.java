@@ -18,7 +18,7 @@ public class SingUpContract {
 
     interface EventListener extends ILoadingStatus<String> {
 
-        void register(String name, String email, String password, String phone);
+        void register(String name, String email, String password);
 
         void goToSingIn();
     }

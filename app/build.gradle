@@ -1,24 +1,37 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 26
+    signingConfigs {
+        config {
+            keyAlias 'fitofan'
+            keyPassword '56King65'
+            storeFile file('C:/Users/ScrEnDeR/.AndroidStudio3.1/Project/fitofan.jks')
+            storePassword '56King65'
+        }
+    }
+    compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.alex.fitofan"
+        applicationId "com.fitofan.debug"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 1
+        targetSdkVersion 27
+        versionCode 7
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     dataBinding {
         enabled = true
     }
+    lintOptions {
 
+        checkReleaseBuilds false
+
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {
@@ -27,28 +40,43 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     //design
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:animated-vector-drawable:26.1.0'
-    implementation 'com.android.support:customtabs:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:animated-vector-drawable:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
+
+    //fabric.io
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
+        transitive = true;
+    }
 
     //cardRecycler
     implementation 'com.github.adgvcxz:cardlayoutmanager:0.2.1'
+
+    //GIF
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
+
+    //CameraKit
+    implementation 'com.wonderkiln:camerakit:0.12.0'
 
     //circleImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -60,8 +88,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
+    //Crop Image
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+
     //Json
-    implementation "com.googlecode.json-simple:json-simple:1.1"
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
 
     //ProgressBars
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
@@ -71,12 +102,12 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.github.bumptech.glide:glide:4.0.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //facebook
-    implementation 'com.facebook.android:facebook-android-sdk:4.26.0'
+    implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
 
     //ORM
     implementation 'com.j256.ormlite:ormlite-android:5.0'
@@ -84,5 +115,4 @@ dependencies {
 
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
-
 }

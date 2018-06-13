@@ -121,6 +121,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         countLike.setText(CountData.mathLikes(mTrainings.get(position).getLikes()));
         countComments.setText(CountData.mathLikes(mTrainings.get(position).getComments()));
         countLike.setTextColor(Color.parseColor("#000000"));
+        countSaved.setTextColor(Color.parseColor("#000000"));
 
         if (mTrainings.get(position).getLiked() == 1) {
             like.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_favorite_full_red));
@@ -128,6 +129,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         }
         if (mTrainings.get(position).getIsSaved() == 1) {
             save.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_save_full_black));
+            countSaved.setTextColor(Color.parseColor("#ffffff"));
         }
 
         if (mTrainings.get(position).getStatus().equals("1")) {

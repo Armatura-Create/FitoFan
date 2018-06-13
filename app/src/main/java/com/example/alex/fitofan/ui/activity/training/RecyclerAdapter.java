@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -27,7 +27,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private ArrayList<ExerciseModelFromTraining> model;
 
-    public RecyclerAdapter(TrainingActivity trainingActivity, ArrayList<ExerciseModelFromTraining> model) {
+    RecyclerAdapter(TrainingActivity trainingActivity, ArrayList<ExerciseModelFromTraining> model) {
         this.trainingActivity = trainingActivity;
         this.model = model;
     }
@@ -46,8 +46,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Создание нового представления
         LinearLayout linear = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_exercise, parent, false);
@@ -73,7 +74,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         else
             time.setText(FormatTime.formatTime(model.get(position).getTime()));
 
-        if (model.get(position).getImage() != null && !model.get(position).isRest()) {
+        if (model.get(position).getImage() != null && !model.get(position).isRest() && !model.get(position).getImage().equals("")) {
             image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(trainingActivity.getContext())
                     .load(Uri.parse(model.get(position).getImage()))
@@ -87,7 +88,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         } else {
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(trainingActivity.getContext())
-                    .load(R.mipmap.logo_fitofan_old)
+                    .load(R.drawable.main_logo)
+                    .transition(withCrossFade())
                     .into(image);
         }
 

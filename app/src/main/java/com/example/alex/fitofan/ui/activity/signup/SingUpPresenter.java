@@ -3,6 +3,8 @@ package com.example.alex.fitofan.ui.activity.signup;
 
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.utils.Connection;
 
@@ -20,61 +22,38 @@ class SingUpPresenter implements SingUpContract.EventListener {
 
     @Override
     public void onSuccess(String info) {
+        Answers.getInstance().logSignUp(new SignUpEvent()
+                .putMethod("SingUp")
+                .putSuccess(true));
+        Toast.makeText(view.getContext(), "Registered", Toast.LENGTH_SHORT).show();
         view.goToSingIn();
     }
 
     @Override
     public void onFailure(String message) {
         Toast.makeText(view.getContext(), message + "Failure", Toast.LENGTH_SHORT).show();
+        Answers.getInstance().logSignUp(new SignUpEvent()
+                .putMethod("SingUpError" + message)
+                .putSuccess(false));
     }
 
 
     @Override
-    public void register(String email, String password, String firstName, String lastName) {
-
-//        class UserLogingAsynk extends AsyncTask<Void, Void, String> {
-//
-//            @Override
-//            protected String doInBackground(Void... voids) {
-//                HttpRequest request = new HttpRequest();
-//                HashMap<String, String> params = new HashMap<>();
-//                params.put("email", email);
-//                params.put("name", firstName);
-//                params.put("surname", firstName);
-//                params.put("password", password);
-//                return request.DoRequest("http://api.fitofan.com/v1/registration", params);
-//            }
-//
-//            @Override
-//            protected void onPostExecute(String s) {
-//                try {
-//                    JSONObject jsonObject = new JSONObject(s);
-//                    if (jsonObject.getInt("status") == 1) {
-//                        Log.e("onKKK: ", new Gson().toJson(s, TokenAtRegistration.class));
-//                    } else {
-//                        Log.e("onKKK: ", new Gson().toJson(s, TokenAtRegistration.class));
-//                    }
-//                } catch (Exception ex) {
-//
-//                    Log.e("onKKK: ", ex.toString());
-//                    Log.e("onKKK: ", s);
-//
-//                }
-//                super.onPostExecute(s);
-//            }
-//        }
-//        new UserLogingAsynk().execute();
+    public void register(String email, String password, String firstName) {
 
         if (Connection.isNetworkAvailable(view.getContext())) {
-//            RegisterModel model = new RegisterModel();
-//            model.setName(firstName);
-//            model.setEmail(email);
-//            model.setSurname(firstName);
-//            model.setPassword(password);
+            String[] name = firstName.split(" ", 2);
+
             HashMap<String, String> params = new HashMap<>();
             params.put("email", email);
-            params.put("name", firstName);
-            params.put("surname", "");
+            params.put("name", name[0]);
+            if (name.length > 1) {
+                if (name[1] != null && !name[1].equals(""))
+                    params.put("surname", name[1]);
+                else
+                    params.put("surname", " ");
+            } else
+                params.put("surname", " ");
             params.put("password", password);
             Request.getInstance().singUp(params, this);
         } else onFailure(CONNECTION_ERROR);

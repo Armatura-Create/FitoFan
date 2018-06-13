@@ -99,6 +99,13 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/logo_fitofan" />
 
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/logo" />
+
         </android.support.v7.widget.CardView>
 
         <TextView

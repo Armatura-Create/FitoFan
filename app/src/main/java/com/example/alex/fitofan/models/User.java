@@ -76,6 +76,9 @@ public class User {
     @Expose
     private String background_url;
 
+    @SerializedName("mini_image_url")
+    @Expose
+    private String miniImageUrl;
 
     @SerializedName("location")
     @Expose
@@ -234,5 +237,13 @@ public class User {
 
     public void setAvatarLiked(int avatarLiked) {
         this.avatarLiked = avatarLiked;
+    }
+
+    public String getMiniImageUrl() {
+        return miniImageUrl;
+    }
+
+    public void setMiniImageUrl(String miniImageUrl) {
+        this.miniImageUrl = miniImageUrl;
     }
 }

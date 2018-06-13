@@ -9,17 +9,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.alex.fitofan.R;
-import com.example.alex.fitofan.client.Request;
-import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.models.GetUserModel;
-import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.main.MainActivity;
 import com.example.alex.fitofan.ui.activity.signin.SignInActivity;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
+import io.fabric.sdk.android.Fabric;
 
 public class LaunchScreenActivity extends AppCompatActivity {
 
@@ -28,6 +26,11 @@ public class LaunchScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final Fabric fabric = new Fabric.Builder(getApplication().getBaseContext())
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
+        Fabric.with(fabric);
         super.onCreate(savedInstanceState);
         if (MSharedPreferences.getInstance().getUserInfo() != null &&
                 new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class) != null
@@ -43,11 +46,12 @@ public class LaunchScreenActivity extends AppCompatActivity {
 
             anim();
 
-            // переход на другое активити спустя 3 сек
-            handler.postDelayed(runnable, 3000);
+            // переход на другое активити спустя 2 сек
+            handler.postDelayed(runnable, 2000);
         } else {
             goSingIn();
         }
+
 
     }
 
@@ -73,7 +77,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
 
         anim();
 
-        // переход на другое активити спустя 3 сек
-        handler.postDelayed(runnable, 3000);
+        // переход на другое активити спустя 2 сек
+        handler.postDelayed(runnable, 2000);
     }
 }

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,6 +34,7 @@ import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.preview_plan.PreviewPlanActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CountData;
+import com.example.alex.fitofan.utils.PreCachingLayoutManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initRecyclerView(ArrayList<GetTrainingModel> models) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext());
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterMyPlans(models, this);
         mBinding.rvMyPlans.setAdapter(adapter);
@@ -273,7 +273,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onSuccess(GetPlansModel info) {
-        mModels.addAll(sort(info.getTrainings()));
+        mModels.addAll(info.getTrainings());
         mBinding.refresh.setRefreshing(false);
         adapter.setTrainings(mModels);
         adapter.notifyDataSetChanged();

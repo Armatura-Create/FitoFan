@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FitoFan planner</string>
+    <string name="app_name">FitoFan DEBUG</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -37,7 +37,7 @@
     <string name="create_plan">Create a training plan</string>
     <string name="training_class">Training name</string>
     <string name="class_description">Add a workout class for example: \"running\", \"strength training\", \"press training\", etc.</string>
-    <string name="add_image_file">Add image class</string>
+    <string name="add_image_file">Add image plan</string>
     <string name="description_description_plan">Add a description for the workout class.\nDescribes the delivery of a goal and a task when performing this type of training.</string>
     <string name="description_description_exercise">Add a description of the correctness class, the correctness and the peculiarity of its execution.</string>
     <string name="add_audio_file">Add audio file</string>
@@ -119,5 +119,8 @@
     <string name="not_valid_email">Email is not valid\nExample:example@gmail.com</string>
     <string name="pass_not_match">Passwords do not match</string>
     <string name="exemple_pass">The password must contain at least 8 characters, numbers, upper and lower case letters</string>
+    <string name="rate_app">Rate</string>
+    <string name="training_inventory">Inventory</string>
+    <string name="inventory_plan">The name of the inventory that is needed for training. For example: \"a skipping rope\", \"dumbbells\", etc.</string>
 
 </resources>

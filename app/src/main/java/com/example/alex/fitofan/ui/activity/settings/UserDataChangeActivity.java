@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.drm.ProcessedData;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -32,12 +32,12 @@ import com.example.alex.fitofan.utils.CheckerInputData;
 import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-
-import okio.Utf8;
 
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
@@ -46,7 +46,6 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
     private ActivityChangeUserDataBinding mBinding;
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int SELECT_IMAGE = 300;
     private Menu menu;
     private boolean changePhoto;
     private Uri uri;
@@ -117,9 +116,9 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
     }
 
     void choosePicture() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_IMAGE);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
     }
 
     private void initAll() {
@@ -161,17 +160,15 @@ public class UserDataChangeActivity extends AppCompatActivity implements ILoadin
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case SELECT_IMAGE:
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    if (data != null)
-                        if (data.getData() != null) {
-                            uri = data.getData();
-                            Glide.with(this)
-                                    .load(uri)
-                                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                                    .into(mBinding.imageUser);
-                            changePhoto = true;
-                        }
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    uri = result.getUri();
+                    Glide.with(this)
+                            .load(uri)
+                            .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                            .into(mBinding.imageUser);
+                    changePhoto = true;
                 }
                 break;
         }

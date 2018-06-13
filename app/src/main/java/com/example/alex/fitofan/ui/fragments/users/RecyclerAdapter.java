@@ -78,7 +78,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if (usersModels.get(position).getImage_url() != null && !usersModels.get(position).getImage_url().equals("")) {
             Glide.with(mFragment.getContext()) //передаем контекст приложения
-                    .load(Uri.parse(usersModels.get(position).getImage_url()))
+                    .load(Uri.parse(usersModels.get(position).getMiniImageUrl()))
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))

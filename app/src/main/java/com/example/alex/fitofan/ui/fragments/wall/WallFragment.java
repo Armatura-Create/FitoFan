@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +23,13 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
+import com.example.alex.fitofan.eventbus.MyPlansEvent;
+import com.example.alex.fitofan.eventbus.ReselectWallTabs;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.SearchStatus;
@@ -39,7 +43,12 @@ import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CountData;
+import com.example.alex.fitofan.utils.PreCachingLayoutManager;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,25 +87,48 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onStart() {
+        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onResume() {
+        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().register(this);
         onRefresh();
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReselectWallTabs(ReselectWallTabs event) {
+        onRefresh();
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.preview_plan_wall_with_del, menu);
+        MenuInflater inflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+        inflater.inflate(R.menu.filter_from_seach, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_test) {
+            Toast.makeText(getContext(), "Test", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
         return super.onContextItemSelected(item);
     }
 
@@ -184,7 +216,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void initRecyclerView() {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext());
         mBinding.rvWall.setItemViewCacheSize(100);
         mBinding.rvWall.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterWall(models, this);
@@ -239,6 +271,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Override
     public void onRefresh() {
+        mBinding.rvWall.scrollToPosition(0);
         mBinding.itemSearch.search.setText("");
         isRefresh = true;
         isLoading = true;

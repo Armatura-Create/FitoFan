@@ -1,11 +1,14 @@
 package com.example.alex.fitofan.ui.activity.preview_plan;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.CountDataOnPreviewModel;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
@@ -150,7 +157,7 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
                 userName.setText(mUserModel.getName() + " " + mUserModel.getSurname());
 
                 Glide.with(trainingActivity.getContext())
-                        .load(Uri.parse(mUserModel.getImage_url()))
+                        .load(Uri.parse(mUserModel.getMiniImageUrl()))
                         .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                         .transition(withCrossFade())
                         .into(userImage);
@@ -181,11 +188,10 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             else
                 time.setText(FormatTime.formatTime(model.get(position - 1).getTime()));
 
-            if (!model.get(position - 1).isRest() && model.get(position - 1).getImage() != null) {
+            if (!model.get(position - 1).isRest() && model.get(position - 1).getImage() != null && !model.get(position - 1).getImage().equals("")) {
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(trainingActivity.getContext())
                         .load(Uri.parse(model.get(position - 1).getImage()))
-                        .apply(placeholderOf(R.drawable.logo_fitofan))
                         .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                         .transition(withCrossFade())
                         .into(image);
@@ -199,8 +205,7 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             } else {
                 image.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 Glide.with(trainingActivity.getContext())
-                        .load(R.mipmap.logo_fitofan_old)
-                        .apply(placeholderOf(R.mipmap.logo_fitofan_old))
+                        .load(R.drawable.main_logo)
                         .transition(withCrossFade())
                         .into(image);
             }

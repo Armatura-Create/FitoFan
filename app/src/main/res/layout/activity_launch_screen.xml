@@ -17,11 +17,11 @@
         <ImageView
             android:id="@+id/logo_launch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_gravity="top"
-            android:paddingLeft="120dp"
-            android:paddingRight="120dp"
-            android:src="@drawable/logo" />
+            android:paddingLeft="110dp"
+            android:paddingRight="110dp"
+            android:src="@drawable/load_on_splashscreen" />
 
     </android.support.design.widget.CoordinatorLayout>
 

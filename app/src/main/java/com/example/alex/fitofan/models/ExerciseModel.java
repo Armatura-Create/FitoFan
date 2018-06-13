@@ -13,49 +13,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class ExerciseModel implements Serializable, Parcelable {
 
-    @DatabaseField(columnName = "time")
-    @SerializedName("time")
-    @Expose
     private long time;
 
-    @DatabaseField(columnName = "name")
-    @SerializedName("name")
-    @Expose
     private String name;
 
-    @DatabaseField(columnName = "description")
-    @SerializedName("description")
-    @Expose
     private String description;
 
-    @DatabaseField(columnName = "count_repetitions")
-    @SerializedName("count_repetitions")
-    @Expose
     private int countRepetitions = 1;
 
-    @DatabaseField(columnName = "time_between")
-    @SerializedName("time_between")
-    @Expose
     private long timeBetween = 0;
 
-    @DatabaseField(columnName = "audio")
     private String audio;
 
-    @DatabaseField(columnName = "image")
     private String image;
 
-    @DatabaseField(columnName = "recovery_time")
-    @SerializedName("recovery_time")
-    @Expose
+    private ArrayList<String> images;
+
     private long recoveryTime = 0;
 
-    public ExerciseModel() {
-    }
+    private boolean isEditData;
 
-    protected ExerciseModel(Parcel in) {
+    private boolean isEditPhoto;
+
+    public ExerciseModel(){}
+
+    private ExerciseModel(Parcel in) {
         time = in.readLong();
         name = in.readString();
         description = in.readString();
@@ -63,7 +49,10 @@ public class ExerciseModel implements Serializable, Parcelable {
         timeBetween = in.readLong();
         audio = in.readString();
         image = in.readString();
+        images = in.createStringArrayList();
         recoveryTime = in.readLong();
+        isEditData = in.readByte() != 0;
+        isEditPhoto = in.readByte() != 0;
     }
 
     public static final Creator<ExerciseModel> CREATOR = new Creator<ExerciseModel>() {
@@ -154,20 +143,47 @@ public class ExerciseModel implements Serializable, Parcelable {
         return json.toString().replaceAll("\\\\", "");
     }
 
+    public boolean isEditData() {
+        return isEditData;
+    }
+
+    public void setEditData(boolean editData) {
+        isEditData = editData;
+    }
+
+    public boolean isEditPhoto() {
+        return isEditPhoto;
+    }
+
+    public void setEditPhoto(boolean editPhoto) {
+        isEditPhoto = editPhoto;
+    }
+
+    public ArrayList<String> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<String> images) {
+        this.images = images;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(time);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeInt(countRepetitions);
-        parcel.writeLong(timeBetween);
-        parcel.writeString(audio);
-        parcel.writeString(image);
-        parcel.writeLong(recoveryTime);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(time);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeInt(countRepetitions);
+        dest.writeLong(timeBetween);
+        dest.writeString(audio);
+        dest.writeString(image);
+        dest.writeStringList(images);
+        dest.writeLong(recoveryTime);
+        dest.writeByte((byte) (isEditData ? 1 : 0));
+        dest.writeByte((byte) (isEditPhoto ? 1 : 0));
     }
 }

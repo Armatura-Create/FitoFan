@@ -15,7 +15,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_music_server"
-        android:orderInCategory="400"
+        android:orderInCategory="300"
         android:title="@string/edit_music"
         app:showAsAction="never"/>
 </menu>

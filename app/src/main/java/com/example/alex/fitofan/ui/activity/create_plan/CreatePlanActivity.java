@@ -1,12 +1,14 @@
 package com.example.alex.fitofan.ui.activity.create_plan;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,36 +25,39 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityCreatePlanBinding;
+import com.example.alex.fitofan.interfaces.GetExercisePhotosLoader;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
+import com.example.alex.fitofan.interfaces.SendPlan;
 import com.example.alex.fitofan.models.ExerciseModel;
+import com.example.alex.fitofan.models.GetExercisePhotos;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
-import com.example.alex.fitofan.models.SendExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
-import com.example.alex.fitofan.utils.db.DatabaseHelper;
 import com.google.gson.Gson;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class CreatePlanActivity extends AppCompatActivity implements ILoadingStatus<GetPlanModel>, LikeStatus {
+public class CreatePlanActivity extends AppCompatActivity implements ILoadingStatus<GetPlanModel>, LikeStatus, SendPlan, GetExercisePhotosLoader {
 
     private ActivityCreatePlanBinding mBinding;
     private RecyclerAdapterCreatePlan adapter;
@@ -60,22 +65,37 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
     private ImageView imageExercise;
     private CardView cvExercise;
     private TrainingModel mModel;
-    private ProgressDialog mProgressDialog;
+    private Dialog mProgressDialog;
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int SELECT_IMAGE_PLAN = 200;
-    private static final int SELECT_IMAGE_EXERCISE = 300;
     private static final int FILE_SELECT_CODE = 400;
     private boolean isEdit;
     private boolean isSend;
     private LinearLayout borderAudio;
+    private int number;
+    private String plan_id;
+    private boolean isExercise;
+    private ProgressBar progress;
+    private TextView parth;
+    private boolean isManyImages;
+    private String idExercise;
+    private int numberImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_plan);
-        mProgressDialog = new ProgressDialog(this);
+
+        mProgressDialog = new Dialog(this);
+        mProgressDialog.setContentView(R.layout.dialog_load);
+
+        progress = mProgressDialog.findViewById(R.id.progress_bar);
+        parth = mProgressDialog.findViewById(R.id.text_part);
+
+        Objects.requireNonNull(mProgressDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mProgressDialog.setCancelable(false);
+
         mModel = new TrainingModel();
         ExerciseModel exerciseModel = new ExerciseModel();
         ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
@@ -91,7 +111,7 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
 
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             View v = getCurrentFocus();
             if (v instanceof EditText) {
                 v.clearFocus();
@@ -118,7 +138,7 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
 
     @Override
     public void onBackPressed() {
-        if(!isSend) {
+        if (!isSend) {
             Dialog dialog = CustomDialog.dialogSimple(this,
                     getResources().getString(R.string.exit),
                     "",
@@ -158,22 +178,22 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
         mBinding.contentCreatePlan.rvExerciseCreatePlan.setVerticalScrollbarPosition(adapter.getItemCount() - 1);
     }
 
-    void choosePictureExercise(int position, ImageView image, CardView cvImage) {
+    void choosePicture(int position, ImageView image, CardView cvImage) {
         tempPosition = position;
         imageExercise = image;
         cvExercise = cvImage;
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_IMAGE_EXERCISE);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+        this.isExercise = false;
     }
 
-    void choosePicturePlan(int position, ImageView image, CardView cvImage) {
+    public void choosePicture(int position) {
         tempPosition = position;
-        imageExercise = image;
-        cvExercise = cvImage;
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_IMAGE_PLAN);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+        isExercise = true;
     }
 
     void chooseAudioExercise(int position, LinearLayout borderAudio) {
@@ -201,39 +221,24 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case SELECT_IMAGE_PLAN:
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    if (data != null)
-                        if (data.getData() != null) {
-                            Uri uriPlan = data.getData();
-                            Bitmap imageBitmap = null;
-                            try {
-                                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriPlan);
-                                imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
-                                mModel.setImage(URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            adapter.setImage(uriPlan, imageExercise, cvExercise);
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    Uri resultUri = result.getUri();
+                    Bitmap imageBitmap = null;
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+                        imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+                        if (!isExercise) {
+                            mModel.setImage(URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+                            adapter.setImage(resultUri, imageExercise, cvExercise);
+                        } else {
+                            adapter.setImageExercise(resultUri, tempPosition);
                         }
-                }
-                break;
-            case SELECT_IMAGE_EXERCISE:
-                if (resultCode == RESULT_OK) {
-                    if (data != null)
-                        if (data.getData() != null) {
-                            Uri uriExercise = data.getData();
-                            Bitmap imageBitmap = null;
-                            try {
-                                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriExercise);
-                                imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
-                                mModel.getExercises().get(tempPosition - 1).setImage(CompressImage.getBase64FromBitmap(imageBitmap));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                            adapter.setImage(uriExercise, imageExercise, cvExercise);
-                        }
                 }
                 break;
             case FILE_SELECT_CODE:
@@ -248,59 +253,43 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
         }
     }
 
+    void editPlan(TrainingModel modelTraining) {
+
+    }
+
+    @SuppressLint("SetTextI18n")
     void sendPlan(TrainingModel modelTraining) {
+        mModel = modelTraining;
 
         if (!checkEditText(modelTraining)) {
             Toast.makeText(this, "Введены не все данные!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mProgressDialog.setMessage("Please wait...");
+        number = 0;
+        numberImages = 0;
+
         mProgressDialog.show();
-        if (modelTraining.getImage() != null) {
-            try {
-                requestMultiplePermissions();
-                ArrayList<SendExerciseModel> exercise = new ArrayList<>();
-                HashMap<String, String> training = new HashMap<>();
-                training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                training.put("plan_time", String.valueOf(modelTraining.getTime()));
-                training.put("status", "0");
-                training.put("name", modelTraining.getName());
-                training.put("description", modelTraining.getDescription());
-                training.put("image_path", modelTraining.getImage());
-                for (int i = 0; i < modelTraining.getExercises().size(); i++) {
-                    SendExerciseModel model = new SendExerciseModel();
-                    model.setCountRepetitions(modelTraining.getExercises().get(i).getCountRepetitions());
-                    model.setDescription(modelTraining.getExercises().get(i).getDescription());
-                    model.setName(modelTraining.getExercises().get(i).getName());
-                    model.setRecoveryTime(modelTraining.getExercises().get(i).getRecoveryTime());
-                    model.setTime(modelTraining.getExercises().get(i).getTime());
-                    model.setTimeBetween(modelTraining.getExercises().get(i).getTimeBetween());
-                    if (modelTraining.getExercises().get(i).getAudio() != null)
-                        model.setMusicUrls(modelTraining.getExercises().get(i).getAudio());
-                    if (modelTraining.getExercises().get(i).getImage() != null) {
-                        model.setImagePath(modelTraining.getExercises().get(i).getImage());
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toast.makeText(this, "Add exercise images", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    exercise.add(model);
-                    training.put("exercises", URLEncoder.encode(new Gson().toJson(exercise), "UTF-8"));
-                }
-                if (!isEdit)
-                    Request.getInstance().sendPlan(training, this);
-                else
-                    Request.getInstance().editPlan(training, this);
-            } catch (Exception e) {
-                e.printStackTrace();
-                mProgressDialog.dismiss();
-                Toast.makeText(getContext(), "Сбой при сохранении", Toast.LENGTH_SHORT).show();
+        try {
+            HashMap<String, String> training = new HashMap<>();
+            training.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            training.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            training.put("plan_time", String.valueOf(modelTraining.getTime()));
+            training.put("status", "0");
+            training.put("name", modelTraining.getName());
+            training.put("description", modelTraining.getDescription());
+            training.put("inventory", modelTraining.getInvetory());
+            training.put("image_path", modelTraining.getImage());
+            if (Connection.isNetworkAvailable(this)) {
+                progress.setProgress(0);
+                parth.setText(number + 1 + "/" + (modelTraining.getExercises().size() + 1));
+                Request.getInstance().sendPlan(training, this);
             }
-        } else {
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
             mProgressDialog.dismiss();
-            Toast.makeText(this, "Add training image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Сбой при сохранении", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -309,11 +298,19 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
             return false;
         if (modelTraining.getDescription() == null)
             return false;
+        if (modelTraining.getImage() == null)
+            return false;
+        if (modelTraining.getInvetory() == null)
+            modelTraining.setInvetory("");
         for (int i = 0; i < modelTraining.getExercises().size(); i++) {
             if (modelTraining.getExercises().get(i).getName() == null)
                 return false;
             if (modelTraining.getExercises().get(i).getDescription() == null)
-                return false;
+                modelTraining.getExercises().get(i).setDescription("");
+            if (modelTraining.getExercises().get(i).getAudio() == null)
+                modelTraining.getExercises().get(i).setAudio("");
+            if (modelTraining.getExercises().get(i).getImage() == null)
+                modelTraining.getExercises().get(i).setImage("");
         }
         return true;
     }
@@ -322,25 +319,109 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingSta
         return this;
     }
 
+    @SuppressLint("SetTextI18n")
+    private void requestExerciseAdd() {
+        numberImages = 0;
+        HashMap<String, String> map = new HashMap<>();
+        int prog = (number + 1) * 100 / (mModel.getExercises().size() + 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progress.setProgress(prog, true);
+        } else {
+            progress.setProgress(prog);
+        }
+        parth.setText(number + 2 + "/" + (mModel.getExercises().size() + 1));
+
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("is_new", "1");
+        map.put("name", mModel.getExercises().get(number).getName());
+        map.put("description", mModel.getExercises().get(number).getDescription());
+
+        map.put("plan_id", plan_id);
+        map.put("recovery_time", String.valueOf(mModel.getExercises().get(number).getRecoveryTime()));
+        map.put("count_repetitions", String.valueOf(mModel.getExercises().get(number).getCountRepetitions()));
+        map.put("exercise_time", String.valueOf(mModel.getExercises().get(number).getTime()));
+        map.put("time_between", String.valueOf(mModel.getExercises().get(number).getTimeBetween()));
+        try {
+            map.put("music_urls", URLEncoder.encode(mModel.getExercises().get(number).getAudio(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
+        map.put("image", mModel.getExercises().get(number).getImages().get(0));
+        if (Connection.isNetworkAvailable(this))
+            Request.getInstance().addExercise(map, this);
+    }
+
+    private void requestExerciseImagesAdd() {
+        numberImages++;
+        if (mModel.getExercises().get(number).getImages().size() > numberImages) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+            map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+            map.put("exercise_id", idExercise);
+            map.put("image", mModel.getExercises().get(number).getImages().get(numberImages));
+            if (Connection.isNetworkAvailable(this))
+                Request.getInstance().addExercisePhoto(map, this);
+        } else {
+            number++;
+            if (mModel.getExercises().size() > number) {
+                requestExerciseAdd();
+            } else {
+                mProgressDialog.cancel();
+                Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                isSend = true;
+                onBackPressed();
+            }
+        }
+
+    }
+
     @Override
     public void onSuccess(String info) {
-        mProgressDialog.dismiss();
-        if (info.equals("edit"))
-            Toast.makeText(getContext(), getResources().getString(R.string.edited), Toast.LENGTH_SHORT).show();
-        else
+        idExercise = info;
+        if (mModel.getExercises().get(number).getImages().size() > 1) {
+            requestExerciseImagesAdd();
+        } else if (mModel.getExercises().size() > number + 1) {
+            number++;
+            requestExerciseAdd();
+        } else {
+            mProgressDialog.cancel();
             Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
-        isSend = true;
-        onBackPressed();
+            isSend = true;
+            onBackPressed();
+        }
+//        if (info.equals("edit"))
+//            Toast.makeText(getContext(), getResources().getString(R.string.edited), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSuccess(GetPlanModel info) {
+        if (!isEdit) {
+            plan_id = info.getTraining().getId();
+            number = 0;
+            if (mModel.getExercises().size() > 0) {
+                requestExerciseAdd();
+            } else {
+                mProgressDialog.cancel();
+            }
+        } else {
+            plan_id = info.getTraining().getId();
+            number = 0;
+            //TODO Редатирование
+        }
+    }
 
+    @Override
+    public void onSuccess(GetExercisePhotos info) {
+        requestExerciseImagesAdd();
     }
 
     @Override
     public void onFailure(String message) {
-        mProgressDialog.dismiss();
+        mProgressDialog.cancel();
+        Crashlytics.log(message);
+        Log.e("onFailure: ", message);
         Toast.makeText(getContext(), "Сбой при сохранении", Toast.LENGTH_SHORT).show();
     }
 }

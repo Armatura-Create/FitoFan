@@ -101,8 +101,11 @@
     <string name="training">Тренировка</string>
     <string name="my_place">Мое место</string>
     <string name="user_profile">Профиль</string>
-    <string name="connection_error">Ошибка соединения...</string>
+    <string name="connection_error">Ошибка соединения…</string>
     <string name="cancel">Отклонено</string>
     <string name="edited">Изменено</string>
+    <string name="rate_app">Оценить</string>
+    <string name="training_inventory">Инвентарь</string>
+    <string name="inventory_plan">Название инвентаря который необходим для тренировки. Например: \"скакалка\", \"гантели\" и т.д.</string>
 
 </resources>

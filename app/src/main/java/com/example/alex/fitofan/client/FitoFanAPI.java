@@ -1,6 +1,8 @@
 package com.example.alex.fitofan.client;
 
 import com.example.alex.fitofan.models.GetCommentsModel;
+import com.example.alex.fitofan.models.GetExerciseModel;
+import com.example.alex.fitofan.models.GetExercisePhotos;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetPlansModel;
 import com.example.alex.fitofan.models.GetRatingModel;
@@ -155,5 +157,13 @@ interface FitoFanAPI {
     @POST("/v1/searchUsers")
     @FormUrlEncoded
     Call<GetSearchUsersModel> searchUsers(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/addPlanExercise")
+    @FormUrlEncoded
+    Call<GetExerciseModel> addPlanExercise(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/addExercisePhoto")
+    @FormUrlEncoded
+    Call<GetExercisePhotos> addExercisePhoto(@FieldMap(encoded = true) HashMap<String, String> params);
 
 }

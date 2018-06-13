@@ -1,5 +1,6 @@
 package com.example.alex.fitofan.ui.activity.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +21,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
-import com.example.alex.fitofan.eventbus.MyPlansEvent;
+import com.example.alex.fitofan.eventbus.ReselectWallTabs;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
@@ -37,10 +40,9 @@ import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.fabric.sdk.android.Fabric;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
@@ -52,13 +54,17 @@ public class MainActivity extends AppCompatActivity
     private ActivityMainBinding mBinding;
     private MainPresenter mPresenter;
     private View navHeader;
-    private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int SELECT_IMAGE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final Fabric fabric = new Fabric.Builder(getApplication().getBaseContext())
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
+        Fabric.with(fabric);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mPresenter = new MainPresenter(this);
@@ -78,6 +84,14 @@ public class MainActivity extends AppCompatActivity
         initTabs();
         initListeners();
         loadHeader();
+        logUser();
+    }
+
+    private void logUser() {
+        GetUserModel model = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(model.getUser().getUid());
+        Crashlytics.setUserName(model.getUser().getName() + " " + model.getUser().getSurname());
     }
 
     @Override
@@ -96,7 +110,6 @@ public class MainActivity extends AppCompatActivity
         return super.dispatchTouchEvent(event);
     }
 
-
     private void initListeners() {
         navHeader.findViewById(R.id.nav_profileImage).setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), UserProfileActivity.class);
@@ -109,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         Connection.isNetworkAvailable(mBinding.appBarMain.contentMain.container, this);
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadHeader() {
         CircleImageView imageProfile = navHeader.findViewById(R.id.nav_profileImage);
         TextView firstName = navHeader.findViewById(R.id.first_name);
@@ -142,17 +156,7 @@ public class MainActivity extends AppCompatActivity
                     .transition(withCrossFade())
                     .into(imageProfile); //ссылка на ImageView
         }
-
-        //TODO Доделать подгрузку имени
     }
-
-    private void loadHeader(Intent data) {
-        CircleImageView imageProfile = navHeader.findViewById(R.id.nav_profileImage);
-        Glide.with(getApplicationContext()) //передаем контекст приложения
-                .load(data.getData())
-                .into(imageProfile); //ссылка на ImageView
-    }
-
 
     private void initTabs() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -163,6 +167,24 @@ public class MainActivity extends AppCompatActivity
         mBinding.appBarMain.contentMain.viewpager.setOffscreenPageLimit(4);
         mBinding.appBarMain.contentMain.viewpager.setAdapter(adapter);
         mBinding.appBarMain.tablayout.setupWithViewPager(mBinding.appBarMain.contentMain.viewpager);
+        mBinding.appBarMain.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0)
+                    if (tab.isSelected())
+                        EventBus.getDefault().post(new ReselectWallTabs());
+            }
+        });
     }
 
     @Override
@@ -203,15 +225,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     protected void onResume() {
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-        EventBus.getDefault().unregister(this);
-        EventBus.getDefault().register(this);
         loadHeader();
         super.onResume();
     }
@@ -222,15 +241,9 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMyPlansEvent(MyPlansEvent event) {
-        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-        mBinding.appBarMain.contentMain.viewpager.setCurrentItem(2);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -244,6 +257,8 @@ public class MainActivity extends AppCompatActivity
             mBinding.appBarMain.contentMain.viewpager.setCurrentItem(1);
         } else if (id == R.id.nav_my_plans) {
             mBinding.appBarMain.contentMain.viewpager.setCurrentItem(2);
+        } else if (id == R.id.nav_fans) {
+            mBinding.appBarMain.contentMain.viewpager.setCurrentItem(3);
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingActivity.class));
         } else if (id == R.id.nav_share) {
@@ -252,8 +267,8 @@ public class MainActivity extends AppCompatActivity
             mPresenter.alertExit();
         } else if (id == R.id.nav_add_plan) {
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
-        }
-
+        } else if (id == R.id.nav_rate_app)
+            mPresenter.rateApp();
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

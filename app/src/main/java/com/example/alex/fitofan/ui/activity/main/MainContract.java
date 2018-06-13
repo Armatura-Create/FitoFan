@@ -20,5 +20,6 @@ interface MainContract {
         void alertExit();
 
         void shareApp();
+        void rateApp();
     }
 }

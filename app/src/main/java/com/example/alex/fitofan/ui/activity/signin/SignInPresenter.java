@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
@@ -31,6 +34,8 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+
+import io.fabric.sdk.android.Fabric;
 
 class SignInPresenter implements SignInContract.EventListener {
     private SignInContract.View view;
@@ -136,6 +141,10 @@ class SignInPresenter implements SignInContract.EventListener {
                     }
                 } catch (Exception e) {
                     LoginManager.getInstance().logOut();
+                    Answers.getInstance().logLogin(new LoginEvent()
+                            .putMethod("ErrorLoginFB")
+                            .putSuccess(false));
+                    Crashlytics.logException(e);
                     e.printStackTrace();
                 }
 
@@ -161,6 +170,10 @@ class SignInPresenter implements SignInContract.EventListener {
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
+        Answers.getInstance().logLogin(new LoginEvent()
+                .putMethod("LoginFBorEmail")
+                .putSuccess(true));
+
         new Thread(() -> {
             try {
                 Thread.sleep(1500L);
@@ -176,6 +189,12 @@ class SignInPresenter implements SignInContract.EventListener {
     public void onFailure(String message) {
         if (message.equals("incorrect")) {
             Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.incorrect_email_or_pass), Toast.LENGTH_SHORT).show();
+            Answers.getInstance().logLogin(new LoginEvent()
+                    .putMethod("Incorrect")
+                    .putSuccess(false));
         }
+        Answers.getInstance().logLogin(new LoginEvent()
+                .putMethod("ErrorLoginEmail")
+                .putSuccess(false));
     }
 }

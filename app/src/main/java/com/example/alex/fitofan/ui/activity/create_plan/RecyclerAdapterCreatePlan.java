@@ -4,14 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,27 +22,30 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModel;
 import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.utils.CompressImage;
 import com.example.alex.fitofan.utils.CountData;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.CustomDialog.RecyclerAdapterCard;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Objects;
-
-import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdapterCreatePlan.ViewHolder> {
 
     //Предоставляет ссылку на представления, используемые в RecyclerView
     private TrainingModel mTrainingModel;
     private CreatePlanActivity mCreatePlanActivity;
+    private ArrayList<RecyclerGridAdapterPhotos> adapters;
     private int id;
     private final long MILISEC_MIN = 60000L;
     private final long MILISEC_SEC = 1000L;
@@ -50,16 +54,22 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     RecyclerAdapterCreatePlan(CreatePlanActivity mCreatePlanActivity, TrainingModel mTrainingModel, int id) {
         this.mCreatePlanActivity = mCreatePlanActivity;
         this.mTrainingModel = mTrainingModel;
+        mTrainingModel.getExercises().get(0).setImages(new ArrayList<>());
+        adapters = new ArrayList<>();
+        adapters.add(new RecyclerGridAdapterPhotos(mCreatePlanActivity));
         this.id = id;
     }
 
     void addItem() {
         mTrainingModel.getExercises().add(mTrainingModel.getExercises().size(), new ExerciseModel());
+        mTrainingModel.getExercises().get(mTrainingModel.getExercises().size() - 1).setImages(new ArrayList<>());
+        adapters.add(mTrainingModel.getExercises().size() - 1, new RecyclerGridAdapterPhotos(mCreatePlanActivity));
         this.notifyItemInserted(mTrainingModel.getExercises().size() + 1);
     }
 
-    void delItem() {
+    private void delItem() {
         mTrainingModel.getExercises().remove(getItemCount() - 3);
+        adapters.remove(getItemCount() - 3);
         this.notifyItemRemoved(getItemCount() - 1);
     }
 
@@ -84,8 +94,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Создание нового представления
         LinearLayout linear = null;
         switch (viewType) {
@@ -114,13 +125,18 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         //header view
         LinearLayout linerNameTraining = linear.findViewById(R.id.liner_name_training);
         LinearLayout linerDescriptionTraining = linear.findViewById(R.id.liner_description_training);
+        LinearLayout linerInventoryTraining = linear.findViewById(R.id.liner_inventory_training);
         TextView nameTraining = linear.findViewById(R.id.et_training_name_create);
         TextView nameTrainingDescription = linear.findViewById(R.id.ed_description_training);
+        TextView inventory = linear.findViewById(R.id.ed_inventory_training);
         Button btAddImageTraining = linear.findViewById(R.id.bt_add_image_training);
         ImageView imageTraining = linear.findViewById(R.id.image_training_plan_create);
         CardView cvImageTraining = linear.findViewById(R.id.image_training_plan_card);
+        TextView textDescription = linear.findViewById(R.id.text_description_plan);
+        TextView textName = linear.findViewById(R.id.text_name_plan);
 
         //body view
+        RecyclerView rv_images = linear.findViewById(R.id.image_exercise_rv);
         LinearLayout linerNameExercise = linear.findViewById(R.id.liner_name_exercise);
         LinearLayout linerTimeBetweenExercise = linear.findViewById(R.id.liner_time_between_exercise);
         LinearLayout linerRecoveryTime = linear.findViewById(R.id.liner_recovery_time);
@@ -137,8 +153,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         TextView etTimeExercise = linear.findViewById(R.id.et_exercise_time);
         TextView etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
         TextView etRelaxTime = linear.findViewById(R.id.et_recovery_time);
-        ImageView imageExercise = linear.findViewById(R.id.image_exercise_create);
-        CardView cvImageExercise = linear.findViewById(R.id.image_exercise_card);
+        TextView textNameExrcise = linear.findViewById(R.id.text_name_exercises);
 
         //footer
         Button btAddExercise = linear.findViewById(R.id.bt_add_exercise);
@@ -155,11 +170,15 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                         cvImageTraining);
             }
 
+            textDescription.setText(textDescription.getText() + "*");
+            textName.setText(textName.getText() + "*");
+            btAddImageTraining.setText(btAddImageTraining.getText() + "*");
+
             btAddImageTraining.setOnClickListener(v -> {
                 mCreatePlanActivity.requestMultiplePermissions();
                 if (ContextCompat.checkSelfPermission(mCreatePlanActivity.getContext(),
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                    mCreatePlanActivity.choosePicturePlan(position, imageTraining, cvImageTraining);
+                    mCreatePlanActivity.choosePicture(position, imageTraining, cvImageTraining);
             });
 
             linerNameTraining.setOnClickListener(v -> {
@@ -195,19 +214,35 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                     dialog.dismiss();
                 });
             });
+
+            linerInventoryTraining.setOnClickListener(v -> {
+                Dialog dialog = CustomDialog.dialog(mCreatePlanActivity.getContext(),
+                        mCreatePlanActivity.getResources().getString(R.string.training_inventory),
+                        mCreatePlanActivity.getResources().getString(R.string.inventory_plan),
+                        mCreatePlanActivity.getResources().getString(R.string.save), 1);
+
+                //set text if !null
+                setDataEt(dialog, inventory);
+
+                dialog.findViewById(R.id.bt_dialog_add).setOnClickListener(v1 -> {
+                    EditText et = dialog.findViewById(R.id.et_add_field_dialog);
+                    inventory.setText(et.getText());
+                    mTrainingModel.setInvetory(String.valueOf(et.getText()));
+                    dialog.dismiss();
+                });
+            });
         }
 
         //body methods
         if (position > 0 && position != getItemCount() - 1) {
-
-            cvImageExercise.setVisibility(View.GONE);
-            imageExercise.setImageDrawable(null);
 
             etRelaxTime.setText(FormatTime.formatTime(0));
             etTimeBetweenExercise.setText(FormatTime.formatTime(0));
             etTimeExercise.setText(FormatTime.formatTime(0));
             etNameExercise.setText("");
             etNumberRepetition.setText("1");
+
+            textNameExrcise.setText(textNameExrcise.getText() + "*");
 
             if (id > 0) {
                 setDataEditExercise(position,
@@ -216,8 +251,13 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                         etTimeExercise,
                         etTimeBetweenExercise,
                         etRelaxTime,
-                        imageExercise, cvImageExercise);
+                        rv_images);
             }
+
+
+            GridLayoutManager layoutManager = new GridLayoutManager(mCreatePlanActivity.getContext(), 3);
+            rv_images.setLayoutManager(layoutManager);
+            rv_images.setAdapter(adapters.get(position - 1));
 
             btAddAudio.setOnClickListener(v ->
                     mCreatePlanActivity.chooseAudioExercise(position, borderAudio)
@@ -401,18 +441,28 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 });
             });
 
-            btAddImageExercise.setOnClickListener(v ->
-                    mCreatePlanActivity.choosePictureExercise(position, imageExercise, cvImageExercise)
-            );
+            btAddImageExercise.setOnClickListener(v -> {
+                if (adapters.get(position - 1).getItemCount() < 5)
+                    mCreatePlanActivity.choosePicture(position);
+                else
+                    Toast.makeText(mCreatePlanActivity.getContext(), "Max 5 images", Toast.LENGTH_SHORT).show();
+            });
         }
 
         //footer methods
-        if (position == getItemCount() - 1) {
+        if (position ==
+
+                getItemCount() - 1)
+
+        {
             btAddExercise.setOnClickListener(v -> {
                 mCreatePlanActivity.addItemExercise();
             });
 
             btSaveTraining.setOnClickListener(v -> {
+                for (int i = 0; i < mTrainingModel.getExercises().size(); i++) {
+                    mTrainingModel.getExercises().get(i).setImages(adapters.get(i).getImagesString());
+                }
                 mCreatePlanActivity.sendPlan(mTrainingModel);
             });
 
@@ -424,6 +474,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 }
             });
         }
+
     }
 
     private void setDataEt(Dialog dialog, TextView nameTraining) {
@@ -446,7 +497,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
     private String setAllTime() {
 
-        long allTime = Long.valueOf(CountData.mathData(mTrainingModel).getTimeLong());
+        long allTime = CountData.mathData(mTrainingModel).getTimeLong();
 //
 //        for (int i = 0; i < mTrainingModel.getExercises().size(); i++) {
 //            if (mTrainingModel.getExercises().get(i).getTime() % 10 == 0)
@@ -458,19 +509,20 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         return CountData.mathData(mTrainingModel).getTime();
     }
 
-    private void setDataEditExercise(int position, TextView etNameExercise, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, ImageView image, CardView cvImage) {
+    private void setDataEditExercise(int position, TextView etNameExercise, TextView etNumberRepetition, TextView etTimeExercise, TextView etTimeBetweenExercise, TextView etRelaxTime, RecyclerView rv) {
         etNameExercise.setText(mTrainingModel.getExercises().get(position - 1).getName());
         etNumberRepetition.setText(String.valueOf(mTrainingModel.getExercises().get(position - 1).getCountRepetitions()));
         etTimeExercise.setText(FormatTime.formatCountWithDimension(mTrainingModel.getExercises().get(position - 1).getTime()));
         etTimeBetweenExercise.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getTimeBetween()));
         etRelaxTime.setText(FormatTime.formatTime(mTrainingModel.getExercises().get(position - 1).getRecoveryTime()));
-        if (mTrainingModel.getExercises().get(position - 1).getImage() != null) {
-            cvImage.setVisibility(View.VISIBLE);
-            Glide.with(mCreatePlanActivity.getContext())
-                    .load(Uri.parse(mTrainingModel.getExercises().get(position - 1).getImage()))
-                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                    .into(image);
-        }
+        initRecycler(rv, position);
+    }
+
+    private void initRecycler(RecyclerView rv, int position) {
+//        GridLayoutManager layoutManager = new GridLayoutManager(mCreatePlanActivity.getContext(), 3);
+//        rv.setLayoutManager(layoutManager);
+//        RecyclerGridAdapterPhotos adapter = new RecyclerGridAdapterPhotos(mCreatePlanActivity.getContext(), mModel);
+//        rv.setAdapter(adapter);
     }
 
     void setAudio(Uri uriExercise, int position, LinearLayout border) {
@@ -478,12 +530,25 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             border.setVisibility(View.VISIBLE);
         else
             border.setVisibility(View.INVISIBLE);
-        mTrainingModel.getExercises().get(position - 1).setAudio(uriExercise.toString());
+        mTrainingModel.getExercises().get(position - 1).setAudio(String.valueOf(uriExercise));
     }
 
-    void setImage(Uri uriExercise, ImageView imageExercise, CardView cvExercise) {
+    void setImage(Uri uri, ImageView imageExercise, CardView cvExercise) {
         cvExercise.setVisibility(View.VISIBLE);
-        Glide.with(mCreatePlanActivity.getContext()).load(uriExercise).into(imageExercise);
+        if (uri != null)
+            Glide.with(mCreatePlanActivity.getContext())
+                    .load(uri)
+                    .into(imageExercise);
+    }
+
+    void setImageExercise(Uri uri, int position) {
+        try {
+            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(mCreatePlanActivity.getContentResolver(), uri);
+            imageBitmap = CompressImage.compressImageFromBitmap(imageBitmap);
+            adapters.get(position - 1).addImage(uri, URLEncoder.encode(CompressImage.getBase64FromBitmap(imageBitmap), "UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

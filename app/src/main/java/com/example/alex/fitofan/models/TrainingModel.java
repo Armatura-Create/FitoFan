@@ -3,12 +3,6 @@ package com.example.alex.fitofan.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,35 +11,29 @@ import java.util.ArrayList;
 
 public class TrainingModel implements Serializable, Parcelable {
 
-    @DatabaseField(generatedId = true)
     private int id;
 
-    @DatabaseField(columnName = "time")
-    @SerializedName("time")
-    @Expose
     private long time;
 
-    @DatabaseField(columnName = "name")
-    @SerializedName("name")
-    @Expose
     private String name;
 
-    @DatabaseField(columnName = "description")
-    @SerializedName("description")
-    @Expose
     private String description;
 
-    @DatabaseField(columnName = "image")
     private String image;
 
-    @ForeignCollectionField(eager = true)
-    @DatabaseField(columnName = "exercise", dataType = DataType.SERIALIZABLE)
-    @SerializedName("exercises")
-    @Expose
+    private String invetory;
+
     private ArrayList<ExerciseModel> exercises;
 
     private String userId;
+
     private String createdTime;
+
+    private ArrayList<String> imageTraining;
+
+    private boolean isEditData;
+
+    private boolean isEditPhoto;
 
     public TrainingModel() {
     }
@@ -102,14 +90,6 @@ public class TrainingModel implements Serializable, Parcelable {
     public void setDescription(String description) {
         this.description = description;
     }
-//
-//    public Uri getUriImage() {
-//        return uriImage;
-//    }
-//
-//    public void setUriImage(Uri uriImage) {
-//        this.uriImage = uriImage;
-//    }
 
     public int getId() {
         return id;
@@ -166,5 +146,37 @@ public class TrainingModel implements Serializable, Parcelable {
 
     public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public boolean isEditData() {
+        return isEditData;
+    }
+
+    public void setEditData(boolean editData) {
+        isEditData = editData;
+    }
+
+    public boolean isEditPhoto() {
+        return isEditPhoto;
+    }
+
+    public void setEditPhoto(boolean editPhoto) {
+        isEditPhoto = editPhoto;
+    }
+
+    public String getInvetory() {
+        return invetory;
+    }
+
+    public void setInvetory(String invetory) {
+        this.invetory = invetory;
+    }
+
+    public ArrayList<String> getImageTraining() {
+        return imageTraining;
+    }
+
+    public void setImageTraining(ArrayList<String> imageTraining) {
+        this.imageTraining = imageTraining;
     }
 }

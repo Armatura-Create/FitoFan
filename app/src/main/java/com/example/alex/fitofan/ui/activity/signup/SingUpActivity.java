@@ -72,7 +72,6 @@ public class SingUpActivity extends AppCompatActivity implements SingUpContract.
 
             presenter.register(mBinding.content.login.getText().toString().trim(),
                     mBinding.content.password.getText().toString().trim(),
-                    mBinding.content.firstName.getText().toString().trim(),
                     mBinding.content.firstName.getText().toString().trim());
         });
     }
