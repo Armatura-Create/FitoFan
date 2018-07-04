@@ -163,7 +163,7 @@ public class RecyclerAdapterRaiting extends RecyclerView.Adapter<RecyclerAdapter
                     .transition(withCrossFade())
                     .into(imageUser); //ссылка на ImageView
 
-            number.setText(position + 2 + "");
+            number.setText(position + 3 + "");
             name.setText(mModel.get(position + 2).getName() + " " + mModel.get(position + 2).getSurname());
             like.setText(mModel.get(position + 2).getLikes());
 

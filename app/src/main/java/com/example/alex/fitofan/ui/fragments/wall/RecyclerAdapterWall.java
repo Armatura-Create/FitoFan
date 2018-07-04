@@ -5,11 +5,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,16 +19,15 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.CountData;
-import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.errorOf;
 
 public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
 
@@ -87,7 +86,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         TextView tvFirstName = linear.findViewById(R.id.first_name_wall);
         TextView tvLastName = linear.findViewById(R.id.last_name_wall);
         TextView tvNameTrainig = linear.findViewById(R.id.tv_training_name);
-        TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
+        RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
         TextView tvTimeCreate = linear.findViewById(R.id.data_publication);
         TextView tvDescription = linear.findViewById(R.id.tv_description);
         TextView countLike = linear.findViewById(R.id.count_like);
@@ -104,9 +103,12 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         countSaved.setText(CountData.mathLikes(mWallModels.get(position).getSaved()));
         countLike.setText(CountData.mathLikes(mWallModels.get(position).getLikes()));
         countComments.setText(CountData.mathLikes(mWallModels.get(position).getComments()));
-
+        if (mWallModels.get(position).getPlanLevel() != null && !mWallModels.get(position).getPlanLevel().equals(""))
+            levelTraining.setRating(Float.valueOf(mWallModels.get(position).getPlanLevel()));
+        else
+            levelTraining.setRating((float) 1.0);
         tvNameTrainig.setText(mWallModels.get(position).getName());
-        tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position).getPlan_time())));
+
         tvTimeCreate.setText(mWallModels.get(position).getCreationDate());
         tvDescription.setText(mWallModels.get(position).getDescription());
         tvFirstName.setText(mWallModels.get(position).getUser().getName());
@@ -126,12 +128,11 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
             countSaved.setTextColor(Color.parseColor("#ffffff"));
         }
 
-        Glide.with(mWallFragment.getContext()) //передаем контекст приложения
+        Glide.with(Objects.requireNonNull(mWallFragment.getContext())) //передаем контекст приложения
                 .load(Uri.parse(mWallModels.get(position).getImage()))
                 .apply(centerCropTransform())
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                 .transition(withCrossFade())
-
                 .into(imageTrainingPlan);
 
         Glide.with(mWallFragment.getContext())

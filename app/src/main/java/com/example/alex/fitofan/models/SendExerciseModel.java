@@ -2,7 +2,6 @@ package com.example.alex.fitofan.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DatabaseField;
 
 public class SendExerciseModel {
 

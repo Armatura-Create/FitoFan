@@ -153,7 +153,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initRecyclerView(ArrayList<GetTrainingModel> models) {
-        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext());
+        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext(), 20);
         mBinding.rvMyPlans.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterMyPlans(models, this);
         mBinding.rvMyPlans.setAdapter(adapter);
@@ -255,7 +255,7 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onSuccess(GetPlansModel info, String text) {
         if (isSaved) {
             mModels.clear();
-            mModels.addAll(sort(info.getTrainings()));
+            mModels.addAll(info.getTrainings());
             mBinding.refresh.setRefreshing(false);
             adapter.setTrainings(mModels);
             adapter.notifyDataSetChanged();

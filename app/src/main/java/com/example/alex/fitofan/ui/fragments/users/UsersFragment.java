@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class UsersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchStatus {
 
@@ -78,7 +78,7 @@ public class UsersFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void initRecyclerView() {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
         mBinding.rv.setItemViewCacheSize(100);
         mBinding.rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapter(users, this);

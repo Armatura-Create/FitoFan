@@ -1,7 +1,6 @@
 package com.example.alex.fitofan.ui.fragments.my_plans;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +20,6 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.GetTrainingModel;
 import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.CountData;
-import com.example.alex.fitofan.utils.FormatTime;
 
 import java.util.ArrayList;
 
@@ -93,7 +92,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
 
         TextView name = linear.findViewById(R.id.tv_training_name);
         TextView description = linear.findViewById(R.id.tv_description);
-        TextView time = linear.findViewById(R.id.tv_total_time);
+        RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
         TextView countLike = linear.findViewById(R.id.count_like);
         ImageView imageTraining = linear.findViewById(R.id.image_training);
         TextView countComments = linear.findViewById(R.id.count_comments);
@@ -112,7 +111,10 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
 
         name.setText(mTrainings.get(position).getName());
         description.setText(mTrainings.get(position).getDescription());
-        time.setText(FormatTime.formatTime(Long.parseLong(mTrainings.get(position).getPlan_time())));
+        if (mTrainings.get(position).getPlanLevel() != null && !mTrainings.get(position).getPlanLevel().equals(""))
+            levelTraining.setRating(Float.valueOf(mTrainings.get(position).getPlanLevel()));
+        else
+            levelTraining.setRating((float) 1.0);
 
         like.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_favorite_black));
         save.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_save_black));

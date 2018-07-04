@@ -2,13 +2,13 @@ package com.example.alex.fitofan.utils;
 
 import com.example.alex.fitofan.models.CountDataOnPreviewModel;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
-import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.GetPlanModel;
 
 import java.util.ArrayList;
 
 public class CountData {
 
-    public static CountDataOnPreviewModel mathData(TrainingModel model) {
+    public static CountDataOnPreviewModel mathData(GetPlanModel model) {
         long time = 0;
         int count = 0;
         long distance = 0;

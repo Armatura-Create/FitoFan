@@ -4,117 +4,177 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_dialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardBackgroundColor="#FF050054"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardCornerRadius="10dp">
+    app:cardBackgroundColor="@color/background_fragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+                android:layout_height="220dp" />
 
-            <ImageView
-                android:id="@+id/iv_background"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/shape_preview_top" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_rv_preview"
-            android:orientation="vertical"
-            android:weightSum="6">
+            <VideoView
+                android:id="@+id/video_view"
+                android:layout_width="wrap_content"
+                android:layout_height="220dp"
+                android:visibility="gone"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/name_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:minLines="2"
-                    android:textColor="@android:color/white"
-                    android:textSize="38sp"
-                    android:textStyle="bold"
-                    tools:text="Cross" />
-
-                <TextView
-                    android:id="@+id/description_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="20dp"
-                    android:isScrollContainer="true"
-                    android:minLines="15"
-                    android:maxLines="15"
-                    android:scrollbars="vertical"
-                    android:textColor="@android:color/white"
-                    tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:id="@+id/linear_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/radius_liner_turn"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/back_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
+                    android:id="@+id/back_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_gravity="bottom"
                     android:src="@drawable/ic_left_white_24dp" />
 
-                <ImageView
-                    android:id="@+id/close_dialog"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:padding="5dp"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/ripple_back"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_clear_white_24dp" />
+                <TextView
+                    android:id="@+id/number_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    tools:text="12/12" />
 
                 <ImageView
-                    android:id="@+id/next_exercise"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:layout_gravity="bottom"
+                    android:id="@+id/next_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ripple_back"
                     android:clickable="true"
                     android:focusable="true"
                     android:src="@drawable/ic_right_white_24dp" />
             </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/name_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@android:color/black"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            tools:text="Cross" />
+
+        <TextView
+            android:id="@+id/description_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:isScrollContainer="true"
+            android:maxLines="10"
+            android:minLines="10"
+            android:scrollbars="vertical"
+            android:textColor="#606a7a"
+            android:textSize="16sp"
+            tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />
+
+        <TextView
+            android:id="@+id/tv_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:gravity="end"
+            android:text="@string/close"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/liner_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#303338"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <ImageView
+                android:id="@+id/back_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_left_white_24dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tv_exercise_now"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    tools:text="16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_count_exercises"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:text="16" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/next_exercise"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_right_white_24dp" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

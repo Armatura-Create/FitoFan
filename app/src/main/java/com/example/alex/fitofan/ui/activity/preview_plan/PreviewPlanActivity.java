@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -22,15 +23,16 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
 import com.example.alex.fitofan.interfaces.DelStatus;
-import com.example.alex.fitofan.interfaces.ILoadingStatus;
+import com.example.alex.fitofan.interfaces.ILoadingPlan;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.UserStatus;
-import com.example.alex.fitofan.models.ExerciseModel;
+import com.example.alex.fitofan.models.GetExerciseModel;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.models.GetUserModel;
-import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.PhotoModel;
 import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.settings.MSharedPreferences;
+import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.training.TrainingActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
@@ -45,18 +47,19 @@ import java.util.HashMap;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
-public class PreviewPlanActivity extends AppCompatActivity implements ILoadingStatus<GetPlanModel>, LikeStatus, DelStatus, UserStatus {
+public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPlan, LikeStatus, DelStatus, UserStatus {
 
     private ActivityPlanPreviewBinding mBinding;
     private RecyclerAdapterPreviewPlan adapter;
-    private TrainingModel mModel;
-    private GetPlanModel mModelfromServer;
+    private GetPlanModel mPlanModel;
+    private GetPlanModel mNotEditPlan;
 
     private Menu menu;
     private ProgressDialog progressDialog;
     private int positionLike = 1;
     private int positionSave = 0;
     private int tempPosition;
+    private ArrayList<PhotoModel> imageTraining = new ArrayList<>();
 
     private static final int FILE_SELECT_CODE = 400;
     private LinearLayout borderLinear;
@@ -70,11 +73,18 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        ArrayList<ExerciseModel> models = new ArrayList<>();
-        mModel = new TrainingModel();
-        mModel.setExercises(models);
+        ArrayList<GetExerciseModel> models = new ArrayList<>();
+        mPlanModel = new GetPlanModel();
+        mPlanModel.setExercises(models);
         initRecyclerView();
         initListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        progressDialog.show();
+        initRequest();
+        super.onResume();
     }
 
     private void initRequest() {
@@ -121,44 +131,43 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
             HashMap<String, String> map = new HashMap<>();
             map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("plan_id", String.valueOf(mModel.getId()));
+            map.put("plan_id", String.valueOf(mPlanModel.getTraining().getId()));
             if (Connection.isNetworkAvailable(this)) {
-                if (mModelfromServer.getTraining().getIsSaved() == 0)
+                if (mPlanModel.getTraining().getIsSaved() == 0)
                     Request.getInstance().savePlan(map, this);
-                if (mModelfromServer.getTraining().getIsSaved() != 0)
+                if (mPlanModel.getTraining().getIsSaved() != 0)
                     Request.getInstance().unSavePlan(map, this);
             }
             return true;
         }
         if (id == R.id.action_edit_server) {
-
+            goEdit();
         }
 
         if (id == R.id.action_remove_all) {
             HashMap<String, String> map = new HashMap<>();
             map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
             map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-            map.put("plan_id", String.valueOf(mModel.getId()));
+            map.put("plan_id", String.valueOf(mPlanModel.getTraining().getId()));
             Request.getInstance().delPlan(map, this);
         }
 
         if (id == R.id.action_remove_wall) {
-            if (mModelfromServer.getStatus() == 1)
-                unpublicationPlan(String.valueOf(mModel.getId()));
+            if (mPlanModel.getStatus() == 1)
+                unpublicPlan(String.valueOf(mPlanModel.getTraining().getId()));
         }
 
         if (id == R.id.action_music_server) {
-            if (mModelfromServer.getExercises().size() > 0) {
+            if (mPlanModel.getExercises().size() > 0) {
                 int[] pos = {0};
                 Dialog dialog = CustomDialog.cardMusic(this,
-                        mModelfromServer.getExercises().get(pos[0]).getName(),
-                        mModelfromServer.getExercises().get(pos[0]).getImage());
+                        mPlanModel.getExercises().get(pos[0]).getName(),
+                        mPlanModel.getExercises().get(pos[0]).getImage());
                 dialog.setCancelable(true);
-                dialog.findViewById(R.id.bt_add_audio_exercise).setOnClickListener(view -> {
-                    chooseAudioExercise(pos[0], dialog.findViewById(R.id.background_border_audio));
-                });
+                dialog.findViewById(R.id.bt_add_audio_exercise).setOnClickListener(view ->
+                        chooseAudioExercise(pos[0], dialog.findViewById(R.id.background_border_audio)));
 
-                if (mModelfromServer.getExercises().size() - 1 == pos[0])
+                if (mPlanModel.getExercises().size() - 1 == pos[0])
                     dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                 else
                     dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -167,16 +176,16 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                 else
                     dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
                 dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
-                    if (mModelfromServer.getExercises().size() - 1 > pos[0]) {
+                    if (mPlanModel.getExercises().size() - 1 > pos[0]) {
                         pos[0]++;
-                        if (mModelfromServer.getExercises().size() > pos[0]) {
-                            CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                    mModelfromServer.getExercises().get(pos[0]).getImage(),
-                                    (mModel.getExercises().get(pos[0]).getAudio() != null &&
-                                            !mModel.getExercises().get(pos[0]).getAudio().equals("")));
+                        if (mPlanModel.getExercises().size() > pos[0]) {
+                            CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                    mPlanModel.getExercises().get(pos[0]).getImage(),
+                                    (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
+                                            !mPlanModel.getExercises().get(pos[0]).getMusicUrls().equals("")));
                         }
                     }
-                    if (mModel.getExercises().size() - 1 == pos[0])
+                    if (mPlanModel.getExercises().size() - 1 == pos[0])
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                     else
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -190,13 +199,13 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                     if (pos[0] > 0) {
                         pos[0]--;
                         if (pos[0] + 1 > 0) {
-                            CustomDialog.cardSetMusic(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                    mModel.getExercises().get(pos[0]).getImage(),
-                                    (mModel.getExercises().get(pos[0]).getAudio() != null &&
-                                            !mModel.getExercises().get(pos[0]).getAudio().equals("")));
+                            CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                    mPlanModel.getExercises().get(pos[0]).getImage(),
+                                    (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
+                                            !mPlanModel.getExercises().get(pos[0]).getMusicUrls().equals("")));
                         }
                     }
-                    if (mModel.getExercises().size() - 1 == pos[0])
+                    if (mPlanModel.getExercises().size() - 1 == pos[0])
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                     else
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -210,6 +219,13 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void goEdit() {
+        Intent intent = new Intent(getContext(), CreatePlanActivity.class);
+        intent.putExtra("edit", true);
+        intent.putExtra("planId", mPlanModel.getTraining().getId());
+        startActivity(intent);
     }
 
     void chooseAudioExercise(int position, LinearLayout borderLinear) {
@@ -232,7 +248,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                     if (data != null)
                         if (data.getData() != null) {
                             Uri uriExercise = data.getData();
-                            mModel.getExercises().get(tempPosition).setAudio(String.valueOf(uriExercise));
+                            mPlanModel.getExercises().get(tempPosition).setMusicUrls(String.valueOf(uriExercise));
                             Log.e("startMusicExercise", String.valueOf(uriExercise));
                             borderLinear.setVisibility(View.VISIBLE);
                         }
@@ -245,41 +261,44 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         HashMap<String, String> map = new HashMap<>();
         map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
         map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-        map.put("plan_id", String.valueOf(mModel.getId()));
+        map.put("plan_id", String.valueOf(mPlanModel.getTraining().getId()));
         if (Connection.isNetworkAvailable(this)) {
-            if (mModelfromServer.getTraining().getLiked() == 0)
+            if (mPlanModel.getTraining().getLiked() == 0)
                 Request.getInstance().like(map, this);
-            if (mModelfromServer.getTraining().getLiked() != 0)
+            if (mPlanModel.getTraining().getLiked() != 0)
                 Request.getInstance().dislikePlan(map, this);
         }
     }
 
     private void initListeners() {
         mBinding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        mBinding.goToTraining.setOnClickListener(v -> {
-            goTraining();
-        });
+        mBinding.goToTraining.setOnClickListener(v ->
+                goTraining());
 
         ItemClickSupport.addTo(mBinding.rv).setOnItemClickListener((recyclerView, position, v) -> {
             if (position == 0) {
                 Dialog dialog = CustomDialog.card(this, this.getWindow(),
-                        mModel.getName(),
-                        mModel.getDescription(),
-                        mModel.getImageTraining());
+                        mPlanModel.getTraining().getName(),
+                        mPlanModel.getTraining().getDescription(),
+                        imageTraining, null);
                 dialog.setCancelable(true);
-                dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
-                dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                dialog.findViewById(R.id.liner_bottom).setVisibility(View.GONE);
             }
             if (position != 0) {
 
                 int[] pos = {adapter.getModel().get(position - 1).getPosition()};
                 if (!adapter.getModel().get(position - 1).isRest()) {
                     Dialog dialog = CustomDialog.card(this, this.getWindow(),
-                            mModel.getExercises().get(pos[0]).getName(),
-                            mModel.getExercises().get(pos[0]).getDescription(),
-                            mModel.getExercises().get(pos[0]).getImages());
+                            mPlanModel.getExercises().get(pos[0]).getName(),
+                            mPlanModel.getExercises().get(pos[0]).getDescription(),
+                            mPlanModel.getExercises().get(pos[0]).getPhotos(),
+                            mPlanModel.getExercises().get(pos[0]).getVideoUrl());
                     dialog.setCancelable(true);
-                    if (mModel.getExercises().size() - 1 == pos[0])
+                    TextView posExercise = dialog.findViewById(R.id.tv_exercise_now);
+                    TextView allCountExercise = dialog.findViewById(R.id.tv_count_exercises);
+                    posExercise.setText(pos[0] + 1 + "");
+                    allCountExercise.setText(mPlanModel.getExercises().size() + "");
+                    if (mPlanModel.getExercises().size() - 1 == pos[0])
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                     else
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -288,16 +307,17 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                     else
                         dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
                     dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
-                        if (mModel.getExercises().size() - 1 > pos[0]) {
+                        if (mPlanModel.getExercises().size() - 1 > pos[0]) {
                             pos[0]++;
-                            if (mModel.getExercises().size() > pos[0]) {
-                                CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                        mModel.getExercises().get(pos[0]).getDescription(),
-                                        mModel.getExercises().get(pos[0]).getImages());
-
+                            if (mPlanModel.getExercises().size() > pos[0]) {
+                                CustomDialog.cardSet(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                        mPlanModel.getExercises().get(pos[0]).getDescription(),
+                                        mPlanModel.getExercises().get(pos[0]).getPhotos(),
+                                        mPlanModel.getExercises().get(pos[0]).getVideoUrl());
+                                posExercise.setText(pos[0] + 1 + "");
                             }
                         }
-                        if (mModel.getExercises().size() - 1 == pos[0])
+                        if (mPlanModel.getExercises().size() - 1 == pos[0])
                             dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                         else
                             dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -311,12 +331,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
                         if (pos[0] > 0) {
                             pos[0]--;
                             if (pos[0] + 1 > 0) {
-                                CustomDialog.cardSet(dialog, mModel.getExercises().get(pos[0]).getName(),
-                                        mModel.getExercises().get(pos[0]).getDescription(),
-                                        mModel.getExercises().get(pos[0]).getImages());
+                                CustomDialog.cardSet(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                        mPlanModel.getExercises().get(pos[0]).getDescription(),
+                                        mPlanModel.getExercises().get(pos[0]).getPhotos(),
+                                        mPlanModel.getExercises().get(pos[0]).getVideoUrl());
+                                posExercise.setText(pos[0] + 1 + "");
                             }
                         }
-                        if (mModel.getExercises().size() - 1 == pos[0])
+                        if (mPlanModel.getExercises().size() - 1 == pos[0])
                             dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                         else
                             dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
@@ -337,7 +359,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         mBinding.rv.setNestedScrollingEnabled(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.rv.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapterPreviewPlan(this, UnpackingTraining.buildExercises(mModel));
+        adapter = new RecyclerAdapterPreviewPlan(this, UnpackingTraining.buildExercises(mPlanModel));
         mBinding.rv.setAdapter(adapter);
 
     }
@@ -345,14 +367,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
     void goTraining() {
         if (getIntent().getBooleanExtra("isWall", false)) {
             Bundle bundle = new Bundle();
-            bundle.putParcelable("traningModel", mModel);
+            bundle.putParcelable("planModel", mNotEditPlan);
             Intent intent = new Intent(getContext(), TrainingActivity.class);
-            intent.putExtra("traningModel", bundle);
+            intent.putExtra("planModel", bundle);
             startActivity(intent);
         }
     }
 
-    public void unpublicationPlan(String id) {
+    public void unpublicPlan(String id) {
         HashMap<String, String> map = new HashMap<>();
         if (Connection.isNetworkAvailable(getContext())) {
             map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
@@ -364,14 +386,35 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
     }
 
     private void setData() {
-        mBinding.collapsing.setTitle(mModelfromServer.getTraining().getName());
+        mBinding.collapsing.setTitle(mPlanModel.getTraining().getName());
 
         Glide.with(getContext().getApplicationContext())
-                .load(Uri.parse(mModelfromServer.getTraining().getImage()))
+                .load(Uri.parse(mPlanModel.getTraining().getImage()))
                 .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                 .transition(withCrossFade())
                 .into(mBinding.traningImage);
 
+    }
+
+    private void imagesSet() {
+        PhotoModel temp = new PhotoModel();
+        temp.setImagePath(mPlanModel.getTraining().getImage());
+        imageTraining.clear();
+        imageTraining.add(temp);
+        Log.e("imagesSet: ", new Gson().toJson(imageTraining));
+
+        for (int i = 0; i < mPlanModel.getExercises().size(); i++) {
+            ArrayList<PhotoModel> temps = new ArrayList<>();
+            PhotoModel temp2 = new PhotoModel();
+            if (mPlanModel.getExercises().get(i).getImage() != null && !mPlanModel.getExercises().get(i).getImage().equals("")) {
+                temp2.setImagePath(mPlanModel.getExercises().get(i).getImage());
+                temps.add(temp2);
+                temps.addAll(mPlanModel.getExercises().get(i).getPhotos());
+                mPlanModel.getExercises().get(i).setPhotos(temps);
+            } else {
+                mPlanModel.getExercises().get(i).setPhotos(null);
+            }
+        }
     }
 
     public Context getContext() {
@@ -379,68 +422,37 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
     }
 
     @Override
-    public void onSuccess(GetPlanModel info) {
-        if (info.getTraining() != null) {
-            adapter.setModel(UnpackingTraining.buildExercises(setTraining(info)));
-            adapter.setTrainingModel(setTraining(info));
-            adapter.notifyDataSetChanged();
-            if (menu != null) {
-                if (info.getTraining().getIsSaved() == 1) {
-                    menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-                }
+    public void onSuccess(GetPlanModel info, String request) {
+        if (request.equals("getPlan")) {
+            if (info != null) {
+                mPlanModel = info;
+                if (info.getTraining() != null) {
+                    imagesSet();
+                    setData();
+                    mNotEditPlan = info;
+                    adapter.setModel(UnpackingTraining.buildExercises(mPlanModel));
+                    adapter.setTrainingModel(info);
+                    adapter.notifyDataSetChanged();
+                    if (menu != null) {
+                        if (info.getTraining().getIsSaved() == 1) {
+                            menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
+                        }
 
-                if (info.getTraining().getLiked() == 1) {
-                    menu.findItem(R.id.action_like).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                }
-            }
+                        if (info.getTraining().getLiked() == 1) {
+                            menu.findItem(R.id.action_like).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
+                        }
+                    }
 
-            if (info.getTraining().getUserId() != null) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("user_id", info.getTraining().getUserId());
-                map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                Request.getInstance().getUserData(map, this);
+                    if (info.getTraining().getUserId() != null) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("user_id", info.getTraining().getUserId());
+                        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                        Request.getInstance().getUserData(map, this);
+                    }
+                }
             }
         }
-    }
-
-    private TrainingModel setTraining(GetPlanModel training) {
-        mModelfromServer = training;
-        ArrayList<ExerciseModel> exerciseModels = new ArrayList<>();
-        ArrayList<String> image = new ArrayList<>();
-        mModel = new TrainingModel();
-        for (int i = 0; i < training.getExercises().size(); i++) {
-            ArrayList<String> imageExercises = new ArrayList<>();
-            ExerciseModel exerciseModel = new ExerciseModel();
-            exerciseModel.setCountRepetitions(Integer.valueOf(training.getExercises().get(i).getCountRepetitions()));
-            imageExercises.add(training.getExercises().get(i).getImage());
-            exerciseModel.setImage(training.getExercises().get(i).getImage());
-            exerciseModel.setDescription(training.getExercises().get(i).getDescription());
-            exerciseModel.setName(training.getExercises().get(i).getName());
-            exerciseModel.setRecoveryTime(Long.valueOf(training.getExercises().get(i).getRecoveryTime()));
-            exerciseModel.setTime(Long.valueOf(training.getExercises().get(i).getTime()));
-            exerciseModel.setTimeBetween(Long.valueOf(training.getExercises().get(i).getTimeBetween()));
-            exerciseModel.setAudio(training.getExercises().get(i).getMusicUrls());
-            if (training.getExercises().get(i).getPhotos() != null) {
-                for (int j = 0; j < training.getExercises().get(i).getPhotos().size(); j++) {
-                    imageExercises.add(training.getExercises().get(i).getPhotos().get(j).getImagePath());
-                }
-            }
-            exerciseModel.setImages(imageExercises);
-            exerciseModels.add(exerciseModel);
-        }
-
-        image.add(training.getTraining().getImage());
-        mModel.setImageTraining(image);
-        mModel.setExercises(exerciseModels);
-        mModel.setTime(Long.valueOf(training.getTraining().getPlan_time()));
-        mModel.setName(training.getTraining().getName());
-        mModel.setDescription(training.getTraining().getDescription());
-        mModel.setImage(training.getTraining().getImage());
-        mModel.setId(Integer.valueOf(training.getTraining().getId()));
-        mModel.setCreatedTime(training.getTraining().getCreationDate());
-        setData();
-        return mModel;
     }
 
     @Override
@@ -448,23 +460,23 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         if (info.equals("like") || info.equals("dislike")) {
             if (info.equals("like")) {
                 menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                mModelfromServer.getTraining().setLiked(1);
+                mPlanModel.getTraining().setLiked(1);
                 return;
             }
             menu.getItem(positionLike).setIcon(getResources().getDrawable(R.drawable.ic_favorite));
-            mModelfromServer.getTraining().setLiked(0);
+            mPlanModel.getTraining().setLiked(0);
             return;
         }
 
         if (info.equals("save") || info.equals("unsave")) {
             if (info.equals("save")) {
                 menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-                mModelfromServer.getTraining().setIsSaved(1);
+                mPlanModel.getTraining().setIsSaved(1);
                 return;
             }
 
             menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save));
-            mModelfromServer.getTraining().setIsSaved(0);
+            mPlanModel.getTraining().setIsSaved(0);
             return;
         }
 
@@ -475,7 +487,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingSt
         if (info.equals("statusChange")) {
             Toast.makeText(this, getResources().getString(R.string.removed_from_wall), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

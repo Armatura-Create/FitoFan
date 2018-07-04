@@ -1,9 +1,14 @@
 package com.example.alex.fitofan.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GetTrainingModel {
+import java.io.Serializable;
+
+public class GetTrainingModel implements Serializable, Parcelable {
     @SerializedName("user_id")
     @Expose
     private String userId;
@@ -73,9 +78,53 @@ public class GetTrainingModel {
     @Expose
     private String id;
 
+    @SerializedName("plan_level")
+    @Expose
+    private String planLevel = "1.0";
+
     @SerializedName("user")
     @Expose
     private User user;
+
+    private boolean isEditPhoto;
+
+    public GetTrainingModel() {
+
+    }
+
+    protected GetTrainingModel(Parcel in) {
+        userId = in.readString();
+        likes = in.readString();
+        saved = in.readString();
+        inventory = in.readString();
+        isSaved = in.readInt();
+        parentId = in.readString();
+        isPrivate = in.readString();
+        status = in.readString();
+        musicUrls = in.readString();
+        comments = in.readString();
+        liked = in.readInt();
+        plan_time = in.readString();
+        description = in.readString();
+        name = in.readString();
+        image = in.readString();
+        creationDate = in.readString();
+        id = in.readString();
+        planLevel = in.readString();
+        isEditPhoto = in.readByte() != 0;
+    }
+
+    public static final Creator<GetTrainingModel> CREATOR = new Creator<GetTrainingModel>() {
+        @Override
+        public GetTrainingModel createFromParcel(Parcel in) {
+            return new GetTrainingModel(in);
+        }
+
+        @Override
+        public GetTrainingModel[] newArray(int size) {
+            return new GetTrainingModel[size];
+        }
+    };
 
     public String getUserId() {
         return userId;
@@ -219,5 +268,49 @@ public class GetTrainingModel {
 
     public void setInventory(String inventory) {
         this.inventory = inventory;
+    }
+
+    public boolean isEditPhoto() {
+        return isEditPhoto;
+    }
+
+    public void setEditPhoto(boolean editPhoto) {
+        isEditPhoto = editPhoto;
+    }
+
+    public String getPlanLevel() {
+        return planLevel;
+    }
+
+    public void setPlanLevel(String planLevel) {
+        this.planLevel = planLevel;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(likes);
+        dest.writeString(saved);
+        dest.writeString(inventory);
+        dest.writeInt(isSaved);
+        dest.writeString(parentId);
+        dest.writeString(isPrivate);
+        dest.writeString(status);
+        dest.writeString(musicUrls);
+        dest.writeString(comments);
+        dest.writeInt(liked);
+        dest.writeString(plan_time);
+        dest.writeString(description);
+        dest.writeString(name);
+        dest.writeString(image);
+        dest.writeString(creationDate);
+        dest.writeString(id);
+        dest.writeString(planLevel);
+        dest.writeByte((byte) (isEditPhoto ? 1 : 0));
     }
 }

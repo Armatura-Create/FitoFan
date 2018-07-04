@@ -1,9 +1,14 @@
 package com.example.alex.fitofan.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PhotoModel {
+import java.io.Serializable;
+
+public class PhotoModel implements Serializable, Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -24,6 +29,33 @@ public class PhotoModel {
     @SerializedName("image_path")
     @Expose
     private String imagePath;
+
+    private boolean isDeleted;
+    private boolean isEdit;
+
+    public PhotoModel() {
+
+    }
+
+    protected PhotoModel(Parcel in) {
+        id = in.readString();
+        exerciseId = in.readInt();
+        userId = in.readString();
+        planId = in.readString();
+        imagePath = in.readString();
+    }
+
+    public static final Creator<PhotoModel> CREATOR = new Creator<PhotoModel>() {
+        @Override
+        public PhotoModel createFromParcel(Parcel in) {
+            return new PhotoModel(in);
+        }
+
+        @Override
+        public PhotoModel[] newArray(int size) {
+            return new PhotoModel[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -63,5 +95,35 @@ public class PhotoModel {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(exerciseId);
+        dest.writeString(userId);
+        dest.writeString(planId);
+        dest.writeString(imagePath);
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isEdit() {
+        return isEdit;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
     }
 }

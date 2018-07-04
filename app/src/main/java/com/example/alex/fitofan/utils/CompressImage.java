@@ -25,10 +25,12 @@ public class CompressImage {
         if (maxWidth > actualHeight) {
             return source;
         }
-        float scaleVal = 1;
-        scaleVal = maxWidth / actualWidth;
+        float scaleValX = 1;
+//        float scaleValY = 1;
+        scaleValX = maxWidth / actualWidth;
+//        scaleValY = maxHeight / actualHeight;
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleVal, scaleVal);
+        matrix.postScale(scaleValX, scaleValX);
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 source, 0, 0, actualWidth, actualHeight, matrix, false);
         source.recycle();

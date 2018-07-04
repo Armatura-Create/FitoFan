@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
+import com.example.alex.fitofan.models.PhotoModel;
 
 import java.util.ArrayList;
 
@@ -21,10 +23,11 @@ import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
 public class RecyclerGridAdapterPhotos extends RecyclerView.Adapter<RecyclerGridAdapterPhotos.CardSet> {
 
-    //Предоставляет ссылку на представления, используемые в RecyclerView
+    private boolean isEdit;
     private CreatePlanActivity mActivity;
     private ArrayList<Uri> images;
-    private ArrayList<String> imagesString;
+    private ArrayList<PhotoModel> imagesString;
+    private RecyclerAdapterCreatePlan adapterMain;
 
     RecyclerGridAdapterPhotos(CreatePlanActivity mActivity) {
         this.mActivity = mActivity;
@@ -32,13 +35,35 @@ public class RecyclerGridAdapterPhotos extends RecyclerView.Adapter<RecyclerGrid
         imagesString = new ArrayList<>();
     }
 
-    void addImage(Uri uri, String string) {
+    RecyclerGridAdapterPhotos(CreatePlanActivity mActivity, String image, ArrayList<PhotoModel> imagesString, RecyclerAdapterCreatePlan adapterMain) {
+        this.mActivity = mActivity;
+        this.imagesString = new ArrayList<>();
+        this.adapterMain = adapterMain;
+        images = new ArrayList<>();
+        if (image != null && !image.equals("")) {
+            images.add(Uri.parse(image));
+            PhotoModel temp = new PhotoModel();
+            temp.setImagePath(image);
+            this.imagesString.add(0, temp);
+        }
+        for (int i = 0; i < imagesString.size(); i++) {
+            if (imagesString.get(i).getImagePath() != null && !imagesString.get(i).getImagePath().equals("")) {
+                images.add(Uri.parse(imagesString.get(i).getImagePath()));
+                this.imagesString.add(imagesString.get(i));
+            }
+        }
+        isEdit = true;
+    }
+
+    void addImage(Uri uri, PhotoModel stringImage) {
+        if (isEdit)
+            stringImage.setEdit(true);
         images.add(uri);
-        imagesString.add(string);
+        imagesString.add(stringImage);
         this.notifyItemInserted(images.size() - 1);
     }
 
-    public ArrayList<String> getImagesString() {
+    public ArrayList<PhotoModel> getImagesString() {
         return imagesString;
     }
 
@@ -54,7 +79,7 @@ public class RecyclerGridAdapterPhotos extends RecyclerView.Adapter<RecyclerGrid
     @Override
     public void onBindViewHolder(@NonNull CardSet holder, final int position) {
         //Заполнение заданного представления данными
-
+        Log.e("removeImage: ", String.valueOf(imagesString.size()));
         if (images.size() > 0)
             Glide.with(mActivity.getContext())
                     .load(images.get(position))
@@ -81,8 +106,16 @@ public class RecyclerGridAdapterPhotos extends RecyclerView.Adapter<RecyclerGrid
         }
 
         void removeImage(int position) {
-            images.remove(position);
-            imagesString.remove(position);
+
+            if (isEdit)
+                if (imagesString.get(getAdapterPosition()).getId() != null && !imagesString.get(getAdapterPosition()).getId().equals("")) {
+                    ArrayList<String> string = mActivity.getDeletePhotos();
+                    string.add(imagesString.get(getAdapterPosition()).getId());
+                    mActivity.setDeletePhotos(string);
+                }
+            imagesString.remove(getAdapterPosition());
+            images.remove(getAdapterPosition());
+
 
             notifyItemRemoved(position);
             notifyItemRangeChanged(getAdapterPosition(), images.size());

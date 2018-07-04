@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="ndroid.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -20,10 +22,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider{188446971953265}"
+            android:exported="true" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="e372db6265136990a1b77cebc70639a1d26cdaa6"
-            />
+            android:value="e372db6265136990a1b77cebc70639a1d26cdaa6" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -59,8 +65,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <activity
             android:name=".ui.activity.main.MainActivity"
@@ -125,7 +132,7 @@
             android:name=".ui.activity.create_plan.CreatePlanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
             android:name=".ui.activity.preview_plan.PreviewPlanActivity"
@@ -140,6 +147,11 @@
 
         <activity
             android:name=".ui.activity.sub.SubActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+
+        <activity
+            android:name=".utils.VideoTrim"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
 

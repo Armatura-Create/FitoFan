@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +24,6 @@ import com.example.alex.fitofan.models.User;
 import com.example.alex.fitofan.ui.activity.FullScreenImage;
 import com.example.alex.fitofan.utils.ActionPlanCard;
 import com.example.alex.fitofan.utils.CountData;
-import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAdapterUserProfile.ViewHolder> {
 
@@ -106,7 +104,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         //Заполнение заданного представления данными
         final CoordinatorLayout linear = holder.mLinearLayout;
 
@@ -192,7 +190,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
         if (position >= 1) {
             ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
             TextView tvNameTranig = linear.findViewById(R.id.tv_training_name);
-            TextView tvTotalTime = linear.findViewById(R.id.tv_total_time);
+            RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
             TextView tvDescription = linear.findViewById(R.id.tv_description);
 
             ImageView comments = linear.findViewById(R.id.icon_comments);
@@ -225,7 +223,10 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             if (mWallModels != null) {
 
                 tvNameTranig.setText(mWallModels.get(position - 1).getName());
-                tvTotalTime.setText(FormatTime.formatTime(Long.valueOf(mWallModels.get(position - 1).getPlan_time())));
+                if (mWallModels.get(position - 1).getPlanLevel() != null && !mWallModels.get(position - 1).getPlanLevel().equals(""))
+                    levelTraining.setRating(Float.valueOf(mWallModels.get(position - 1).getPlanLevel()));
+                else
+                    levelTraining.setRating((float) 1.0);
                 tvDescription.setText(mWallModels.get(position - 1).getDescription());
 
                 Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения
@@ -239,22 +240,19 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             planLeaner.setOnClickListener(v -> {
                 ++numberOfClicks;
                 if (!threadStarted) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            threadStarted = true;
-                            try {
-                                Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
-                                if (numberOfClicks == 1) {
-                                    ActionPlanCard.goPreviewPlan(mUserProfileActivity.getContext(), mWallModels.get(position - 1).getId(), mWallModels.get(position - 1).getUserId(), true);
-                                } else if (numberOfClicks == 2) {
-                                    mUserProfileActivity.likePlan(mWallModels.get(position - 1).getId(), like, countLike, false, position - 1);
-                                }
-                                numberOfClicks = 0;
-                                threadStarted = false;
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                    new Thread(() -> {
+                        threadStarted = true;
+                        try {
+                            Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
+                            if (numberOfClicks == 1) {
+                                ActionPlanCard.goPreviewPlan(mUserProfileActivity.getContext(), mWallModels.get(position - 1).getId(), mWallModels.get(position - 1).getUserId(), true);
+                            } else if (numberOfClicks == 2) {
+                                mUserProfileActivity.likePlan(mWallModels.get(position - 1).getId(), like, countLike, false, position - 1);
                             }
+                            numberOfClicks = 0;
+                            threadStarted = false;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }).start();
                 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
@@ -46,7 +48,7 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_rainting, container, false);
 
@@ -90,7 +92,7 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
         mBinding.yourPlace.numberParticipant.setText(user.getRating());
 
         if (user.getImage_url() != null && !user.getImage_url().equals("")) {
-            Glide.with(getContext())
+            Glide.with(Objects.requireNonNull(getContext()))
                     .load(Uri.parse(user.getImage_url()))
                     .apply(centerCropTransform())
                     .transition(withCrossFade())
@@ -122,7 +124,7 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     private void initRecyclerView() {
         models = new ArrayList<>();
 
-        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(getActivity().getApplicationContext());
+        PreCachingLayoutManager linearLayoutManager = new PreCachingLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
         mBinding.rvRaiting.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapterRaiting(models, this);
         mBinding.rvRaiting.setAdapter(adapter);
@@ -172,7 +174,8 @@ public class ParticipantFragment extends Fragment implements ILoadingStatus<GetR
     public void onSuccess(User info) {
         mBinding.yourPlace.likeRating.setText(info.getLikes());
         GetUserModel app = new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class);
-        app.getUser().setLikes(info.getLikes());
+        if (app != null && app.getUser() != null)
+            app.getUser().setLikes(info.getLikes());
 
         MSharedPreferences.getInstance().setUserInfo(new Gson().toJson(app));
     }

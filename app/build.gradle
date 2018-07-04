@@ -12,10 +12,10 @@ android {
     }
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.fitofan.debug"
+        applicationId "com.fitofan"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 7
+        versionCode 23
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -48,7 +48,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
 
     //fabric.io
@@ -75,9 +75,6 @@ dependencies {
     //GIF
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
 
-    //CameraKit
-    implementation 'com.wonderkiln:camerakit:0.12.0'
-
     //circleImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
@@ -88,8 +85,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
-    //Crop Image
+    //Crop
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+    implementation 'life.knowledge4:k4l-video-trimmer:1.0'
+
+    //ManyStartIntent
+    implementation 'com.github.KingsMentor:IntentManip:v1.0'
 
     //Json
     implementation 'com.googlecode.json-simple:json-simple:1.1'
@@ -100,18 +101,18 @@ dependencies {
 
     //Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.github.bumptech.glide:glide:4.0.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //facebook
     implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
+    implementation 'com.facebook.android:facebook-share:4.33.0'
 
-    //ORM
-    implementation 'com.j256.ormlite:ormlite-android:5.0'
-    implementation 'com.j256.ormlite:ormlite-core:5.0'
+//    //ORM
+//    implementation 'com.j256.ormlite:ormlite-android:5.0'
+//    implementation 'com.j256.ormlite:ormlite-core:5.0'
 
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'

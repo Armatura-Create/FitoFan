@@ -13,11 +13,12 @@ import com.example.alex.fitofan.models.GetWallModel;
 import com.example.alex.fitofan.models.LikeModel;
 import com.example.alex.fitofan.models.StatusModel;
 import com.example.alex.fitofan.models.SubModel;
-import com.example.alex.fitofan.settings.MApplication;
 
 import java.util.HashMap;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -144,7 +145,7 @@ interface FitoFanAPI {
 
     @POST("/v1/editPlan")
     @FormUrlEncoded
-    Call<LikeModel> editPlan(@FieldMap(encoded = true) HashMap<String, String> params);
+    Call<GetPlanModel> editPlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
     @POST("/v1/getMyUnpublishedPlans")
     @FormUrlEncoded
@@ -165,5 +166,20 @@ interface FitoFanAPI {
     @POST("/v1/addExercisePhoto")
     @FormUrlEncoded
     Call<GetExercisePhotos> addExercisePhoto(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/editPlanExercise")
+    @FormUrlEncoded
+    Call<GetExerciseModel> editExercise(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/deleteExercisePhoto")
+    @FormUrlEncoded
+    Call<GetExercisePhotos> deleteExercisePhoto(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/deletePlanExercise")
+    @FormUrlEncoded
+    Call<LikeModel> deletePlanExercise(@FieldMap(encoded = true) HashMap<String, String> params);
+
+    @POST("/v1/changeExerciseVideo")
+    Call<GetExercisePhotos> changeExerciseVideo(@Body RequestBody body);
 
 }

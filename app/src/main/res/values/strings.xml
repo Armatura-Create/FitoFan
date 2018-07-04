@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FitoFan DEBUG</string>
+    <string name="app_name">FitoFan</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -63,7 +63,7 @@
     <string name="relax">Relax</string>
     <string name="start_training">Start training</string>
     <string name="remove">Remove</string>
-    <string name="edit">Edit</string>
+    <string name="deleted">Edit</string>
     <string name="removed">Removed</string>
     <string name="select_action">Select action</string>
     <string name="first_exercise">This is the first exercise</string>
@@ -122,5 +122,12 @@
     <string name="rate_app">Rate</string>
     <string name="training_inventory">Inventory</string>
     <string name="inventory_plan">The name of the inventory that is needed for training. For example: \"a skipping rope\", \"dumbbells\", etc.</string>
+    <string name="no_entered_name">No name entered</string>
+    <string name="no_entered_description">no description entered</string>
+    <string name="no_put_image">not inserted picture</string>
+    <string name="failed_to_save">Failed to save</string>
+    <string name="difficulty_level">Difficulty level</string>
+    <string name="close_constructor">Close plan constructor?</string>
+    <string name="select_video">Select Video</string>
 
 </resources>

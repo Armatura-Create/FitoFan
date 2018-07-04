@@ -16,7 +16,7 @@
     <item
         android:id="@+id/action_edit_server"
         android:orderInCategory="300"
-        android:title="@string/edit"
+        android:title="@string/deleted"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_music_server"

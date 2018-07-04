@@ -61,10 +61,10 @@
                             android:ellipsize="end"
                             android:gravity="bottom"
                             android:maxLines="2"
-                            tools:text="Развитие скорости"
                             android:textColor="@color/button_blue"
                             android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Развитие скорости" />
 
                     </LinearLayout>
 
@@ -75,28 +75,15 @@
                         android:gravity="end"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="15dp"
-                            android:layout_marginEnd="3dp"
-                            android:layout_marginStart="27dp"
-                            android:layout_marginTop="15dp"
-                            android:padding="2.5dp"
-                            android:src="@drawable/ic_timer_24dp" />
-
-                        <TextView
-                            android:id="@+id/tv_total_time"
+                        <RatingBar
+                            android:id="@+id/levelTraining"
+                            style="@style/CustomRatingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginEnd="20dp"
-                            android:gravity="end"
-                            android:text="23мин"
-                            android:textColor="@color/button_blue"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:layout_marginEnd="10dp"
+                            android:isIndicator="true"
+                            android:numStars="3"
+                            android:stepSize="1" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -136,9 +123,9 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
-                    tools:text="Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки "
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    tools:text="Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки Цель тренеровки " />
             </LinearLayout>
 
             <LinearLayout
@@ -222,9 +209,9 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginStart="8dp"
+                                android:contentDescription="@string/saved_plans"
                                 android:padding="2.5dp"
-                                android:src="@drawable/ic_save_black"
-                                android:contentDescription="@string/saved_plans" />
+                                android:src="@drawable/ic_save_black" />
 
                             <TextView
                                 android:id="@+id/saved_plan"

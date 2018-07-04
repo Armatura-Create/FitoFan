@@ -13,9 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.method.ScrollingMovementMethod;
@@ -32,18 +30,14 @@ import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.OnProgressBarListener;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityTrainingBinding;
-import com.example.alex.fitofan.models.TrainingModel;
+import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.utils.CustomDialog.CustomDialog;
 import com.example.alex.fitofan.utils.FormatTime;
 import com.example.alex.fitofan.utils.ItemClickSupport;
 import com.example.alex.fitofan.utils.StaticValues;
 import com.example.alex.fitofan.utils.UnpackingTraining;
-import com.example.alex.fitofan.utils.db.DatabaseHelper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,8 +46,7 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
         MediaPlayer.OnCompletionListener, OnProgressBarListener {
 
     private ActivityTrainingBinding mBinding;
-    private TrainingModel mTrainingModel;
-    private Dao<TrainingModel, Integer> mTrainings;
+    private GetPlanModel mPlanModel;
     private MediaPlayer mMediaPlayer;
 
     private static final long DEFAULT_REFRESH_INTERVAL = 10L;
@@ -86,18 +79,15 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         initListeners();
-        if (getIntent().getIntExtra("trainingModel", -1) != -1)
-            initTraining(getIntent().getIntExtra("trainingModel", -1));
-        else
-            initTraining(getIntent().getBundleExtra("traningModel").getParcelable("traningModel"));
+        initTraining(getIntent().getBundleExtra("planModel").getParcelable("planModel"));
         initSoundPoint();
     }
 
-    private void initTraining(TrainingModel traningModel) {
-        if (traningModel != null) {
-            mTrainingModel = traningModel;
+    private void initTraining(GetPlanModel trainingModel) {
+        if (trainingModel != null) {
+            mPlanModel = trainingModel;
         } else {
-            mTrainingModel = new TrainingModel();
+            mPlanModel = new GetPlanModel();
         }
         initRecycler();
         setData();
@@ -168,26 +158,10 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
         }
     }
 
-    private void initTraining(int trainingModel) {
-        if (trainingModel >= 0) {
-            try {
-                mTrainings = OpenHelperManager.getHelper(this, DatabaseHelper.class).getTrainingDAO();
-                assert mTrainings != null;
-                mTrainingModel = mTrainings.queryForId(trainingModel);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } else {
-            mTrainingModel = new TrainingModel();
-        }
-        initRecycler();
-        setData();
-    }
-
     private void initRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mBinding.rv.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerAdapter(this, UnpackingTraining.buildExercises(mTrainingModel));
+        adapter = new RecyclerAdapter(this, UnpackingTraining.buildExercises(mPlanModel));
         mBinding.rv.setAdapter(adapter);
     }
 
@@ -254,6 +228,16 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
                 mBinding.timer.setVisibility(View.GONE);
                 mBinding.timerProgress.setVisibility(View.GONE);
                 mBinding.tvNameExercise.setVisibility(View.GONE);
+                mBinding.timerThree.setVisibility(View.VISIBLE);
+                mBinding.timerThree.animate()
+                        .alpha(1.0f)
+                        .setDuration(300)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                            }
+                        });
             } else {
                 mBinding.changeBt.setImageDrawable(getResources().getDrawable(R.drawable.ic_text_white));
                 isVisibility = false;
@@ -263,6 +247,16 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
                 mBinding.timer.setVisibility(View.VISIBLE);
                 mBinding.timerProgress.setVisibility(View.VISIBLE);
                 mBinding.tvNameExercise.setVisibility(View.VISIBLE);
+                mBinding.timerThree.animate()
+                        .alpha(0.0f)
+                        .setDuration(300)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mBinding.timerTwo.setVisibility(View.GONE);
+                            }
+                        });
             }
             mBinding.changeBt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.animator.animation_scale_like));
         });
@@ -273,9 +267,7 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
 //            Log.e("initListeners: ", String.valueOf(e));
 //        }
 
-        mBinding.btStart.setOnClickListener(v ->
-
-        {
+        mBinding.btStart.setOnClickListener(v -> {
             if (!isPreparationTime) {
                 if (isPause) {
                     mBinding.btStart.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon));
@@ -340,7 +332,7 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
             if (positionMusic != adapter.getModel().get(mPosition).getPosition()) {
                 releaseMP();
                 positionMusic = adapter.getModel().get(mPosition).getPosition();
-                startMusicExercise(mTrainingModel.getExercises().get(positionMusic).getAudio());
+                startMusicExercise(mPlanModel.getExercises().get(positionMusic).getMusicUrls());
             } else {
                 playMP();
             }
@@ -377,6 +369,7 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
                 mBinding.timerProgress.setProgress(preparationTime[0] * 100 / 5000);
                 mBinding.timer.setText(FormatTime.formatTime(elapsedTime));
                 mBinding.timerTwo.setText(FormatTime.formatTime(elapsedTime));
+                mBinding.timerThree.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
@@ -411,6 +404,7 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
                                 adapter.getModel().get(mPosition).getTime())));
                 mBinding.timer.setText(FormatTime.formatTime(elapsedTime));
                 mBinding.timerTwo.setText(FormatTime.formatTime(elapsedTime));
+                mBinding.timerThree.setText(FormatTime.formatTime(elapsedTime));
             }
         }), DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
 
@@ -455,9 +449,11 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
                 if (!adapter.getModel().get(mPosition).isRest()) {
                     mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                     mBinding.timerTwo.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                    mBinding.timerThree.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 } else {
                     mBinding.timer.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
                     mBinding.timerTwo.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
+                    mBinding.timerThree.setText(FormatTime.formatTime(adapter.getModel().get(mPosition).getTime()));
                 }
 
                 temp = "Time";
@@ -465,16 +461,19 @@ public class TrainingActivity extends AppCompatActivity implements SoundPool.OnL
             case StaticValues.DISTANCE:
                 mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 mBinding.timerTwo.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timerThree.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Distance" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
             case StaticValues.WEIGHT:
                 mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 mBinding.timerTwo.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timerThree.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Weight" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
             case StaticValues.COUNT:
                 mBinding.timer.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 mBinding.timerTwo.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
+                mBinding.timerThree.setText(FormatTime.formatCount(adapter.getModel().get(mPosition).getTime()));
                 temp = "Count" + " (" + FormatTime.formatType(adapter.getModel().get(mPosition).getTime()) + ")";
                 break;
         }

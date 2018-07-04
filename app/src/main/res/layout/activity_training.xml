@@ -152,6 +152,23 @@
                         app:layout_constraintStart_toStartOf="@+id/timer_progress"
                         app:layout_constraintTop_toBottomOf="@+id/timer" />
 
+                    <TextView
+                        android:id="@+id/timer_three"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="?attr/actionBarSize"
+                        android:alpha="0"
+                        android:animateLayoutChanges="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:translationZ="10dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toStartOf="@+id/change_bt"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="2222" />
+
                     <ImageView
                         android:id="@+id/change_bt"
                         android:layout_width="40dp"
@@ -179,7 +196,6 @@
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
@@ -204,15 +220,15 @@
             android:id="@+id/timer_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_marginEnd="80dp"
             android:alpha="0"
+            android:animateLayoutChanges="true"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_anchor="@+id/bt_start"
-            app:layout_anchorGravity="left|center_vertical"/>
+            app:layout_anchorGravity="left|center_vertical" />
 
         <com.daimajia.numberprogressbar.NumberProgressBar
             android:id="@+id/number_progress_bar"
