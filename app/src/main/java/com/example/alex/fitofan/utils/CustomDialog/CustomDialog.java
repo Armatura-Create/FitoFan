@@ -4,23 +4,24 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -29,13 +30,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.PhotoModel;
 import com.example.alex.fitofan.ui.activity.FullScreenImage;
+import com.yqritc.scalablevideoview.ScalableType;
+import com.yqritc.scalablevideoview.ScalableVideoView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
-import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
 
 public final class CustomDialog {
 
@@ -186,8 +190,8 @@ public final class CustomDialog {
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         TextView tvDescription = mDialog.findViewById(R.id.description_exercise);
         TextView close = mDialog.findViewById(R.id.tv_close);
-        VideoView videoView = mDialog.findViewById(R.id.video_view);
-        LinearLayout controlImages  = mDialog.findViewById(R.id.linear_control);
+        ScalableVideoView videoView = mDialog.findViewById(R.id.video_view);
+        LinearLayout controlImages = mDialog.findViewById(R.id.linear_control);
 
         tvTitle.setText(title);
         tvDescription.setText(description);
@@ -233,18 +237,28 @@ public final class CustomDialog {
                 mDialog.getContext().startActivity(intent);
             });
         } else if (video != null && !video.equals("")) {
+
             controlImages.setVisibility(View.GONE);
 
             videoView.setVisibility(View.VISIBLE);
 
-            videoView.setVideoURI(Uri.parse(video));
-            videoView.setOnPreparedListener(mp -> {
-                Log.d("START VIDEO", "start Uri");
-                videoView.start();
-                mp.setVolume(0, 0);
-                mp.setLooping(true);
-            });
-
+            try {
+                videoView.setDataSource(context, Uri.parse(video));
+            } catch (IOException e) {
+                Log.e("card: ", e.toString());
+                e.printStackTrace();
+            }
+//            videoView.setOnPreparedListener(mp -> {
+//                Log.d("START VIDEO", "start Uri");
+//                videoView.start();
+//                mp.setVolume(0, 0);
+//                mp.setLooping(true);
+//            });
+            videoView.setLooping(true);
+            videoView.setVolume(0,0);
+            videoView.setScalableType(ScalableType.CENTER_TOP_CROP);
+            videoView.invalidate();
+            videoView.start();
             videoView.requestFocus();
 
         }
@@ -258,33 +272,38 @@ public final class CustomDialog {
         return mDialog;
     }
 
-    public static Dialog cardMusic(Context context, String title, String image) {
+    public static Dialog cardMusic(Context context, String title, String image, boolean isAudio) {
         mDialog = new Dialog(context);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.dialog_music);
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         ImageView imageExercise = mDialog.findViewById(R.id.image_exercise);
-        ImageView close = mDialog.findViewById(R.id.close_dialog);
+        LinearLayout border = mDialog.findViewById(R.id.background_border_audio);
+        TextView close = mDialog.findViewById(R.id.tv_close);
 
+        if (isAudio) {
+            border.setVisibility(View.VISIBLE);
+        } else {
+            border.setVisibility(View.INVISIBLE);
+        }
 
         tvTitle.setText(title);
         if (image != null) {
             Glide.with(context) //передаем контекст приложения
                     .load(Uri.parse(image))
-                    .apply(centerCropTransform())
+                    .apply(fitCenterTransform())
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                     .transition(withCrossFade())
                     .into(imageExercise); //ссылка на ImageView
         } else {
             Glide.with(context)
                     .load(R.drawable.background_launch_screen)
-                    .apply(centerCropTransform())
+                    .apply(fitCenterTransform())
                     .transition(withCrossFade())
                     .into(imageExercise);
         }
 
-        close.setOnClickListener(v -> mDialog.dismiss());
-
+        close.setOnClickListener(v -> mDialog.cancel());
         mDialog.setCancelable(true);
 
         Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -307,14 +326,14 @@ public final class CustomDialog {
         if (image != null) {
             Glide.with(dialog.getContext()) //передаем контекст приложения
                     .load(Uri.parse(image))
-                    .apply(centerCropTransform())
+                    .apply(fitCenterTransform())
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
                     .transition(withCrossFade())
                     .into(imageExercise); //ссылка на ImageView
         } else {
             Glide.with(dialog.getContext())
                     .load(R.drawable.background_launch_screen)
-                    .apply(centerCropTransform())
+                    .apply(fitCenterTransform())
                     .transition(withCrossFade())
                     .into(imageExercise);
         }
@@ -325,7 +344,7 @@ public final class CustomDialog {
         TextView tvTitle = dialog.findViewById(R.id.name_exercise);
         TextView tvDescription = dialog.findViewById(R.id.description_exercise);
         VideoView videoView = mDialog.findViewById(R.id.video_view);
-        LinearLayout controlImages  = mDialog.findViewById(R.id.linear_control);
+        LinearLayout controlImages = mDialog.findViewById(R.id.linear_control);
 
         tvTitle.setText(title);
         tvDescription.setText(description);

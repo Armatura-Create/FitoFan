@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.alex.fitofan.R;
@@ -98,6 +99,7 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
     private TextView path;
     private String idExercise;
     private LinearLayout borderAudio;
+    private VideoView video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,11 +207,12 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
         isExercise = true;
     }
 
-    void recordingVideo(int position) {
+    void recordingVideo(int position, VideoView video) {
         requestMultiplePermissions();
         if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             tempPosition = position;
+            this.video = video;
             Intent videoGallery = new Intent();
             videoGallery.setType("video/*");
             videoGallery.setAction(Intent.ACTION_GET_CONTENT);
@@ -218,11 +221,8 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
             videoCamera.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
             PreparedIntent preparedIntent = new PreparedIntent(videoGallery, R.string.select_video, R.mipmap.ic_launcher);
             List<ResolveIntent> resolveIntentList = IntentAppend.appendCustomIntent(this, videoCamera, preparedIntent);
-            LaunchIntent.withButtomSheetAsList(this, resolveIntentList, getResources().getString(R.string.select_action), (ResolvedIntentListener<ResolveIntent>) resolveIntent -> {
-//                Toast.makeText(CreatePlanActivity.this, String.valueOf(resolveIntent.getIntent().getAction().contains("GET_CONTENT")), Toast.LENGTH_SHORT).show();
-//                if (resolveIntent.getIntent().getAction().contains("GET_CONTENT"))
-                startActivityForResult(ManipUtils.getLaunchableIntent(resolveIntent), VIDEO_CAPTURE);
-            });
+            LaunchIntent.withButtomSheetAsList(this, resolveIntentList, getResources().getString(R.string.select_action), (ResolvedIntentListener<ResolveIntent>) resolveIntent ->
+                    startActivityForResult(ManipUtils.getLaunchableIntent(resolveIntent), VIDEO_CAPTURE));
         }
     }
 
@@ -289,7 +289,7 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
                             intent.putExtra("data", getFilePathFromVideoURI(data.getData()));
                             startActivityForResult(intent, VIDEO_TRIM);
                         } else {
-                            adapter.setVideoRealPath(getFilePathFromVideoURI(data.getData()), tempPosition);
+                            adapter.setVideoRealPath(getFilePathFromVideoURI(data.getData()), tempPosition, video);
                             Toast.makeText(this, "TestVideo", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -298,7 +298,7 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
             case VIDEO_TRIM:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-                        adapter.setVideoRealPath(data.getStringExtra("video_trim"), tempPosition);
+                        adapter.setVideoRealPath(data.getStringExtra("video_trim"), tempPosition, video);
                         Toast.makeText(this, "VIDEO_TRIM " + data.getStringExtra("video_trim"), Toast.LENGTH_SHORT).show();
                     }
                 }

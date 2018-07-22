@@ -14,22 +14,22 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:gravity="center"
-            android:layout_gravity="center"
+            android:id="@+id/rootRelative"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager_image"
                 android:layout_width="match_parent"
                 android:layout_height="220dp" />
 
-            <VideoView
+            <com.yqritc.scalablevideoview.ScalableVideoView
                 android:id="@+id/video_view"
-                android:layout_width="wrap_content"
-                android:layout_height="220dp"
-                android:visibility="gone"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:scalableType="fitCenter"/>
 
             <LinearLayout
                 android:id="@+id/linear_control"
@@ -86,15 +86,15 @@
         <TextView
             android:id="@+id/description_exercise"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:isScrollContainer="true"
             android:maxLines="10"
             android:minLines="10"
+            android:isScrollContainer="true"
             android:scrollbars="vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:textColor="#606a7a"
             android:textSize="16sp"
             tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />

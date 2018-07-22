@@ -3,6 +3,7 @@ package com.example.alex.fitofan.ui.activity.user_profile;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
 
 public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAdapterUserProfile.ViewHolder> {
 
@@ -190,7 +191,7 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
         if (position >= 1) {
             ImageView imageTrainingPlan = linear.findViewById(R.id.image_training);
             TextView tvNameTranig = linear.findViewById(R.id.tv_training_name);
-            RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
+            ImageView levelTraining = linear.findViewById(R.id.level_image);
             TextView tvDescription = linear.findViewById(R.id.tv_description);
 
             ImageView comments = linear.findViewById(R.id.icon_comments);
@@ -223,10 +224,25 @@ public class RecyclerAdapterUserProfile extends RecyclerView.Adapter<RecyclerAda
             if (mWallModels != null) {
 
                 tvNameTranig.setText(mWallModels.get(position - 1).getName());
-                if (mWallModels.get(position - 1).getPlanLevel() != null && !mWallModels.get(position - 1).getPlanLevel().equals(""))
-                    levelTraining.setRating(Float.valueOf(mWallModels.get(position - 1).getPlanLevel()));
-                else
-                    levelTraining.setRating((float) 1.0);
+                if (mWallModels.get(position - 1).getPlanLevel() != null && !mWallModels.get(position - 1).getPlanLevel().equals("")) {
+                    Drawable drawable = null;
+                    switch (mWallModels.get(position - 1).getPlanLevel()) {
+                        case "0":
+                            drawable = mUserProfileActivity.getResources().getDrawable(R.drawable.level_0);
+                            break;
+                        case "1":
+                            drawable = mUserProfileActivity.getResources().getDrawable(R.drawable.level_1);
+                            break;
+                        case "2":
+                            drawable = mUserProfileActivity.getResources().getDrawable(R.drawable.level_2);
+                            break;
+                        case "3":
+                            drawable = mUserProfileActivity.getResources().getDrawable(R.drawable.level_3);
+                            break;
+                    }
+                    levelTraining.setImageDrawable(drawable);
+                } else
+                    levelTraining.setImageDrawable(mUserProfileActivity.getResources().getDrawable(R.drawable.level_0));
                 tvDescription.setText(mWallModels.get(position - 1).getDescription());
 
                 Glide.with(mUserProfileActivity.getContext()) //передаем контекст приложения

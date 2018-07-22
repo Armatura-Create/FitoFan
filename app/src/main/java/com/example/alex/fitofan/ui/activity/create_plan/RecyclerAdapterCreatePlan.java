@@ -16,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.alex.fitofan.R;
@@ -57,6 +58,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
     private boolean isEdit;
     private final long MILISEC_MIN = 60000L;
     private final long MILISEC_SEC = 1000L;
+    private final String levelZero = "#d1d3d1";
     private final String levelOne = "#83ca9c";
     private final String levelTwo = "#fece0b";
     private final String levelThree = "#f05448";
@@ -177,6 +179,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         TextView etTimeBetweenExercise = linear.findViewById(R.id.et_time_between_exercise);
         TextView etRelaxTime = linear.findViewById(R.id.et_recovery_time);
         TextView textNameExrcise = linear.findViewById(R.id.text_name_exercises);
+        VideoView videoView = linear.findViewById(R.id.video_view);
 
         //footer
         Button btAddExercise = linear.findViewById(R.id.bt_add_exercise);
@@ -198,8 +201,8 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             btAddImageTraining.setText(btAddImageTraining.getText() + "*");
 
             difficultyLevel.setText(mCreatePlanActivity.getResources().getString(R.string.difficulty_level) + " : " + 1);
-            levelTraining.getProgressDrawable().setColorFilter(Color.parseColor(levelOne), PorterDuff.Mode.SRC_ATOP); // полоска
-            levelTraining.getThumb().setColorFilter(Color.parseColor(levelOne), PorterDuff.Mode.SRC_ATOP); // кругляшок
+            levelTraining.getProgressDrawable().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // полоска
+            levelTraining.getThumb().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // кругляшок
 
             btAddImageTraining.setOnClickListener(v -> {
                 mCreatePlanActivity.requestMultiplePermissions();
@@ -273,21 +276,25 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     switch (progress){
                         case 0:
+                            seekBar.getProgressDrawable().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // полоска
+                            seekBar.getThumb().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // кругляшок
+                            break;
+                        case 1:
                             seekBar.getProgressDrawable().setColorFilter(Color.parseColor(levelOne), PorterDuff.Mode.SRC_ATOP); // полоска
                             seekBar.getThumb().setColorFilter(Color.parseColor(levelOne), PorterDuff.Mode.SRC_ATOP); // кругляшок
                             break;
-                        case 1:
+                        case 2:
                             seekBar.getProgressDrawable().setColorFilter(Color.parseColor(levelTwo), PorterDuff.Mode.SRC_ATOP); // полоска
                             seekBar.getThumb().setColorFilter(Color.parseColor(levelTwo), PorterDuff.Mode.SRC_ATOP); // кругляшок
                             break;
-                        case 2:
+                        case 3:
                             seekBar.getProgressDrawable().setColorFilter(Color.parseColor(levelThree), PorterDuff.Mode.SRC_ATOP); // полоска
                             seekBar.getThumb().setColorFilter(Color.parseColor(levelThree), PorterDuff.Mode.SRC_ATOP); // кругляшок
                             break;
                     }
 
-                    difficultyLevel.setText(mCreatePlanActivity.getResources().getString(R.string.difficulty_level) + " : " + (progress + 1));
-                    mPlanModel.getTraining().setPlanLevel(String.valueOf(progress + 1));
+                    difficultyLevel.setText(mCreatePlanActivity.getResources().getString(R.string.difficulty_level) + " : " + progress);
+                    mPlanModel.getTraining().setPlanLevel(String.valueOf(progress));
                 }
 
                 @Override
@@ -551,13 +558,13 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                 if (adapters.get(position - 1).getItemCount() < 1) {
                     Dialog dialog = CustomDialog.dialogSimple(mCreatePlanActivity.getContext(), "Select an action", "", "Video", "Image");
                     dialog.findViewById(R.id.bt_positive).setOnClickListener(v1 -> {
-                        mCreatePlanActivity.recordingVideo(position);
+                        mCreatePlanActivity.recordingVideo(position, videoView);
                         dialog.cancel();
                     });
                     dialog.findViewById(R.id.bt_negative).setOnClickListener(v1 -> {
                         if (adapters.get(position - 1).getItemCount() < 5) {
                             mCreatePlanActivity.choosePicture(position);
-                            setVideoRealPath("", position);
+                            setVideoRealPath("", position, videoView);
                         } else
                             Toast.makeText(mCreatePlanActivity.getContext(), "Max 5 images", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
@@ -669,8 +676,19 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
         }
     }
 
-    void setVideoRealPath(String uri, int position) {
+    void setVideoRealPath(String uri, int position, VideoView video) {
         mPlanModel.getExercises().get(position - 1).setVideoUrl(uri);
+        video.setVisibility(View.VISIBLE);
+
+        video.setVideoURI(Uri.parse(uri));
+        video.setOnPreparedListener(mp -> {
+            Log.d("START VIDEO", "start Uri");
+            video.start();
+            mp.setVolume(0, 0);
+            mp.setLooping(true);
+        });
+
+        video.requestFocus();
     }
 
     @Override

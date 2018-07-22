@@ -23,6 +23,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivityPlanPreviewBinding;
 import com.example.alex.fitofan.interfaces.DelStatus;
+import com.example.alex.fitofan.interfaces.ILoadingEdit;
 import com.example.alex.fitofan.interfaces.ILoadingPlan;
 import com.example.alex.fitofan.interfaces.LikeStatus;
 import com.example.alex.fitofan.interfaces.UserStatus;
@@ -41,13 +42,15 @@ import com.example.alex.fitofan.utils.StaticValues;
 import com.example.alex.fitofan.utils.UnpackingTraining;
 import com.google.gson.Gson;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 
-public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPlan, LikeStatus, DelStatus, UserStatus {
+public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPlan, LikeStatus, DelStatus, UserStatus, ILoadingEdit {
 
     private ActivityPlanPreviewBinding mBinding;
     private RecyclerAdapterPreviewPlan adapter;
@@ -82,8 +85,8 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
 
     @Override
     protected void onResume() {
-        progressDialog.show();
-        initRequest();
+//        progressDialog.show();
+//        initRequest();
         super.onResume();
     }
 
@@ -158,33 +161,29 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
         }
 
         if (id == R.id.action_music_server) {
-            if (mPlanModel.getExercises().size() > 0) {
-                int[] pos = {0};
-                Dialog dialog = CustomDialog.cardMusic(this,
-                        mPlanModel.getExercises().get(pos[0]).getName(),
-                        mPlanModel.getExercises().get(pos[0]).getImage());
-                dialog.setCancelable(true);
-                dialog.findViewById(R.id.bt_add_audio_exercise).setOnClickListener(view ->
-                        chooseAudioExercise(pos[0], dialog.findViewById(R.id.background_border_audio)));
+            if (mPlanModel.getTraining().getParentId().equals("0")) {
+                if (mPlanModel.getTraining().getIsSaved() == 1) {
+                    copyPlan();
+                } else {
+                    Toast.makeText(this, "save first plan", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                if (mPlanModel.getExercises().size() - 1 == pos[0])
-                    dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
-                else
-                    dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
-                if (pos[0] == 0)
-                    dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
-                else
-                    dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
-                dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
-                    if (mPlanModel.getExercises().size() - 1 > pos[0]) {
-                        pos[0]++;
-                        if (mPlanModel.getExercises().size() > pos[0]) {
-                            CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
-                                    mPlanModel.getExercises().get(pos[0]).getImage(),
-                                    (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
-                                            !mPlanModel.getExercises().get(pos[0]).getMusicUrls().equals("")));
-                        }
-                    }
+            if (mPlanModel.getTraining().getIsSaved() == 1 || !mPlanModel.getTraining().getParentId().equals("0")) {
+                if (mPlanModel.getExercises().size() > 0) {
+                    int[] pos = {0};
+                    Dialog dialog = CustomDialog.cardMusic(this,
+                            mPlanModel.getExercises().get(pos[0]).getName(),
+                            mPlanModel.getExercises().get(pos[0]).getImage(),
+                            mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null);
+                    dialog.setCancelable(true);
+                    TextView posExercise = dialog.findViewById(R.id.tv_exercise_now);
+                    TextView allCountExercise = dialog.findViewById(R.id.tv_count_exercises);
+                    posExercise.setText(pos[0] + 1 + "");
+                    allCountExercise.setText(mPlanModel.getExercises().size() + "");
+                    dialog.findViewById(R.id.bt_add_audio_exercise).setOnClickListener(view ->
+                            chooseAudioExercise(pos[0], dialog.findViewById(R.id.background_border_audio)));
+
                     if (mPlanModel.getExercises().size() - 1 == pos[0])
                         dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
                     else
@@ -193,32 +192,52 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
                         dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
                     else
                         dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
-                });
-
-                dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
-                    if (pos[0] > 0) {
-                        pos[0]--;
-                        if (pos[0] + 1 > 0) {
-                            CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
-                                    mPlanModel.getExercises().get(pos[0]).getImage(),
-                                    (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
-                                            !mPlanModel.getExercises().get(pos[0]).getMusicUrls().equals("")));
+                    dialog.findViewById(R.id.next_exercise).setOnClickListener(view -> {
+                        if (mPlanModel.getExercises().size() - 1 > pos[0]) {
+                            pos[0]++;
+                            if (mPlanModel.getExercises().size() > pos[0]) {
+                                CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                        mPlanModel.getExercises().get(pos[0]).getImage(),
+                                        (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
+                                                !mPlanModel.getExercises().get(pos[0]).getMusicUrls().equals("")));
+                                posExercise.setText(pos[0] + 1 + "");
+                            }
                         }
-                    }
-                    if (mPlanModel.getExercises().size() - 1 == pos[0])
-                        dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
-                    else
-                        dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
-                    if (pos[0] == 0)
-                        dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
-                    else
-                        dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
-                });
+                        if (mPlanModel.getExercises().size() - 1 == pos[0])
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                        if (pos[0] == 0)
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
+                    });
+
+                    dialog.findViewById(R.id.back_exercise).setOnClickListener(view -> {
+                        if (pos[0] > 0) {
+                            pos[0]--;
+                            if (pos[0] + 1 > 0) {
+                                CustomDialog.cardSetMusic(dialog, mPlanModel.getExercises().get(pos[0]).getName(),
+                                        mPlanModel.getExercises().get(pos[0]).getImage(),
+                                        (mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null &&
+                                                mPlanModel.getExercises().get(pos[0]).getMusicUrls() != null));
+                                posExercise.setText(pos[0] + 1 + "");
+                            }
+                        }
+                        if (mPlanModel.getExercises().size() - 1 == pos[0])
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.next_exercise).setVisibility(View.VISIBLE);
+                        if (pos[0] == 0)
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.INVISIBLE);
+                        else
+                            dialog.findViewById(R.id.back_exercise).setVisibility(View.VISIBLE);
+                    });
+                }
             }
         }
 
         return super.onOptionsItemSelected(item);
-
     }
 
     private void goEdit() {
@@ -226,6 +245,14 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
         intent.putExtra("edit", true);
         intent.putExtra("planId", mPlanModel.getTraining().getId());
         startActivity(intent);
+    }
+
+    private void copyPlan() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("plan_id", String.valueOf(mPlanModel.getTraining().getId()));
+        Request.getInstance().copyPlan(map, this);
     }
 
     void chooseAudioExercise(int position, LinearLayout borderLinear) {
@@ -249,12 +276,34 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
                         if (data.getData() != null) {
                             Uri uriExercise = data.getData();
                             mPlanModel.getExercises().get(tempPosition).setMusicUrls(String.valueOf(uriExercise));
+                            try {
+                                editMusicExercise(mPlanModel.getExercises().get(tempPosition).getId());
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                             Log.e("startMusicExercise", String.valueOf(uriExercise));
                             borderLinear.setVisibility(View.VISIBLE);
                         }
                 }
                 break;
         }
+    }
+
+    private void editMusicExercise(String id) throws UnsupportedEncodingException {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+        map.put("music_urls", URLEncoder.encode(mPlanModel.getExercises().get(tempPosition).getMusicUrls(), "UTF-8"));
+        map.put("id", mPlanModel.getExercises().get(tempPosition).getId());
+        map.put("name", mPlanModel.getExercises().get(tempPosition).getName());
+        map.put("description", mPlanModel.getExercises().get(tempPosition).getDescription());
+        map.put("plan_id", mPlanModel.getTraining().getId());
+        map.put("recovery_time", String.valueOf(mPlanModel.getExercises().get(tempPosition).getRecoveryTime()));
+        map.put("count_repetitions", String.valueOf(mPlanModel.getExercises().get(tempPosition).getCountRepetitions()));
+        map.put("exercise_time", String.valueOf(mPlanModel.getExercises().get(tempPosition).getTime()));
+        map.put("time_between", String.valueOf(mPlanModel.getExercises().get(tempPosition).getTimeBetween()));
+        map.put("image", "");
+        Request.getInstance().editExercises(map, this);
     }
 
     private void like() {
@@ -423,36 +472,43 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
 
     @Override
     public void onSuccess(GetPlanModel info, String request) {
-        if (request.equals("getPlan")) {
-            if (info != null) {
-                mPlanModel = info;
-                if (info.getTraining() != null) {
-                    imagesSet();
-                    setData();
-                    mNotEditPlan = info;
-                    adapter.setModel(UnpackingTraining.buildExercises(mPlanModel));
-                    adapter.setTrainingModel(info);
-                    adapter.notifyDataSetChanged();
-                    if (menu != null) {
-                        if (info.getTraining().getIsSaved() == 1) {
-                            menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
-                        }
-
-                        if (info.getTraining().getLiked() == 1) {
-                            menu.findItem(R.id.action_like).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
-                        }
+        if (request.equals("getPlan") && info != null) {
+            mPlanModel = info;
+            if (info.getTraining() != null) {
+                imagesSet();
+                setData();
+                mNotEditPlan = info;
+                adapter.setModel(UnpackingTraining.buildExercises(mPlanModel));
+                adapter.setTrainingModel(info);
+                adapter.notifyDataSetChanged();
+                if (menu != null) {
+                    if (info.getTraining().getIsSaved() == 1) {
+                        menu.getItem(positionSave).setIcon(getResources().getDrawable(R.drawable.ic_save_full));
                     }
 
-                    if (info.getTraining().getUserId() != null) {
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put("user_id", info.getTraining().getUserId());
-                        map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
-                        map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
-                        Request.getInstance().getUserData(map, this);
+                    if (info.getTraining().getLiked() == 1) {
+                        menu.findItem(R.id.action_like).setIcon(getResources().getDrawable(R.drawable.ic_favorite_full));
                     }
+                }
+
+                if (info.getTraining().getUserId() != null) {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("user_id", info.getTraining().getUserId());
+                    map.put("uid", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getUid());
+                    map.put("signature", new Gson().fromJson(MSharedPreferences.getInstance().getUserInfo(), GetUserModel.class).getUser().getSignature());
+                    Request.getInstance().getUserData(map, this);
                 }
             }
         }
+
+        if (request.equals("copyPlan")) {
+            mPlanModel = info;
+        }
+    }
+
+    @Override
+    public void onSuccess(String info, String request) {
+        Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
     }
 
     @Override

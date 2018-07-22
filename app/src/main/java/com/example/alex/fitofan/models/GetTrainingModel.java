@@ -80,7 +80,7 @@ public class GetTrainingModel implements Serializable, Parcelable {
 
     @SerializedName("plan_level")
     @Expose
-    private String planLevel = "1.0";
+    private String planLevel = "0";
 
     @SerializedName("user")
     @Expose

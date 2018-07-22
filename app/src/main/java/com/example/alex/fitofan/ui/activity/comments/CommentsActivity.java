@@ -1,7 +1,6 @@
 package com.example.alex.fitofan.ui.activity.comments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import com.example.alex.fitofan.models.CommentModel;
 import com.example.alex.fitofan.models.GetCommentsModel;
 import com.example.alex.fitofan.models.GetUserModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
-import com.example.alex.fitofan.ui.activity.user_profile.UserProfileActivity;
 import com.example.alex.fitofan.utils.Connection;
 import com.google.gson.Gson;
 

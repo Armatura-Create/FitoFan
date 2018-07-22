@@ -2,6 +2,7 @@ package com.example.alex.fitofan.ui.fragments.wall;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
 
 public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWall.ViewHolder> {
 
@@ -86,7 +87,7 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         TextView tvFirstName = linear.findViewById(R.id.first_name_wall);
         TextView tvLastName = linear.findViewById(R.id.last_name_wall);
         TextView tvNameTrainig = linear.findViewById(R.id.tv_training_name);
-        RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
+        ImageView levelTraining = linear.findViewById(R.id.level_image);
         TextView tvTimeCreate = linear.findViewById(R.id.data_publication);
         TextView tvDescription = linear.findViewById(R.id.tv_description);
         TextView countLike = linear.findViewById(R.id.count_like);
@@ -103,10 +104,25 @@ public class RecyclerAdapterWall extends RecyclerView.Adapter<RecyclerAdapterWal
         countSaved.setText(CountData.mathLikes(mWallModels.get(position).getSaved()));
         countLike.setText(CountData.mathLikes(mWallModels.get(position).getLikes()));
         countComments.setText(CountData.mathLikes(mWallModels.get(position).getComments()));
-        if (mWallModels.get(position).getPlanLevel() != null && !mWallModels.get(position).getPlanLevel().equals(""))
-            levelTraining.setRating(Float.valueOf(mWallModels.get(position).getPlanLevel()));
-        else
-            levelTraining.setRating((float) 1.0);
+        if (mWallModels.get(position).getPlanLevel() != null && !mWallModels.get(position).getPlanLevel().equals("")) {
+            Drawable drawable = null;
+            switch (mWallModels.get(position).getPlanLevel()) {
+                case "0":
+                    drawable = mWallFragment.getResources().getDrawable(R.drawable.level_0);
+                    break;
+                case "1":
+                    drawable = mWallFragment.getResources().getDrawable(R.drawable.level_1);
+                    break;
+                case "2":
+                    drawable = mWallFragment.getResources().getDrawable(R.drawable.level_2);
+                    break;
+                case "3":
+                    drawable = mWallFragment.getResources().getDrawable(R.drawable.level_3);
+                    break;
+            }
+            levelTraining.setImageDrawable(drawable);
+        } else
+            levelTraining.setImageDrawable(mWallFragment.getResources().getDrawable(R.drawable.level_0));
         tvNameTrainig.setText(mWallModels.get(position).getName());
 
         tvTimeCreate.setText(mWallModels.get(position).getCreationDate());

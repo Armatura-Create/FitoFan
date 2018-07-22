@@ -488,6 +488,39 @@ public class Request {
 
     }
 
+    public void copyPlan(HashMap<String, String> data, final ILoadingPlan loader) {
+        Call<GetPlanModel> call;
+        call = RetrofitClient.getAPI().copyPlan(data);
+
+        call.enqueue(new Callback<GetPlanModel>() {
+            @Override
+            public void onResponse(@NonNull Call<GetPlanModel> call, @NonNull Response<GetPlanModel> response) {
+                if (response.isSuccessful()) {
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(new Gson().toJson(response.body(), GetPlanModel.class));
+
+                        if (jsonObject.getInt("status") == 1) {
+                            loader.onSuccess(response.body(), "copyPlan");
+                        } else {
+                            loader.onFailure(response.message());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("onSSS ", e.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetPlanModel> call, @NonNull Throwable t) {
+                Log.e("onFailureCopy ", t.toString());
+                loader.onFailure(CONNECTION_ERROR);// don't change this string
+            }
+        });
+
+    }
+
     public void editExercises(HashMap<String, String> data, final ILoadingEdit loader) {
         Call<GetExerciseModel> call;
         call = RetrofitClient.getAPI().editExercise(data);
@@ -499,7 +532,6 @@ public class Request {
                     JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(new Gson().toJson(response.body(), GetExerciseModel.class));
-
                         if (jsonObject.getInt("status") == 1) {
                             loader.onSuccess(String.valueOf(response.body().getExerciseId()), "editExercise");
                         } else {
@@ -514,6 +546,7 @@ public class Request {
 
             @Override
             public void onFailure(@NonNull Call<GetExerciseModel> call, @NonNull Throwable t) {
+                Log.e("onErrorEditExercises", t.toString());
                 loader.onFailure(CONNECTION_ERROR);// don't change this string
             }
         });

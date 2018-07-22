@@ -147,6 +147,10 @@ interface FitoFanAPI {
     @FormUrlEncoded
     Call<GetPlanModel> editPlan(@FieldMap(encoded = true) HashMap<String, String> params);
 
+    @POST("/v1/copyPlan")
+    @FormUrlEncoded
+    Call<GetPlanModel> copyPlan(@FieldMap(encoded = true) HashMap<String, String> params);
+
     @POST("/v1/getMyUnpublishedPlans")
     @FormUrlEncoded
     Call<GetPlansModel> getMyUnpublishedPlans(@FieldMap(encoded = true) HashMap<String, String> params);

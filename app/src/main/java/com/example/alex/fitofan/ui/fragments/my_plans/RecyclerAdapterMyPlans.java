@@ -2,6 +2,7 @@ package com.example.alex.fitofan.ui.fragments.my_plans;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
 
 public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapterMyPlans.ViewHolder> {
 
@@ -92,7 +93,7 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
 
         TextView name = linear.findViewById(R.id.tv_training_name);
         TextView description = linear.findViewById(R.id.tv_description);
-        RatingBar levelTraining = linear.findViewById(R.id.levelTraining);
+        ImageView levelTraining = linear.findViewById(R.id.level_image);
         TextView countLike = linear.findViewById(R.id.count_like);
         ImageView imageTraining = linear.findViewById(R.id.image_training);
         TextView countComments = linear.findViewById(R.id.count_comments);
@@ -105,16 +106,31 @@ public class RecyclerAdapterMyPlans extends RecyclerView.Adapter<RecyclerAdapter
         ImageView like = linear.findViewById(R.id.icon_like);
         ImageView comments = linear.findViewById(R.id.icon_comments);
         LinearLayout planLinear = linear.findViewById(R.id.plan_liner);
-        CoordinatorLayout likeCoor= linear.findViewById(R.id.coordinator_like);
-        CoordinatorLayout comCoor= linear.findViewById(R.id.coordinator_comments);
-        CoordinatorLayout saveCoor= linear.findViewById(R.id.coordinator_save);
+        CoordinatorLayout likeCoor = linear.findViewById(R.id.coordinator_like);
+        CoordinatorLayout comCoor = linear.findViewById(R.id.coordinator_comments);
+        CoordinatorLayout saveCoor = linear.findViewById(R.id.coordinator_save);
 
         name.setText(mTrainings.get(position).getName());
         description.setText(mTrainings.get(position).getDescription());
-        if (mTrainings.get(position).getPlanLevel() != null && !mTrainings.get(position).getPlanLevel().equals(""))
-            levelTraining.setRating(Float.valueOf(mTrainings.get(position).getPlanLevel()));
-        else
-            levelTraining.setRating((float) 1.0);
+        if (mTrainings.get(position).getPlanLevel() != null && !mTrainings.get(position).getPlanLevel().equals("")) {
+            Drawable drawable = null;
+            switch (mTrainings.get(position).getPlanLevel()) {
+                case "0":
+                    drawable = mMyPlansFragment.getResources().getDrawable(R.drawable.level_0);
+                    break;
+                case "1":
+                    drawable = mMyPlansFragment.getResources().getDrawable(R.drawable.level_1);
+                    break;
+                case "2":
+                    drawable = mMyPlansFragment.getResources().getDrawable(R.drawable.level_2);
+                    break;
+                case "3":
+                    drawable = mMyPlansFragment.getResources().getDrawable(R.drawable.level_3);
+                    break;
+            }
+            levelTraining.setImageDrawable(drawable);
+        } else
+            levelTraining.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.level_0));
 
         like.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_favorite_black));
         save.setImageDrawable(mMyPlansFragment.getResources().getDrawable(R.drawable.ic_save_black));
