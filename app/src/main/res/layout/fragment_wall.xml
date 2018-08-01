@@ -28,8 +28,8 @@
                     app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
 
                     <include
-                        layout="@layout/item_search"
-                        android:id="@+id/item_search"/>
+                        android:id="@+id/item_search"
+                        layout="@layout/item_search" />
 
                 </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -49,6 +49,12 @@
                     tools:listitem="@layout/item_wall" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
+
+            <include
+                android:id="@+id/fab_include"
+                layout="@layout/fabs_menu"
+                app:layout_anchor="@id/rv_wall"
+                app:layout_anchorGravity="bottom|right|end" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_add_training"

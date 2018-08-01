@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.res.Resources;
 
+import com.example.alex.fitofan.utils.ConnectivityReceiver;
+
 @SuppressLint("Registered")
 public class MApplication extends Application {
 
@@ -26,5 +28,9 @@ public class MApplication extends Application {
      */
     public Resources getMResources() {
         return res;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 }

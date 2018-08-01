@@ -11,6 +11,7 @@
         android:id="@+id/user_liner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
@@ -26,61 +27,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/first_name_wall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/button_blue"
-                    android:textSize="16sp"
-                    tools:text="Александр" />
-
-                <TextView
-                    android:id="@+id/last_name_wall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/button_blue"
-                    android:textSize="16sp"
-                    tools:text="Данильев" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/data_publication"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/darker_gray"
-                tools:text="12.03.2018 18:00" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/plan_liner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="5">
+            android:weightSum="10">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="8"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/first_name_wall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/button_blue"
+                        android:textSize="16sp"
+                        tools:text="Александр" />
+
+                    <TextView
+                        android:id="@+id/last_name_wall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/button_blue"
+                        android:textSize="16sp"
+                        tools:text="Данильев" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/data_publication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/darker_gray"
+                    tools:text="12.03.2018 18:00" />
 
                 <TextView
                     android:id="@+id/text_training_plan"
@@ -89,37 +74,25 @@
                     android:text="@string/training_plan"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tv_training_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ellipsize="end"
-                    android:gravity="bottom"
-                    android:maxLines="2"
-                    android:textColor="@color/button_blue"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="Развитие скорости" />
-
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:gravity="end|center_vertical"
-                android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/level_image"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="2"
+                tools:src="@drawable/level_0" />
 
-                <ImageView
-                    android:id="@+id/level_image"
-                    android:layout_width="65dp"
-                    android:layout_height="35dp"
-                    android:layout_marginEnd="20dp"
-                    tools:src="@drawable/level_0"/>
-
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/plan_liner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -146,6 +119,22 @@
                 android:src="@drawable/logo" />
 
         </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_training_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="bottom"
+            android:maxLines="2"
+            android:paddingBottom="3dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/button_blue"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Развитие скорости" />
 
         <TextView
             android:id="@+id/tv_description"

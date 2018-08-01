@@ -25,11 +25,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp" />
 
-            <com.yqritc.scalablevideoview.ScalableVideoView
-                android:id="@+id/video_view"
+            <android.support.design.widget.CoordinatorLayout
+                android:id="@+id/coordinator_video"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:scalableType="fitCenter"/>
+                android:layout_height="match_parent">
+
+                <VideoView
+                    android:id="@+id/video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/video_player_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter" />
+
+                <ProgressBar
+                    android:id="@+id/video_player_progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+            </android.support.design.widget.CoordinatorLayout>
 
             <LinearLayout
                 android:id="@+id/linear_control"
@@ -89,12 +109,12 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="20dp"
-            android:maxLines="10"
-            android:minLines="10"
-            android:isScrollContainer="true"
-            android:scrollbars="vertical"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
+            android:isScrollContainer="true"
+            android:maxLines="10"
+            android:minLines="10"
+            android:scrollbars="vertical"
             android:textColor="#606a7a"
             android:textSize="16sp"
             tools:text="Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross Cross " />

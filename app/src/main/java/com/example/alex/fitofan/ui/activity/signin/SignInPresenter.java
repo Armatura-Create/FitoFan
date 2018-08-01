@@ -1,6 +1,5 @@
 package com.example.alex.fitofan.ui.activity.signin;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,8 +12,6 @@ import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.ActivitySignInBinding;
 import com.example.alex.fitofan.models.LocationModel;
 import com.example.alex.fitofan.models.SingInModel;
-import com.example.alex.fitofan.models.User;
-import com.example.alex.fitofan.models.UserDataModel;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -26,16 +23,10 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import org.json.JSONException;
 
-import java.io.Reader;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-
-import io.fabric.sdk.android.Fabric;
 
 class SignInPresenter implements SignInContract.EventListener {
     private SignInContract.View view;

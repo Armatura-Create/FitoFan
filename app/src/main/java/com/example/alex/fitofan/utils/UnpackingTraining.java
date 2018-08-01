@@ -1,20 +1,15 @@
 package com.example.alex.fitofan.utils;
 
-import android.util.Log;
-
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.ExerciseModelFromTraining;
 import com.example.alex.fitofan.models.GetPlanModel;
 import com.example.alex.fitofan.settings.MApplication;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public final class UnpackingTraining {
 
     public static ArrayList<ExerciseModelFromTraining> buildExercises(GetPlanModel model) {
-
-        Log.e("buildExercises: ", new Gson().toJson(model));
 
         ArrayList<ExerciseModelFromTraining> result = new ArrayList<>();
         for (int i = 0; i < model.getExercises().size(); i++) {
@@ -65,6 +60,20 @@ public final class UnpackingTraining {
                 }
             }
 
+        }
+        return result;
+    }
+
+    public static ArrayList<ExerciseModelFromTraining> buildExercisesPreview(GetPlanModel model) {
+        ArrayList<ExerciseModelFromTraining> result = new ArrayList<>();
+        for (int i = 0; i < model.getExercises().size(); i++) {
+            ExerciseModelFromTraining temp = new ExerciseModelFromTraining();
+            temp.setCountRepetitions(Integer.valueOf(model.getExercises().get(i).getCountRepetitions()));
+            temp.setName(model.getExercises().get(i).getName());
+            temp.setDescription(model.getExercises().get(i).getDescription());
+            temp.setTime(Integer.valueOf(model.getExercises().get(i).getTime()));
+            temp.setImage(model.getExercises().get(i).getImage());
+            result.add(temp);
         }
         return result;
     }

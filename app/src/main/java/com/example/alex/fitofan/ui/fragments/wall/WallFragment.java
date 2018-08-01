@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,8 +18,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import android.widget.Toast;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.client.Request;
 import com.example.alex.fitofan.databinding.FragmentWallBinding;
-import com.example.alex.fitofan.eventbus.MyPlansEvent;
 import com.example.alex.fitofan.eventbus.ReselectWallTabs;
 import com.example.alex.fitofan.interfaces.ILoadingStatus;
 import com.example.alex.fitofan.interfaces.LikeStatus;
@@ -71,6 +68,11 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView countLike;
     private TextView countSaved;
     private boolean isStop;
+    private boolean isShowMenu;
+    private Animation show_fab_1;
+    private Animation show_fab_2;
+    private Animation hide_fab_1;
+    private Animation hide_fab_2;
 
     @Nullable
     @Override
@@ -81,15 +83,24 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding = DataBindingUtil.bind(view);
         models = new ArrayList<>();
         registerForContextMenu(mBinding.itemSearch.btFilters);
+        initAnimation();
         initListeners();
         initRecyclerView();
         startRequest();
         return view;
     }
 
+    private void initAnimation() {
+        show_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
+        show_fab_2 = AnimationUtils.loadAnimation(getContext(), R.anim.fab2_show);
+        hide_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
+        hide_fab_2 = AnimationUtils.loadAnimation(getContext(), R.anim.fab2_hide);
+    }
+
     @Override
     public void onStart() {
         EventBus.getDefault().register(this);
+        onRefresh();
         super.onStart();
     }
 
@@ -97,7 +108,6 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onResume() {
         EventBus.getDefault().unregister(this);
         EventBus.getDefault().register(this);
-        onRefresh();
         super.onResume();
     }
 
@@ -109,7 +119,7 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReselectWallTabs(ReselectWallTabs event) {
-        onRefresh();
+        mBinding.rvWall.scrollToPosition(0);
     }
 
     @Override
@@ -146,7 +156,21 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mBinding.refresh.setOnRefreshListener(this);
 
         mBinding.fabAddTraining.setOnClickListener(view1 -> {
+            if (!isShowMenu) {
+                showMenuFab();
+            } else {
+                hideMenuFab();
+            }
+        });
+
+        mBinding.fabInclude.fab1.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), CreatePlanActivity.class));
+            hideMenuFab();
+        });
+
+        mBinding.fabInclude.fab2.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "POST", Toast.LENGTH_SHORT).show();
+            hideMenuFab();
         });
 
         mBinding.itemSearch.search.addTextChangedListener(new TextWatcher() {
@@ -167,6 +191,44 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
 
         mBinding.itemSearch.btFilters.setOnClickListener(Objects.requireNonNull(this.getActivity())::openContextMenu);
+    }
+
+    private void showMenuFab() {
+        //fab 1
+        FrameLayout.LayoutParams layoutParamsFab1Show = (FrameLayout.LayoutParams) mBinding.fabInclude.fab1.getLayoutParams();
+        layoutParamsFab1Show.rightMargin += (int) (mBinding.fabInclude.fab1.getWidth() * 1.7);
+        layoutParamsFab1Show.bottomMargin += (int) (mBinding.fabInclude.fab1.getHeight() * 0.25);
+        mBinding.fabInclude.fab1.setLayoutParams(layoutParamsFab1Show);
+        mBinding.fabInclude.fab1.startAnimation(show_fab_1);
+        mBinding.fabInclude.fab1.setClickable(true);
+
+        //fab 2
+        FrameLayout.LayoutParams layoutParamsFab2Show = (FrameLayout.LayoutParams) mBinding.fabInclude.fab2.getLayoutParams();
+        layoutParamsFab2Show.rightMargin += (int) (mBinding.fabInclude.fab2.getWidth() * 0.25);
+        layoutParamsFab2Show.bottomMargin += (int) (mBinding.fabInclude.fab2.getHeight() * 1.7);
+        mBinding.fabInclude.fab2.setLayoutParams(layoutParamsFab2Show);
+        mBinding.fabInclude.fab2.startAnimation(show_fab_2);
+        mBinding.fabInclude.fab2.setClickable(true);
+        isShowMenu = !isShowMenu;
+    }
+
+    private void hideMenuFab() {
+        //fab 1
+        FrameLayout.LayoutParams layoutParamsFab1Hide = (FrameLayout.LayoutParams) mBinding.fabInclude.fab1.getLayoutParams();
+        layoutParamsFab1Hide.rightMargin -= (int) (mBinding.fabInclude.fab1.getWidth() * 1.7);
+        layoutParamsFab1Hide.bottomMargin -= (int) (mBinding.fabInclude.fab1.getHeight() * 0.25);
+        mBinding.fabInclude.fab1.setLayoutParams(layoutParamsFab1Hide);
+        mBinding.fabInclude.fab1.startAnimation(hide_fab_1);
+        mBinding.fabInclude.fab1.setClickable(false);
+
+        //fab 2
+        FrameLayout.LayoutParams layoutParamsFab2Hide = (FrameLayout.LayoutParams) mBinding.fabInclude.fab2.getLayoutParams();
+        layoutParamsFab2Hide.rightMargin -= (int) (mBinding.fabInclude.fab2.getWidth() * 0.25);
+        layoutParamsFab2Hide.bottomMargin -= (int) (mBinding.fabInclude.fab2.getHeight() * 1.7);
+        mBinding.fabInclude.fab2.setLayoutParams(layoutParamsFab2Hide);
+        mBinding.fabInclude.fab2.startAnimation(hide_fab_2);
+        mBinding.fabInclude.fab2.setClickable(false);
+        isShowMenu = !isShowMenu;
     }
 
     private void search(String s) {
@@ -241,8 +303,9 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     }
                 }
 
-                if (dy > 0 || dy < 0 && mBinding.fabAddTraining.isShown())
-                    mBinding.fabAddTraining.hide();
+//                if (dy > 0 || dy < 0 && !isShowMenu) {
+//                    mBinding.fabAddTraining.hide();
+//                }
             }
 
             @Override
@@ -250,6 +313,12 @@ public class WallFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     mBinding.fabAddTraining.show();
+                }
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    if (!isShowMenu) {
+                        mBinding.fabAddTraining.hide();
+                    }
                 }
                 super.onScrollStateChanged(recyclerView, newState);
             }

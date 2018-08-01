@@ -74,7 +74,6 @@ public class MyPlansFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onResume() {
-        initRequest();
         super.onResume();
     }
 

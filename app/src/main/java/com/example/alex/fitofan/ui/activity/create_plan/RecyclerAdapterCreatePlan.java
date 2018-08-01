@@ -21,12 +21,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -274,7 +277,7 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
             levelTraining.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    switch (progress){
+                    switch (progress) {
                         case 0:
                             seekBar.getProgressDrawable().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // полоска
                             seekBar.getThumb().setColorFilter(Color.parseColor(levelZero), PorterDuff.Mode.SRC_ATOP); // кругляшок
@@ -569,9 +572,9 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
                             Toast.makeText(mCreatePlanActivity.getContext(), "Max 5 images", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     });
-                } else if (adapters.get(position - 1).getItemCount() < 5)
+                } else if (adapters.get(position - 1).getItemCount() < 5) {
                     mCreatePlanActivity.choosePicture(position);
-                else
+                } else
                     Toast.makeText(mCreatePlanActivity.getContext(), "Max 5 images", Toast.LENGTH_SHORT).show();
             });
         }
@@ -678,8 +681,11 @@ public class RecyclerAdapterCreatePlan extends RecyclerView.Adapter<RecyclerAdap
 
     void setVideoRealPath(String uri, int position, VideoView video) {
         mPlanModel.getExercises().get(position - 1).setVideoUrl(uri);
-        video.setVisibility(View.VISIBLE);
-
+        if (uri != "") {
+            video.setVisibility(View.VISIBLE);
+        } else {
+            video.setVisibility(View.GONE);
+        }
         video.setVideoURI(Uri.parse(uri));
         video.setOnPreparedListener(mp -> {
             Log.d("START VIDEO", "start Uri");

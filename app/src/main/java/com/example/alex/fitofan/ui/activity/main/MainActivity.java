@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +19,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.databinding.ActivityMainBinding;
 import com.example.alex.fitofan.eventbus.ReselectWallTabs;
 import com.example.alex.fitofan.models.GetUserModel;
+import com.example.alex.fitofan.settings.MApplication;
 import com.example.alex.fitofan.settings.MSharedPreferences;
 import com.example.alex.fitofan.ui.activity.create_plan.CreatePlanActivity;
 import com.example.alex.fitofan.ui.activity.settings.SettingActivity;
@@ -35,7 +37,7 @@ import com.example.alex.fitofan.ui.fragments.my_plans.MyPlansFragment;
 import com.example.alex.fitofan.ui.fragments.rainting.ParticipantFragment;
 import com.example.alex.fitofan.ui.fragments.users.UsersFragment;
 import com.example.alex.fitofan.ui.fragments.wall.WallFragment;
-import com.example.alex.fitofan.utils.Connection;
+import com.example.alex.fitofan.utils.ConnectivityReceiver;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 
@@ -49,11 +51,12 @@ import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class MainActivity extends AppCompatActivity
-        implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
+        implements MainContract.View, NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private ActivityMainBinding mBinding;
     private MainPresenter mPresenter;
     private View navHeader;
+    private Snackbar mSnackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +83,16 @@ public class MainActivity extends AppCompatActivity
 
         mBinding.navView.setNavigationItemSelectedListener(this);
 
+        initSnackBar();
         initCheckConnection();
         initTabs();
         initListeners();
         loadHeader();
         logUser();
+    }
+
+    private void initSnackBar() {
+        mSnackbar = Snackbar.make(mBinding.appBarMain.toolbar, "No Connection!", Snackbar.LENGTH_INDEFINITE);
     }
 
     private void logUser() {
@@ -116,7 +124,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCheckConnection() {
-        Connection.isNetworkAvailable(mBinding.appBarMain.contentMain.container, this);
+        if (!ConnectivityReceiver.isConnected()) {
+            mSnackbar.show();
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -229,6 +239,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         mBinding.drawerLayout.closeDrawer(GravityCompat.START);
         loadHeader();
+        MApplication.getInstance().setConnectivityListener(this);
         super.onResume();
     }
 
@@ -282,5 +293,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Context getContext() {
         return this;
+    }
+
+
+    @SuppressLint("ResourceAsColor")
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (!isConnected) {
+            mSnackbar.show();
+        } else {
+            View snackbarView = mSnackbar.getView();
+            snackbarView.setBackgroundColor(0xFF00A606);
+            mSnackbar.setText("Connection restored");
+            Handler handler = new Handler();
+            Runnable runnable = () -> {
+                mSnackbar.dismiss();
+            };
+            // Закрывает Snackar спустя указаное время
+            handler.postDelayed(runnable, 2000);
+        }
     }
 }

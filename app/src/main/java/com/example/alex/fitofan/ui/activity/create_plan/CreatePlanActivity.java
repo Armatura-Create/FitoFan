@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -290,7 +291,6 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
                             startActivityForResult(intent, VIDEO_TRIM);
                         } else {
                             adapter.setVideoRealPath(getFilePathFromVideoURI(data.getData()), tempPosition, video);
-                            Toast.makeText(this, "TestVideo", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -299,7 +299,6 @@ public class CreatePlanActivity extends AppCompatActivity implements ILoadingPla
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         adapter.setVideoRealPath(data.getStringExtra("video_trim"), tempPosition, video);
-                        Toast.makeText(this, "VIDEO_TRIM " + data.getStringExtra("video_trim"), Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

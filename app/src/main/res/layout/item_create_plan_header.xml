@@ -29,7 +29,6 @@
                 android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
-
                 <LinearLayout
                     android:id="@+id/liner_name_training"
                     android:layout_width="match_parent"
@@ -40,6 +39,7 @@
                         android:id="@+id/text_name_plan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
                         android:text="@string/training_class"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="17sp"
@@ -93,9 +93,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="14dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
                     android:orientation="vertical">
 
                     <TextView

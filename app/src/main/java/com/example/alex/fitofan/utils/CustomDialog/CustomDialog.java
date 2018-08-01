@@ -4,25 +4,26 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -30,10 +31,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.alex.fitofan.R;
 import com.example.alex.fitofan.models.PhotoModel;
 import com.example.alex.fitofan.ui.activity.FullScreenImage;
-import com.yqritc.scalablevideoview.ScalableType;
-import com.yqritc.scalablevideoview.ScalableVideoView;
+import com.example.alex.fitofan.utils.VideoLoadAsyncTask;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -190,13 +189,18 @@ public final class CustomDialog {
         TextView tvTitle = mDialog.findViewById(R.id.name_exercise);
         TextView tvDescription = mDialog.findViewById(R.id.description_exercise);
         TextView close = mDialog.findViewById(R.id.tv_close);
-        ScalableVideoView videoView = mDialog.findViewById(R.id.video_view);
         LinearLayout controlImages = mDialog.findViewById(R.id.linear_control);
+
+        VideoView videoView = mDialog.findViewById(R.id.video_view);
+        CoordinatorLayout videoCoordinator = mDialog.findViewById(R.id.coordinator_video);
+        ImageView previewImage = mDialog.findViewById(R.id.video_player_preview);
+        ProgressBar progressBarVideo = mDialog.findViewById(R.id.video_player_progressbar);
 
         tvTitle.setText(title);
         tvDescription.setText(description);
         tvDescription.setMovementMethod(new ScrollingMovementMethod());
         if (images != null) {
+            videoCoordinator.setVisibility(View.GONE);
             TextView numberImages = mDialog.findViewById(R.id.number_images);
             ViewPager viewPager = mDialog.findViewById(R.id.pager_image);
             ViewPagerImageAdapter pagerImageAdapter = new ViewPagerImageAdapter(context, images);
@@ -240,28 +244,32 @@ public final class CustomDialog {
 
             controlImages.setVisibility(View.GONE);
 
-            videoView.setVisibility(View.VISIBLE);
-
             try {
-                videoView.setDataSource(context, Uri.parse(video));
-            } catch (IOException e) {
-                Log.e("card: ", e.toString());
-                e.printStackTrace();
+                VideoLoadAsyncTask imageLoadAsyncTask = new
+                        VideoLoadAsyncTask(video, previewImage);
+                imageLoadAsyncTask.execute();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
             }
-//            videoView.setOnPreparedListener(mp -> {
-//                Log.d("START VIDEO", "start Uri");
-//                videoView.start();
-//                mp.setVolume(0, 0);
-//                mp.setLooping(true);
-//            });
-            videoView.setLooping(true);
-            videoView.setVolume(0,0);
-            videoView.setScalableType(ScalableType.CENTER_TOP_CROP);
-            videoView.invalidate();
-            videoView.start();
-            videoView.requestFocus();
 
+            previewImage.setVisibility(View.VISIBLE);
+            progressBarVideo.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.GONE);
+            MediaController mediacontroller = new MediaController(context);
+            mediacontroller.setAnchorView(videoView);
+            videoView.setMediaController(mediacontroller);
+            videoView.setOnCompletionListener(mp -> videoView.start());
+            videoView.setOnPreparedListener(mp -> {
+                progressBarVideo.setVisibility(View.GONE);
+                previewImage.setVisibility(View.GONE);
+                videoView.setVisibility(View.VISIBLE);
+                mp.setVolume(0, 0);
+                mp.setLooping(true);
+                mp.start();
+            });
+            videoView.start();
         }
+
         close.setOnClickListener(v -> mDialog.cancel());
 
         mDialog.setCancelable(true);

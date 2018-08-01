@@ -176,23 +176,13 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
             name.setText(model.get(position - 1).getName());
             description.setText(model.get(position - 1).getDescription());
 
-            if (!model.get(position - 1).isRest())
-                time.setText(FormatTime.formatCountWithDimension(model.get(position - 1).getTime()));
-            else
-                time.setText(FormatTime.formatTime(model.get(position - 1).getTime()));
+            time.setText(model.get(position - 1).getCountRepetitions() + "x" + FormatTime.formatCountWithDimension(model.get(position - 1).getTime()));
 
-            if (!model.get(position - 1).isRest() && model.get(position - 1).getImage() != null && !model.get(position - 1).getImage().equals("")) {
+            if (model.get(position - 1).getImage() != null && !model.get(position - 1).getImage().equals("")) {
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(trainingActivity.getContext())
                         .load(Uri.parse(model.get(position - 1).getImage()))
                         .apply(diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))
-                        .transition(withCrossFade())
-                        .into(image);
-            } else if (model.get(position - 1).isRest()) {
-                image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                Glide.with(trainingActivity.getContext())
-                        .load(R.mipmap.logo_fitofan)
-                        .apply(placeholderOf(R.mipmap.logo_fitofan))
                         .transition(withCrossFade())
                         .into(image);
             } else {
@@ -208,6 +198,6 @@ public class RecyclerAdapterPreviewPlan extends RecyclerView.Adapter<RecyclerAda
 
     @Override
     public int getItemCount() {
-        return model != null ? model.size() + 1 : 0;
+        return model != null && model.size() >= 1 ? model.size() + 1 : 0;
     }
 }

@@ -12,6 +12,8 @@ public class ExerciseModelFromTraining {
 
     private int type;
 
+    private int countRepetitions;
+
     private String image = null;
 
     private boolean isRest = false;
@@ -80,5 +82,13 @@ public class ExerciseModelFromTraining {
 
     public boolean isRestRest() {
         return isRestRest;
+    }
+
+    public int getCountRepetitions() {
+        return countRepetitions;
+    }
+
+    public void setCountRepetitions(int countRepetitions) {
+        this.countRepetitions = countRepetitions;
     }
 }

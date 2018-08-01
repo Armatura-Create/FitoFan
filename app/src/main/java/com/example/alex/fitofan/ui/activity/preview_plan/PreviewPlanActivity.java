@@ -58,7 +58,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
     private GetPlanModel mNotEditPlan;
 
     private Menu menu;
-    private ProgressDialog progressDialog;
     private int positionLike = 1;
     private int positionSave = 0;
     private int tempPosition;
@@ -73,9 +72,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
         setContentView(R.layout.activity_plan_preview);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_plan_preview);
         setSupportActionBar(mBinding.toolbar);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
         ArrayList<GetExerciseModel> models = new ArrayList<>();
         mPlanModel = new GetPlanModel();
         mPlanModel.setExercises(models);
@@ -85,8 +81,6 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
 
     @Override
     protected void onResume() {
-//        progressDialog.show();
-//        initRequest();
         super.onResume();
     }
 
@@ -98,7 +92,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
             map.put("plan_id", getIntent().getStringExtra("planId"));
             Request.getInstance().getPlan(map, this);
         } else {
-            progressDialog.cancel();
+            mBinding.progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -478,7 +472,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
                 imagesSet();
                 setData();
                 mNotEditPlan = info;
-                adapter.setModel(UnpackingTraining.buildExercises(mPlanModel));
+                adapter.setModel(UnpackingTraining.buildExercisesPreview(mPlanModel));
                 adapter.setTrainingModel(info);
                 adapter.notifyDataSetChanged();
                 if (menu != null) {
@@ -504,6 +498,7 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
         if (request.equals("copyPlan")) {
             mPlanModel = info;
         }
+        mBinding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -551,12 +546,10 @@ public class PreviewPlanActivity extends AppCompatActivity implements ILoadingPl
             adapter.setUserModel(info);
             adapter.notifyItemChanged(0);
         }
-        progressDialog.dismiss();
     }
 
     @Override
     public void onFailure(String message) {
         Toast.makeText(this, StaticValues.CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
-        progressDialog.dismiss();
     }
 }
